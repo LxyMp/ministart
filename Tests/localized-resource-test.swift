@@ -51,7 +51,7 @@ struct LocalizedResourceTests {
         let copy = root.appendingPathComponent(executable.lastPathComponent)
         try FileManager.default.copyItem(at: executable, to: copy)
 
-        for language in ["en", "de", "es", "fr", "ja", "ko", "pt", "ru", "zh-Hans"] {
+        for language in ["en", "zh-Hans"] {
             let process = Process()
             process.executableURL = copy
             process.arguments = ["-AppleLanguages", "(\(language))"]

@@ -28,7 +28,7 @@ launchers. We accept that to keep the app simple.
   ([#1611](https://github.com/abue-ammar/tinycast/issues/1611), [#517](https://github.com/abue-ammar/tinycast/issues/517))
 - **Windows or Linux.** Tinycast is Mac only. It uses Apple tools that don't run on other systems.
   ([#637](https://github.com/abue-ammar/tinycast/issues/637), [#720](https://github.com/abue-ammar/tinycast/issues/720))
-- **More app languages.** Tinycast comes in English plus eight languages. That list is final for now. We may add one more
+- **More app languages.** Tinycast comes in English plus Simplified Chinese. That list is final for now. We may add more
   language later, but not soon.
   ([#148](https://github.com/abue-ammar/tinycast/issues/148))
 - **A beta switch in the regular app.** Stable and beta stay separate until at least version 1.0.

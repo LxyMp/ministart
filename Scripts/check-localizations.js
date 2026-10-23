@@ -16,13 +16,6 @@ const CATALOGS = ["Tinycast/Resources/Localizable.xcstrings", "Tinycast/Resource
 
 // CLDR cardinal categories each language must spell out.
 const LANGUAGES = {
-  de: ["one", "other"],
-  es: ["one", "many", "other"],
-  fr: ["one", "many", "other"],
-  ja: ["other"],
-  ko: ["other"],
-  pt: ["one", "many", "other"],
-  ru: ["one", "few", "many", "other"],
   "zh-Hans": ["other"],
 };
 

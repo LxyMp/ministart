@@ -22,16 +22,16 @@ struct LanguageTests {
         check("an empty list is English", AppLanguage(storedPreferences: []) == .english)
         check(
             "a fresh installation selects the system language",
-            AppLanguage(storedPreferences: nil, systemPreferences: ["fr-FR"]) == .french)
+            AppLanguage(storedPreferences: nil, systemPreferences: ["zh-Hans"]) == .chineseSimplified)
         check(
             "an unsupported system language falls back to English",
-            AppLanguage(storedPreferences: nil, systemPreferences: ["it-IT", "fr-FR"]) == .english)
+            AppLanguage(storedPreferences: nil, systemPreferences: ["it-IT"]) == .english)
         check(
             "a stored choice overrides the system language",
-            AppLanguage(storedPreferences: ["de"], systemPreferences: ["fr-FR"]) == .german)
+            AppLanguage(storedPreferences: ["zh-Hans"], systemPreferences: ["en-US"]) == .chineseSimplified)
         check(
             "an empty stored choice keeps the English fallback",
-            AppLanguage(storedPreferences: [], systemPreferences: ["fr-FR"]) == .english)
+            AppLanguage(storedPreferences: [], systemPreferences: ["zh-Hans"]) == .english)
         for language in AppLanguage.allCases {
             check(
                 "a fresh installation supports \(language.rawValue)",
@@ -42,16 +42,13 @@ struct LanguageTests {
         }
 
         print("# System Settings' regional tags land on the shipped language")
-        check("de-DE is German", AppLanguage(storedPreferences: ["de-DE"]) == .german)
-        check("pt-BR is Portuguese", AppLanguage(storedPreferences: ["pt-BR"]) == .portuguese)
-        check("pt-PT is Portuguese", AppLanguage(storedPreferences: ["pt-PT"]) == .portuguese)
         check(
             "zh-Hans-CN is Simplified Chinese",
             AppLanguage(storedPreferences: ["zh-Hans-CN"]) == .chineseSimplified)
         check("an unshipped language reads as English", AppLanguage(storedPreferences: ["it"]) == .english)
 
         print("# each choice launches into its own localization")
-        let shipped = ["en", "de", "es", "fr", "ja", "ko", "pt", "ru", "zh-Hans"]
+        let shipped = ["en", "zh-Hans"]
         for language in AppLanguage.allCases {
             check(
                 "\(language.rawValue) resolves to its bundled localization",
@@ -96,46 +93,15 @@ struct LanguageTests {
         }
 
         let windows: [String: (String, String)] = [
-            "en": ("1 window", "2 windows"), "de": ("1 Fenster", "2 Fenster"),
-            "es": ("1 ventana", "2 ventanas"), "fr": ("1 fenêtre", "2 fenêtres"),
-            "ja": ("1個のウインドウ", "2個のウインドウ"), "ko": ("윈도우 1개", "윈도우 2개"),
-            "pt": ("1 janela", "2 janelas"), "ru": ("1 окно", "2 окна"),
             "zh-Hans": ("1 个窗口", "2 个窗口")
         ]
         let contextualLabels: [(key: String, source: String, overrides: [String: String])] = [
-            ("applications-empty", "Nothing here yet.", ["fr": "Aucune application à afficher."]),
-            ("system-settings-empty", "Nothing here yet.", ["fr": "Aucun réglage système à afficher."]),
-            ("system-actions-empty", "Nothing here yet.", ["fr": "Aucune action système à afficher."]),
-            ("commands-empty", "Nothing here yet.", ["fr": "Aucune commande à afficher."]),
-            ("apple-shortcuts-empty", "Nothing here yet.", ["fr": "Aucun raccourci à afficher."]),
-            ("snippets-use-default-folder", "Use Default", ["fr": "Utiliser le dossier par défaut"]),
-            ("notes-use-default-folder", "Use Default", ["fr": "Utiliser le dossier par défaut"]),
-            ("extensions-installed-section", "Installed", ["fr": "Extensions installées"]),
-            ("extensions-install-section", "Install", ["fr": "Installation"]),
-            ("unit-category-time", "Time", ["fr": "Durée"]),
-            ("onboarding-open-launcher", "App Launcher", ["fr": "Ouvrir le lanceur"]),
-            (
-                "emoji-skin-tone-light", "Light",
-                [
-                    "fr": "Claire", "ja": "明るい", "ko": "밝은 피부색", "ru": "Светлый"
-                ]
-            ),
-            (
-                "emoji-skin-tone-medium", "Medium",
-                [
-                    "es": "Medio", "ja": "中間", "ko": "중간 피부색", "pt": "Médio", "ru": "Средний",
-                    "zh-Hans": "中等"
-                ]
-            ),
-            (
-                "emoji-skin-tone-dark", "Dark",
-                [
-                    "fr": "Foncée", "ja": "濃い", "ko": "어두운 피부색", "ru": "Тёмный"
-                ]
-            )
+            ("emoji-skin-tone-light", "Light", ["zh-Hans": "浅色"]),
+            ("emoji-skin-tone-medium", "Medium", ["zh-Hans": "中等"]),
+            ("emoji-skin-tone-dark", "Dark", ["zh-Hans": "深色"])
         ]
-        for language in AppLanguage.allCases {
-            let code = language.rawValue
+        // en is the source language: its strings are the keys, so only zh-Hans gets an lproj.
+        for code in ["zh-Hans"] {
             guard let bundle = Bundle(url: root.appendingPathComponent("\(code).lproj")),
                 let expected = windows[code]
             else {
