@@ -446,6 +446,16 @@ struct QuicklinkTests {
         expect(
             reimported.imported == 0 && reimported.skipped == 2,
             "importing the same file twice adds nothing")
+
+        // A link conflict must not strand the name: the aborted check once recorded it via `&&`.
+        let stranded = QuicklinkArchive.merge(
+            [
+                link("Fresh", "https://github.com"),  // link conflicts, name is new
+                link("Fresh", "https://fresh.example.com")  // both new, must import
+            ], into: existing)
+        expect(
+            stranded.imported == 1 && stranded.additions.first?.link == "https://fresh.example.com",
+            "a name checked against a conflicting link stays available to a later entry")
     }
 
     static func archiveAcceptsAHandWrittenFile() {

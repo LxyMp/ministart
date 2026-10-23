@@ -368,6 +368,9 @@ run custom-command-test    Tinycast/Platform/PseudoTerminal.swift \
                            Tinycast/Features/CustomCommands/Model/CustomCommand.swift \
                            Tinycast/Features/CustomCommands/UI/CustomCommandEditorSession.swift \
                            Tinycast/Features/CustomCommands/Service/ShellCommandRunner.swift
+run ansi-test              Tinycast/DesignSystem/Theme.swift \
+                           Tinycast/Platform/Appearance.swift \
+                           Tinycast/Features/CustomCommands/UI/TerminalLogView.swift
 run custom-command-list-test Tinycast/Features/CustomCommands/Model/CustomCommand.swift \
                              Tinycast/Features/CustomCommands/UI/CustomCommandListScreen.swift
 run uninstall-coordinator-test Tinycast/Features/Uninstall/Model/*.swift \

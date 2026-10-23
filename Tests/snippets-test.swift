@@ -824,6 +824,12 @@ struct SnippetsTests {
                 selectedRange: NSRange(location: 7, length: 10),
                 keyword: "!tcaxprobe") == .rejected)
         check(
+            "a selection past a lagging value is a torn read, not a mismatch",
+            TextReplacementPolicy.keywordState(
+                value: "prefix !tcaxprob",
+                selectedRange: NSRange(location: 17, length: 0),
+                keyword: "!tcaxprobe") == .pending)
+        check(
             "AX replacement confirmation requires the observable text to actually change",
             TextReplacementPolicy.confirmsReplacement(
                 originalValue: "!tcprobe",
@@ -973,6 +979,24 @@ struct SnippetsTests {
                 && pasteboard.pasteboardItems?.count == 1
                 && pasteboard.data(forType: .png) == Data([9, 8, 7])
                 && pasteboard.string(forType: .string) == nil)
+
+        // An NSPasteboardItem writes to one pasteboard ever, so the fixture is rebuilt fresh.
+        let flakyOriginal = NSPasteboardItem()
+        flakyOriginal.setString("Original", forType: .string)
+        _ = pasteboard.replaceObjects([flakyOriginal])
+        let flakyLease = TemporaryPasteboardLease.begin(
+            text: "Temporary flaky",
+            pasteboard: pasteboard)
+        pasteboard.writeFailuresRemaining = 1
+        let flakyRestore = flakyLease?.restoreIfOwned()
+        check(
+            "a restore whose write fails keeps the lease retryable",
+            flakyRestore == .failed && flakyLease?.isOwned == true)
+        check(
+            "the retry brings the original clipboard back",
+            flakyLease?.restoreIfOwned() == .restored(changeCount: pasteboard.changeCount)
+                && pasteboard.pasteboardItems?.count == 1
+                && pasteboard.string(forType: .string) == "Original")
     }
 
     private static func testStoreWatcher() async throws {

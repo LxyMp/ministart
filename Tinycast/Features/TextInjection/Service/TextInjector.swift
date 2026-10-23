@@ -40,9 +40,9 @@ enum TextReplacementPolicy {
     static func keywordState(
         value: String, selectedRange: NSRange, keyword: String
     ) -> KeywordState {
-        guard selectedRange.length == 0,
-            let selectedStringRange = Range(selectedRange, in: value)
-        else { return .rejected }
+        guard selectedRange.length == 0 else { return .rejected }
+        // A selection past the value's end is a torn read — the value lags the caret — not a mismatch.
+        guard let selectedStringRange = Range(selectedRange, in: value) else { return .pending }
         let beforeCursor = value[..<selectedStringRange.lowerBound]
         guard beforeCursor.count >= keyword.count else { return .pending }
         let start = beforeCursor.index(beforeCursor.endIndex, offsetBy: -keyword.count)
@@ -701,6 +701,10 @@ final class TextInjector {
         keywordLength: Int,
         automaticGeneration: AutomaticGeneration?
     ) async -> AccessibilityTargetState {
+        // The tap runs ahead of the renderer, so reading at once judges a half-applied document.
+        if keywordLength > 0 {
+            guard await wait(for: Self.convergenceInterval) else { return .unavailable }
+        }
         for attempt in 0..<Self.convergenceAttempts {
             let state = inspectAccessibilityTarget(
                 in: targetApp,
@@ -1086,7 +1090,7 @@ final class TemporaryPasteboardLease {
     }
 
     private let pasteboard: any PasteboardAccess
-    private let ownedChangeCount: Int
+    private var ownedChangeCount: Int
     private let original: PasteboardSnapshot
     private var isFinished = false
 
@@ -1139,8 +1143,10 @@ final class TemporaryPasteboardLease {
         }
         guard let items = original.pasteboardItems() else { return .failed }
         pasteboard.clearContents()
-        isFinished = true
+        // The clear bumps the ownership count, and a failed write must leave the lease retryable.
+        ownedChangeCount = pasteboard.changeCount
         guard items.isEmpty || pasteboard.writeObjects(items) else { return .failed }
+        isFinished = true
         return .restored(changeCount: pasteboard.changeCount)
     }
 }

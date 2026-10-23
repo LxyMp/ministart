@@ -114,20 +114,32 @@ struct ANSIInterpreter {
     /// Reads one CSI/OSC body; nil when the sequence has not all arrived yet.
     private static func take(_ characters: inout ArraySlice<Character>) -> String? {
         guard let introducer = characters.first else { return nil }
+        let whole = characters
         characters = characters.dropFirst()
         guard introducer == "[" else {
             // OSC and the rest carry no meaning here; swallow to their terminator.
             while let character = characters.first, character != "\u{07}", character != "\u{1B}" {
                 characters = characters.dropFirst()
             }
+            if characters.first == "\u{07}" {
+                characters = characters.dropFirst()
+                return ""
+            }
+            // Running out before the terminator is a split chunk, so hand it back to wait.
+            if characters.isEmpty {
+                characters = whole
+                return nil
+            }
             return ""
         }
-        var body = ""
+        var consumed = ""
         while let character = characters.first {
             characters = characters.dropFirst()
-            body.append(character)
-            if character.isLetter { return body }
+            consumed.append(character)
+            if character.isLetter { return consumed }
         }
+        // Half a body must be held with its introducer, or the next chunk starts mid-sequence.
+        characters = whole
         return nil
     }
 

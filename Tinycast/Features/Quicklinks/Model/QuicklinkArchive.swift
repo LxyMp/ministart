@@ -59,10 +59,13 @@ enum QuicklinkArchive {
                 skipped += 1
                 continue
             }
-            guard names.insert(name).inserted, links.insert(link).inserted else {
+            // Both are judged before either is recorded, so an aborted link can't strand a name.
+            guard !names.contains(name), !links.contains(link) else {
                 skipped += 1
                 continue
             }
+            names.insert(name)
+            links.insert(link)
             // A fresh identity, so an import can't collide with an existing reference.
             additions.append(
                 Quicklink(

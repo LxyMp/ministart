@@ -318,6 +318,9 @@ where every clause is a rule in it.
 
 1. The focused element exposes `AXSelectedTextMarkerRange` → a renderer surface. Skip Accessibility.
 2. The keyword is not at the caret yet → wait, up to 40 ms. Never arrives → events. Wrong → refuse.
+   The AX tier leads with the same one-interval wait the in-process tier does, because a renderer's
+   `AXValue` lags its caret; a selection the value cannot address is that lag, so it reads as pending
+   rather than a refusal.
 3. Write over Accessibility, read the value back. Matches → done. Unchanged → events. Moved some
    other way → refuse.
 4. Events: delete the keyword, then paste (long or multiline) or type in four-unit keystrokes.
@@ -356,7 +359,9 @@ re-gated loop the deletions use, so a target that goes away mid-word stops the r
 
 Longer or multiline fallback text uses a temporary paste. Tinycast snapshots every item, type and data
 payload, then **lends a board holding nothing but the expansion** — one item carrying the plain text
-and Tinycast's own marker type — and restores by rewriting the snapshot whole.
+and Tinycast's own marker type — and restores by rewriting the snapshot whole. A restore whose write
+fails stays retryable — the lease keeps ownership across its own clearing — so a transient failure
+can't abandon the board empty with the original gone.
 
 **The loan carries no other flavour of the old clipboard.** Keeping the original item's shape and
 swapping only its `.string` would leave `public.html`, `public.rtf` and the rest describing the
