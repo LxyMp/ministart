@@ -123,12 +123,6 @@ When **Default action** is set to Copy to Clipboard, <kbd>return</kbd> and
 | <kbd>⌘</kbd><kbd>E</kbd>      | Edit Snippet   |
 | <kbd>⌘</kbd><kbd>N</kbd>      | Create Snippet |
 
-## Meeting card
-
-| Key                           | Does              |
-| ----------------------------- | ----------------- |
-| <kbd>return</kbd>             | Join Meeting      |
-| <kbd>⌘</kbd><kbd>return</kbd> | Copy Meeting Link |
 
 ## Uninstall
 
@@ -151,24 +145,7 @@ When **Default action** is set to Copy to Clipboard, <kbd>return</kbd> and
 | <kbd>esc</kbd>                | Close the switcher, then hide   |
 | <kbd>⌘</kbd><kbd>delete</kbd> | Move the selected note to Trash |
 
-## Switch Room
 
-| Shortcut                                    | Action                                 |
-| ------------------------------------------- | -------------------------------------- |
-| <kbd>return</kbd>                           | Enter the room                         |
-| <kbd>tab</kbd> / <kbd>⇧</kbd><kbd>tab</kbd> | Next or previous layout that fits      |
-| <kbd>⌘</kbd><kbd>K</kbd>                    | Room actions                           |
-| <kbd>⌘</kbd><kbd>N</kbd>                    | Create a room                          |
-| <kbd>⌘</kbd><kbd>delete</kbd>               | Delete the room; its windows stay open |
-
-In the window picker, <kbd>return</kbd> adds or removes a window and <kbd>⌘</kbd><kbd>return</kbd>
-saves the room.
-
-## Window layout editor
-
-| Key                           | Does |
-| ----------------------------- | ---- |
-| <kbd>⌘</kbd><kbd>return</kbd> | Save |
 
 ## Dialogs
 

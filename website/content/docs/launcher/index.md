@@ -5,7 +5,7 @@ description: One search across everything Tinycast knows about, and how it order
 
 The launcher is the root screen. One search covers your apps, System Settings panes, commands,
 quicklinks, snippets, system actions, window commands and layouts, custom commands,
-extension commands and upcoming meetings.
+extension commands.
 
 <kbd>return</kbd> opens the selection. <kbd>⌘</kbd><kbd>K</kbd> shows everything else you can do
 with it.
@@ -14,14 +14,11 @@ with it.
 
 [Favorites](/docs/launcher/favorites) come first, followed by each section in this order:
 
-Meetings → Applications → System Settings → Extensions → Quicklinks → Snippets → System Actions →
-Window Layouts → Window Management → Custom Commands → Commands
+Applications → System Settings → Extensions → Quicklinks → Snippets → System Actions →
+Custom Commands → Commands
 
 Each section is sorted alphabetically and keeps that order, because a list that reorders itself as
 you use it is hard to scan.
-
-When a meeting is about to start, a [join card](/docs/features/calendar#the-join-card) appears above
-everything else.
 
 ## When you type
 
@@ -39,7 +36,7 @@ appear around it:
 
 ### Listing a whole category
 
-Type a section's exact name, like `Snippets`, `Snippet` or `Window Management`, to list that whole
+Type a section's exact name, like `Snippets`, `Snippet` or `Quicklinks`, to list that whole
 category under its own heading.
 
 The name has to match exactly. An app with exactly that name still appears too, which is why typing
@@ -53,7 +50,7 @@ Tinycast checks several names for each entry and gives some of them more weight 
 | ------------------------------------- | --------------------------------------- |
 | Your [alias](/docs/launcher/aliases)  | `ps` for Photoshop                      |
 | The display name                      | `Visual Studio Code`                    |
-| Other names the app is known by       | `iCal` for Calendar, `微信` as `weixin` |
+| Other names the app is known by       | `微信` as `weixin` |
 | The extension a command comes from    | `lucide` for Lucide's Search Icons      |
 | The bundle identifier or program name | `apple.Photos`                          |
 
@@ -147,7 +144,7 @@ To quit every app at once, use the **Quit All Applications**
 results. The palette stays open on the same search.
 
 It works for apps, System Settings panes, commands, system actions, window commands
-and window layouts. To show an entry again, select its checkbox in the matching Settings pane.
+To show an entry again, select its checkbox in the matching Settings pane.
 On a quicklink or custom command it's **Hide from Root Search**, and you turn **Show in root search**
 back on in its editor.
 

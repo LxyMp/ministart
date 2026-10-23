@@ -11,7 +11,7 @@ your snippets.
 
 | Category             | What's included                                                                                |
 | -------------------- | ---------------------------------------------------------------------------------------------- |
-| Settings & Shortcuts | Shortcuts, custom commands, quicklinks, window layouts, rooms, favorites, aliases, preferences |
+| Settings & Shortcuts | Shortcuts, custom commands, quicklinks, favorites, aliases, preferences |
 | Clipboard History    | Text and image clips with their images, and references to copied files                         |
 | Snippets             | Your snippet Markdown files                                                                    |
 | Notes                | Your note Markdown files                                                                       |
@@ -53,13 +53,11 @@ not just setting a preference:
 
 - **Snippets**: agreeing to keyword matching
 - **Extensions**: agreeing to run third-party code
-- **Calendar**: agreeing to let Tinycast read your calendar
-- **Auto Join Meetings** and **Camera Preview**: agreeing to open links and turn on the camera
 - **Search text in images and PDFs**: agreeing to text recognition in the background
 - **Fallback order and checkboxes**: these could add a shell command runner to your launcher
 
-This means a backup someone sends you can't turn on keystroke listening, run third-party code, read
-your calendar. You turn those features on yourself, in the app, after
+This means a backup someone sends you can't turn on keystroke listening or run third-party code.
+You turn those features on yourself, in the app, after
 reading what they do. Importing snippets doesn't turn snippets on.
 
 ## Other things that aren't included
@@ -68,7 +66,7 @@ reading what they do. Importing snippets doesn't turn snippets on.
 | --------------------------------------------------------------- | ---------------------------------------------------------------- |
 | Extensions: their code, data and sign-ins                       | They're third-party code, and their sign-ins are in the Keychain |
 | Extension registries, package manager, custom search paths      | They're specific to this Mac, not part of your setup             |
-| Palette position, auto-switch input source, calendar checkboxes | They depend on this Mac's displays and hardware                  |
+| Palette position, auto-switch input source | They depend on this Mac's displays and hardware                  |
 | Cached data, like currency rates and update checks              | Tinycast downloads it again as needed                            |
 
 Clipboard images are stored inside the backup by name, not by their location on your Mac. The only

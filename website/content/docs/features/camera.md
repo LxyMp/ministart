@@ -32,5 +32,3 @@ Photos appear in your [clipboard history](/docs/features/clipboard) like any oth
 - The camera turns off as soon as the preview closes, so the green light never stays on.
 - Taking a photo also closes the preview, so the camera doesn't stay on waiting for another shot.
 
-The [Calendar](/docs/features/calendar#camera-preview) feature uses the same preview before a
-meeting.

@@ -217,7 +217,6 @@ date three days in the past means three days ago, not next year.
 A number without a unit after a moment means hours after a time and days after a date: `3:45pm + 5`
 is 8:45 PM, and `august 5 + 5` is 10 August.
 
-Adding months and years follows the calendar: `31.1.26 + 1 month` gives 28 February. `+ 1 day` keeps
 the same clock time across daylight saving changes, while `+ 24 hours` adds exactly 24 hours.
 
 Dates with dots are day first, like `19.2.27` for 19 February 2027, and `28. aug` also works. Dates

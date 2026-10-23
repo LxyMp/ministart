@@ -6,7 +6,7 @@ description: What Tinycast asks for, why it needs it, and when it asks.
 Tinycast asks for a permission **only when you use a feature that needs it**, never at launch. The
 launcher, calculator, emoji picker and search all work without any permissions.
 
-**Settings → Permissions** shows the status of Accessibility and Calendars, and opens the right
+**Settings → Permissions** shows the status of Accessibility, and opens the right
 System Settings pane for you.
 
 ## Accessibility
@@ -23,8 +23,6 @@ Grant it in **System Settings → Privacy & Security → Accessibility**, or fro
 | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
 | [Clipboard](/docs/features/clipboard) and [emoji](/docs/features/emoji) paste | Puts the item into the app you were using              |
 | [Snippets](/docs/features/snippets)                                           | Detects the keyword you type, then inserts the text    |
-| [Window management](/docs/features/window-management) and layouts             | Reads and sets other apps' window frames               |
-| [Navigation](/docs/features/navigation)                                       | Lists open windows and clicks menu bar items           |
 | [Hyper key](/docs/reference/hotkeys#hyper-key)                                | Turns one physical key into a modifier chord           |
 | Double-tap modifier shortcuts                                                 | Detects the tap pattern                                |
 | <kbd>⌘</kbd><kbd>esc</kbd> back to the root search                            | macOS uses this shortcut unless Tinycast intercepts it |
@@ -45,19 +43,10 @@ follows:
 - **Restoring a settings backup can't turn snippets on**, so importing a file someone sent you can
   never enable keystroke listening.
 
-## Calendars
-
-The [Calendar](/docs/features/calendar) feature reads your events to find meeting links.
-
-When you turn it on, Tinycast shows its own explanation first, then the macOS prompt. The feature is
-only on once macOS grants access. If you declined earlier, **Settings → Permissions** opens the
-System Settings pane where you can change it.
-
-Events are read on your Mac and never leave it.
 
 ## Camera
 
-**Open Camera** and the optional camera preview before a meeting ask for camera access the first
+**Open Camera** asks for camera access the first
 time you use them. The camera isn't used before then, and it turns off as soon as the preview closes.
 
 ## Automation and Bluetooth

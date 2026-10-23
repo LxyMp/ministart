@@ -13,8 +13,6 @@ description: Recording global shortcuts, double-tap modifiers, and the Hyper key
 - Every app and every System Settings pane
 - Every quicklink, snippet, custom command and extension command
 - All 31 [system actions](/docs/launcher/system-actions)
-- All 35 [window commands](/docs/features/window-management), every
-  [window layout](/docs/features/window-layouts) and every [room](/docs/features/rooms)
 
 You record each shortcut on the item's row in its Settings pane, and it appears as keycaps on the
 item's launcher row.
@@ -145,7 +143,7 @@ reserved while Secure Input lasts. Other apps' Hyper shortcuts still don't work 
 **Enable System Actions** and **Enable Commands** each turn off every shortcut in their pane.
 
 **Turning off a feature turns off its shortcuts.** File Search, Notes,
-Navigation, Calendar, window commands, quicklinks, snippets, custom commands and extensions all check
+quicklinks, snippets, custom commands and extensions all check
 their switch before doing anything. Turn the feature back on and its shortcuts work again.
 
 A [system action's confirmation](/docs/launcher/system-actions#confirmation) appears when you use its

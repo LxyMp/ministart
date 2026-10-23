@@ -34,12 +34,6 @@ export const defaultSwitches: DefaultSwitch[] = [
     isOn: false,
   },
   {
-    icon: "calendar",
-    name: "Calendar",
-    note: "Tells you what it reads before macOS asks for access. Events stay on your Mac.",
-    isOn: false,
-  },
-  {
     icon: "clipboard",
     name: "Clipboard history",
     note: "Stored on your Mac for 3 months. Ignores copies from Keychain Access and Passwords.",

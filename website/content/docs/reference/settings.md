@@ -45,7 +45,7 @@ See [The palette](/docs/palette), [Learned ranking](/docs/launcher#learned-ranki
 
 ### Permissions
 
-Shows whether **Accessibility** and **Calendars** access is granted, and opens the right System
+Shows whether **Accessibility** access is granted, and opens the right System
 Settings pane. See [Permissions](/docs/permissions).
 
 ## Launcher
@@ -74,11 +74,8 @@ Everything here is **off** by default, except Clipboard and Emoji & Symbols.
 | [File Search](/docs/features/file-search)             | Enable File Search                | Show in launcher (**Off**), Commands, Search Scopes, Ignore Patterns                                                                                                                                                                             |
 | [Notes](/docs/features/notes)                         | Enable Notes                      | Notes commands                                                                                                                                                                                                                                   |
 | [Snippets](/docs/features/snippets)                   | Enable snippets                   | Show in launcher, snippet commands, New Snippet, Snippets Folder                                                                                                                                                                                 |
-| [Navigation](/docs/features/navigation)               | Enable navigation                 | Commands, Show Apple menu items (**Off**), Disabled Applications                                                                                                                                                                                 |
-| [Window Management](/docs/features/window-management) | Enable window management          | Show in launcher, Cycling (**None**), Gap between windows (**0**), window commands, [Window Layouts](/docs/features/window-layouts), [Rooms](/docs/features/rooms)                                                                               |
 | [Clipboard](/docs/features/clipboard)                 | Enable Clipboard History (**On**) | Clipboard commands, Keep history for (**3 Months**), Search text in images and PDFs (**Off**), Default action (**Paste**), Disabled Applications, Clear history                                                                                  |
 | [Emoji & Symbols](/docs/features/emoji)               | _(always on)_                     | Emoji commands, Emoji Skin Tone (**Default**)                                                                                                                                                                                                    |
-| [Calendar](/docs/features/calendar)                   | Join meetings from Tinycast       | Show in launcher, Upcoming meetings in launcher (**5 next**), Days to Show (**Today and Tomorrow**), Show the join card (**5 minutes**), Auto Join Meetings (**Off**), Camera Preview (**Off**), menu bar settings, Calendar commands, Calendars |
 | [Extensions](/docs/extensions)                        | Enable extensions                 | Show in launcher, Compatibility, installed extensions, Install, Registries, Package manager, Storage                                                                                                                                             |
 
 ## Advanced

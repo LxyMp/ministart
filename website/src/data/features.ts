@@ -5,7 +5,6 @@ export type FeaturePreview =
   | "extensions"
   | "clipboard"
   | "calculator"
-  | "windows"
   | "snippets";
 
 export type Feature = {
@@ -51,14 +50,6 @@ export const coreFeatures: Feature[] = [
     isWide: false,
   },
   {
-    icon: "windows",
-    title: "Window management",
-    body: "35 keyboard commands for halves, thirds, nudges and moving between displays, plus layouts you save.",
-    href: "/docs/features/window-management",
-    preview: "windows",
-    isWide: true,
-  },
-  {
     icon: "extensions",
     title: "Raycast extensions",
     body: "Install them from the Raycast Store without Node or a build step. They run in JavaScriptCore and render in SwiftUI.",
@@ -83,16 +74,6 @@ export const moreFeatures: MinorFeature[] = [
     icon: "fileSearch",
     title: "File search",
     href: "/docs/features/file-search",
-  },
-  {
-    icon: "calendar",
-    title: "Calendar & meetings",
-    href: "/docs/features/calendar",
-  },
-  {
-    icon: "navigation",
-    title: "Window & menu search",
-    href: "/docs/features/navigation",
   },
   {
     icon: "quicklinks",
