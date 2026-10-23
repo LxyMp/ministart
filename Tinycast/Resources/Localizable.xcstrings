@@ -16580,6 +16580,16 @@
         }
       }
     },
+    "Restart Ministart": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重启 Ministart"
+          }
+        }
+      }
+    },
     "Restore Defaults": {
       "localizations": {
         "zh-Hans": {
