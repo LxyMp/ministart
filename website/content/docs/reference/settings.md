@@ -54,7 +54,6 @@ Settings pane. See [Permissions](/docs/permissions).
 | --------------- | --------------------------------------------------------------------------------------------------------------- |
 | Applications    | [Search Scopes](/docs/launcher#search-scopes), **Enable Applications**, and a row per app                       |
 | System Settings | **Enable System Settings**, and a row per pane                                                                  |
-| System Actions  | **Enable System Actions**, and a row per action                                                                 |
 | Commands        | **Enable Commands**, a row per built-in command, and [Custom Commands](/docs/launcher/commands#custom-commands) |
 | Quicklinks      | [Quicklinks](/docs/launcher/quicklinks) switch, its commands, behavior, import and export                       |
 | Fallbacks       | Which [fallbacks](/docs/launcher/fallbacks) show under a search, and their order                                |

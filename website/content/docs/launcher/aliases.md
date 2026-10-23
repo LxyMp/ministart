@@ -12,7 +12,7 @@ snippets, and extension commands.
 ## Setting one
 
 Set aliases in **Settings**, in the alias field on the item's row. Every pane that lists launcher
-items has this field, including Applications, System Settings, System Actions, Commands,
+items has this field, including Applications, System Settings, Commands,
 Quicklinks and each feature's own command list. For extensions, the field is next to
 each command's shortcut in **Settings → Extensions**.
 

@@ -162,4 +162,4 @@ See [Hotkeys](/docs/reference/hotkeys) for recording shortcuts and using double-
   shortcut.
 - Clearing one app's checkbox only hides that app from search. Its shortcut keeps working.
 
-System Settings, System Actions and Commands each have the same kind of switch in their own pane.
+System Settings and Commands each have the same kind of switch in their own pane.
