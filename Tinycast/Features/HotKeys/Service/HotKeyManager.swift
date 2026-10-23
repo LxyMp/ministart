@@ -8,7 +8,6 @@ final class HotKeyManager {
     /// The launcher's own command funnel, so a shortcut and a palette row run the same thing.
     var onRunCommand: ((CommandID) -> Void)?
     var onRunCustomCommand: ((UUID) -> Void)?
-    var onRunSystemAction: ((SystemAction.ID) -> Void)?
     var onOpenQuicklink: ((UUID) -> Void)?
     var onRunAppleShortcut: ((UUID) -> Void)?
     var onExpandSnippet: ((StoredSnippet.ID) -> Void)?
@@ -174,7 +173,7 @@ final class HotKeyManager {
             index(id, bound: binding != nil, key: boundSnippetKey)
         case .extensionCommand(let entryID):
             index(entryID, bound: binding != nil, key: boundExtensionCommandKey)
-        case .togglePalette, .command, .systemAction:
+        case .togglePalette, .command:
             break
         }
         candidateActionsCache = nil
@@ -283,7 +282,6 @@ final class HotKeyManager {
         actions += boundAppleShortcutIDs.map { .appleShortcut(id: $0) }
         actions += boundSnippetIDs.map { .snippet(id: $0) }
         actions += boundExtensionCommandEntryIDs.map { .extensionCommand(entryID: $0) }
-        actions += SystemAction.ID.allCases.map { .systemAction(id: $0) }
         candidateActionsCache = actions
         return actions
     }
@@ -298,8 +296,6 @@ final class HotKeyManager {
             return displayName?(action) ?? bundleID
         case .customCommand:
             return displayName?(action) ?? String(localized: "Custom Command")
-        case .systemAction(let id):
-            return SystemActionCatalog.action(id: id).name
         case .quicklink:
             return displayName?(action) ?? String(localized: "Quicklink")
         case .appleShortcut:
@@ -338,7 +334,6 @@ final class HotKeyManager {
         case .app(let bundleID): AppLauncher.toggle(bundleID: bundleID)
         case .settingsPane(let bundleID): AppLauncher.openSettingsPane(bundleID: bundleID)
         case .customCommand(let id): onRunCustomCommand?(id)
-        case .systemAction(let id): onRunSystemAction?(id)
         case .quicklink(let id): onOpenQuicklink?(id)
         case .appleShortcut(let id): onRunAppleShortcut?(id)
         case .snippet(let id): onExpandSnippet?(id)

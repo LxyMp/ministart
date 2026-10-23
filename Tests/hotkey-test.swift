@@ -330,14 +330,6 @@ struct DoubleTapDetectorTests {
         expect(
             CommandID.createCustomCommand.englishName == "Create Custom Command",
             "launcher search keeps the explicit English command name")
-        expect(
-            HotKeyAction.systemAction(id: .toggleMicrophoneMute).defaultsKey
-                == "hotkey.systemAction.toggle-microphone-mute",
-            "microphone mute persists under its own global hotkey key")
-        expect(
-            HotKeyAction.systemAction(id: .toggleMicrophoneMute).defaultsKey
-                != HotKeyAction.systemAction(id: .toggleMute).defaultsKey,
-            "microphone and output mute can have independent hotkeys")
         let unbindable = Set(CommandID.allCases.filter { $0.hotKeyAction == nil })
         expect(
             unbindable == [.openInBrowser, .runShellCommand, .quit],

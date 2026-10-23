@@ -499,7 +499,7 @@ enum CommandCatalog {
 enum HotKeyAction: Hashable, Sendable {
     case togglePalette, command(CommandID)
     case app(bundleID: String), settingsPane(bundleID: String)
-    case customCommand(id: UUID), systemAction(id: SystemAction.ID)
+    case customCommand(id: UUID)
     case quicklink(id: UUID)
     case appleShortcut(id: UUID), snippet(id: UUID), extensionCommand(entryID: String)
 }

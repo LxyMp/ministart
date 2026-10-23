@@ -221,7 +221,7 @@ struct LauncherSettingsFileTest {
 
 // In-memory scanning and Carbon keep the shipped bindings and stores safe to test.
 struct AppEntry: Sendable {
-    enum Kind: String, Sendable { case application, systemSettings, systemAction, command, quickAction }
+    enum Kind: String, Sendable { case application, systemSettings, command }
     let id: String
     let name: String
     let url: URL

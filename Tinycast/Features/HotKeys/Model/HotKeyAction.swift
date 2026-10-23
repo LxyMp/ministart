@@ -8,7 +8,6 @@ enum HotKeyAction: Hashable, Sendable {
     case app(bundleID: String)
     case settingsPane(bundleID: String)
     case customCommand(id: UUID)
-    case systemAction(id: SystemAction.ID)
     case quicklink(id: UUID)
     case appleShortcut(id: UUID)
     case snippet(id: StoredSnippet.ID)
@@ -23,7 +22,6 @@ enum HotKeyAction: Hashable, Sendable {
         case .app(let bundleID): "hotkey.app." + bundleID
         case .settingsPane(let bundleID): "hotkey.pane." + bundleID
         case .customCommand(let id): "hotkey.customCommand." + id.uuidString.lowercased()
-        case .systemAction(let id): "hotkey.systemAction." + id.rawValue
         case .quicklink(let id): "hotkey.quicklink." + id.uuidString.lowercased()
         case .appleShortcut(let id): "hotkey.appleShortcut." + id.uuidString.lowercased()
         case .snippet(let id): "hotkey.snippet." + id

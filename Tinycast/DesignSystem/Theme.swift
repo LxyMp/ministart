@@ -239,9 +239,7 @@ enum Theme {
         static let hudWidth: CGFloat = 200
         static let hudHeight: CGFloat = 100
         /// Read-only volume bar geometry used by the HUD.
-        static let volumeTrackHeight: CGFloat = 6
         /// Fixed slot for the level readout, sized to the widest string it ever holds.
-        static let volumeReadout: CGFloat = 38
         static let roomCardTitleBar: CGFloat = 40
         static let roomCardStroke: CGFloat = 2
         static let roomCardShadowRadius: CGFloat = 24

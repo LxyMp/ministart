@@ -18,13 +18,12 @@ final class LauncherSettingsFile {
 
     /// What a section's records are, so every message naming one is a whole sentence.
     private enum Noun {
-        case app, settingsPane, systemAction, command
+        case app, settingsPane, command
 
         func label(_ name: String) -> String {
             switch self {
             case .app: String(localized: "app “\(name)”")
             case .settingsPane: String(localized: "settings pane “\(name)”")
-            case .systemAction: String(localized: "system action “\(name)”")
             case .command: String(localized: "command “\(name)”")
             }
         }
@@ -33,7 +32,6 @@ final class LauncherSettingsFile {
             switch self {
             case .app: String(localized: "no app in this section is called “\(name)”")
             case .settingsPane: String(localized: "no settings pane in this section is called “\(name)”")
-            case .systemAction: String(localized: "no system action in this section is called “\(name)”")
             case .command: String(localized: "no command in this section is called “\(name)”")
             }
         }
@@ -73,15 +71,6 @@ final class LauncherSettingsFile {
 
     func panesBinding(for key: SettingsFileKey) -> SettingsFileBinding {
         bundlesBinding(for: key, .pane)
-    }
-
-    func systemActionsBinding(for key: SettingsFileKey) -> SettingsFileBinding {
-        let items = SystemActionCatalog.all.map { action in
-            Item(
-                name: action.id.rawValue, preferenceKey: action.entryID,
-                action: .systemAction(id: action.id))
-        }
-        return catalogBinding(for: key, items: items, noun: .systemAction)
     }
 
     /// The built-in commands `owner` lists; nil is the Commands pane's own.

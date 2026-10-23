@@ -75,9 +75,7 @@ final class AppCore {
     @ObservationIgnored private(set) lazy var settingsCoordinator = SettingsCoordinator(core: self)
     @ObservationIgnored private(set) lazy var onboardingCoordinator = OnboardingCoordinator(
         core: self)
-    @ObservationIgnored private(set) lazy var systemActionCoordinator = SystemActionCoordinator(
-        paletteCoordinator: paletteCoordinator, core: self)
-    @ObservationIgnored private(set) lazy var uninstallCoordinator = UninstallCoordinator(
+@ObservationIgnored private(set) lazy var uninstallCoordinator = UninstallCoordinator(
         session: uninstall, palette: palette, paletteCoordinator: paletteCoordinator,
         appIndex: appIndex, runningApps: runningApps, hotKeys: hotKeys, favorites: favorites,
         visibility: visibility, ranking: launcherRanking, aliases: aliases, core: self)
@@ -110,7 +108,6 @@ final class AppCore {
         paletteCoordinator: paletteCoordinator,
         settingsCoordinator: settingsCoordinator,
         customCommandCoordinator: customCommandCoordinator,
-        systemActionCoordinator: systemActionCoordinator,
         quicklinkCoordinator: quicklinkCoordinator,
         snippetCoordinator: snippetCoordinator, fileSearchCoordinator: fileSearchCoordinator,
         notesCoordinator: notesCoordinator, extensionCoordinator: extensionCoordinator,
@@ -234,9 +231,6 @@ final class AppCore {
             hotKeys.onRunCustomCommand = { [weak self] id in
                 self?.customCommandCoordinator.runCustomCommand(id: id)
             }
-            hotKeys.onRunSystemAction = { [weak self] id in
-                self?.systemActionCoordinator.runSystemAction(id: id)
-            }
             hotKeys.onOpenQuicklink = { [weak self] id in
                 self?.quicklinkCoordinator.openQuicklinkFromHotKey(id: id)
             }
@@ -272,9 +266,6 @@ final class AppCore {
             KeyShortcut.displayedHyperChord = { [settings] in
                 guard settings.hyperKey != .none else { return nil }
                 return KeyShortcut.hyperChord(includesShift: settings.hyperKeyIncludesShift)
-            }
-            SystemActionRunner.onAsyncFailure = { [weak self] id, failure in
-                self?.systemActionCoordinator.presentSystemActionFailure(id: id, failure: failure)
             }
             hotKeys.start(
                 customCommandIDs: Set(customCommands.commands.map(\.id)),
@@ -353,7 +344,7 @@ final class AppCore {
             return snippetsStore.record(id: id)?.snippet.name
         case .extensionCommand(let entryID):
             return appIndex.apps.first { $0.kind == .extensionCommand && $0.id == entryID }?.name
-        case .togglePalette, .command, .systemAction:
+        case .togglePalette, .command:
             return nil
         }
     }
@@ -650,10 +641,6 @@ final class AppCore {
 
     func hideProgress() {
         messageHUD.dismiss()
-    }
-
-    func pickVolume(current: Float32) async -> Float32? {
-        await dialogs.pickVolume(current: current)
     }
 
     func fillSnippetArguments(

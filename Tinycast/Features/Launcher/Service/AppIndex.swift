@@ -7,7 +7,6 @@ struct AppEntry: Identifiable, Hashable, Sendable {
         case command
         case customCommand
         case snippet
-        case systemAction
         case quicklink
         case appleShortcut
         case extensionCommand
@@ -39,11 +38,6 @@ struct AppEntry: Identifiable, Hashable, Sendable {
                     label: "Snippet", sectionTitle: "Snippets",
                     openVerb: "Paste Snippet", canHideFromSearch: false,
                     canRevealInFinder: true, canDragOut: false, isSymbolIcon: true, rankPriority: 3)
-            case .systemAction:
-                return KindDescriptor(
-                    label: "System Action", sectionTitle: "System Actions",
-                    openVerb: "Run System Action", canHideFromSearch: true,
-                    canRevealInFinder: false, canDragOut: false, isSymbolIcon: true, rankPriority: 3)
             case .quicklink:
                 return KindDescriptor(
                     label: "Quicklink", sectionTitle: "Quicklinks",
@@ -147,8 +141,6 @@ struct AppEntry: Identifiable, Hashable, Sendable {
             return bundleID.map { .settingsPane(bundleID: $0) }
         case .customCommand:
             return CustomCommand.id(fromEntryID: id).map { .customCommand(id: $0) }
-        case .systemAction:
-            return SystemActionCatalog.action(forEntryID: id).map { .systemAction(id: $0.id) }
         case .quicklink:
             return Quicklink.id(fromEntryID: id).map { .quicklink(id: $0) }
         case .appleShortcut:
@@ -181,7 +173,6 @@ struct AppEntry: Identifiable, Hashable, Sendable {
         case .snippet: return "text.quote"
         case .customCommand: return CustomCommand.sfSymbol
         case .command: return CommandCatalog.command(for: self)?.sfSymbol ?? "questionmark"
-        case .systemAction: return SystemActionCatalog.action(forEntryID: id)?.sfSymbol ?? "questionmark"
         case .application, .systemSettings, .appleShortcut, .extensionCommand: return "questionmark"
         }
     }
@@ -296,15 +287,6 @@ final class AppIndex {
     @ObservationIgnored private var matchMemo = Memo<MatchKey, Results>()
     @ObservationIgnored private var resultsMemo = Memo<ResultsKey, Results>()
     private var entriesRevision = 0
-
-    private static let systemActionEntries: [AppEntry] = SystemActionCatalog.all
-        .map { command in
-            AppEntry(
-                id: command.entryID, name: command.name,
-                url: URL(string: "tinycast://system-action/" + command.id.rawValue)!,
-                bundleID: nil, kind: .systemAction, alternateTitles: [command.englishName])
-        }
-        .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
     private var discoveredEntries: [AppEntry] = []
     private var customCommandEntries: [AppEntry] = []
@@ -557,7 +539,6 @@ final class AppIndex {
             discoveredEntries
             + Self.named(
                 extensionEntries + quicklinkEntries + appleShortcutEntries + snippetEntries
-                    + Self.systemActionEntries
                     + customCommandEntries + commandEntries)
         guard updated != searchEntries else { return }
         searchEntries = updated
