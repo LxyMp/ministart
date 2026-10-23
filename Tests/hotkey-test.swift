@@ -290,14 +290,6 @@ struct DoubleTapDetectorTests {
             !HotKeyBinding.modifier(.leftCommand).conflicts(with: .doubleModifier(.leftCommand)),
             "a single and double tap can coexist")
         expect(
-            HotKeyBinding.modifier(.leftCommand).conflicts(
-                with: .doubleModifier(.leftCommand), holdsModifier: true),
-            "a hold reserves its key across single and double taps")
-        expect(
-            HotKeyBinding.modifier(.leftCommand).conflicts(
-                with: .doubleTap(.command), holdsModifier: true),
-            "a hold cannot shadow a generic double tap")
-        expect(
             spelling.binding(from: "left cmd+k") == nil,
             "ordinary combinations remain side-agnostic")
     }
@@ -369,13 +361,6 @@ struct DoubleTapDetectorTests {
             HotKeyAction.builtInActions.contains(.togglePalette),
             "the launcher toggle is bindable without a command row of its own")
 
-        // Every action reaches the launcher as well as a shortcut; `CommandID.init` is exhaustive.
-        expect(
-            BuiltInQuickAction.allCases.allSatisfy { CommandID($0).name == $0.title },
-            "each Quick Action's command carries the action's own title")
-        expect(
-            Set(BuiltInQuickAction.allCases.map(CommandID.init)).count == BuiltInQuickAction.allCases.count,
-            "no two Quick Actions share a launcher command")
         expect(
             Set(HotKeyAction.builtInActions.map(\.defaultsKey)).count
                 == HotKeyAction.builtInActions.count,
@@ -547,7 +532,7 @@ struct DoubleTapDetectorTests {
                     for time in [0.0, 1.0] {
                         expect(
                             sided.handle(keys, at: time) == .cancelled,
-                            "\(context): Hyper cannot start dictation's lone-key hold")
+                            "\(context): Hyper cannot start a lone-key hold")
                         expect(
                             sided.handle(keys, at: time + 0.01) == nil,
                             "\(context): repeated Hyper flags cannot start a hold")

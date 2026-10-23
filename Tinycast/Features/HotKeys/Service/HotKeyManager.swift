@@ -5,23 +5,6 @@ import Foundation
 @Observable
 final class HotKeyManager {
     var onTogglePalette: (() -> Void)?
-    var onDictationPressed: (() -> Void)?
-    var onDictationReleased: (() -> Void)?
-    var onDictationCancelled: (() -> Void)?
-    var dictationEnabled = false {
-        didSet {
-            guard dictationEnabled != oldValue else { return }
-            if !dictationEnabled { onDictationCancelled?() }
-            syncModifierTaps()
-        }
-    }
-    var dictationHoldToTalk = false {
-        didSet {
-            guard dictationHoldToTalk != oldValue else { return }
-            onDictationCancelled?()
-            syncModifierTaps()
-        }
-    }
     /// The launcher's own command funnel, so a shortcut and a palette row run the same thing.
     var onRunCommand: ((CommandID) -> Void)?
     var onRunCustomCommand: ((UUID) -> Void)?
@@ -31,7 +14,6 @@ final class HotKeyManager {
     var onEnterRoom: ((UUID) -> Void)?
     var onRunCustomWindowSize: ((UUID) -> Void)?
     var onOpenQuicklink: ((UUID) -> Void)?
-    var onRunQuickAction: ((UUID) -> Void)?
     var onRunAppleShortcut: ((UUID) -> Void)?
     var onExpandSnippet: ((StoredSnippet.ID) -> Void)?
     var onRunExtensionCommand: ((String) -> Void)?
@@ -45,7 +27,6 @@ final class HotKeyManager {
         didSet {
             guard recordingAction != oldValue else { return }
             let recording = recordingAction != nil
-            if recording, dictationEnabled, dictationHoldToTalk { onDictationCancelled?() }
             if recording { secureInputPressedActions.removeAll(keepingCapacity: true) }
             center.isPaused = recording
             modifierTapMonitor.isPaused = recording
@@ -74,7 +55,6 @@ final class HotKeyManager {
     private var bindings: [HotKeyAction: HotKeyBinding] = [:]
     /// Part of `AppIndex`'s cache key: a bound entry leaves the launcher's Suggestions.
     private(set) var revision = 0
-    var bindsDictationKey: Bool { bindings.values.contains { $0.shortcut?.isDictationKey == true } }
     @ObservationIgnored private var candidateActionsCache: [HotKeyAction]?
     // Reused: the startup load decodes once per candidate action.
     private let decoder = JSONDecoder()
@@ -83,7 +63,6 @@ final class HotKeyManager {
     private let boundPaneKey = "boundPaneBundleIDs"
     private let boundCustomCommandKey = "boundCustomCommandIDs"
     private let boundQuicklinkKey = "boundQuicklinkIDs"
-    private let boundQuickActionKey = "boundQuickActionIDs"
     private let boundWindowLayoutKey = "boundWindowLayoutIDs"
     private let boundWindowRoomKey = "boundWindowRoomIDs"
     private let boundCustomWindowSizeKey = "boundCustomWindowSizeIDs"
@@ -97,7 +76,7 @@ final class HotKeyManager {
 
     func start(
         customCommandIDs: Set<UUID>, quicklinkIDs: Set<UUID>, windowLayoutIDs: Set<UUID>,
-        windowRoomIDs: Set<UUID>, customWindowSizeIDs: Set<UUID>, quickActionIDs: Set<UUID>
+        windowRoomIDs: Set<UUID>, customWindowSizeIDs: Set<UUID>
     ) {
         prune(key: boundCustomCommandKey, live: customCommandIDs) { .customCommand(id: $0) }
         prune(key: boundQuicklinkKey, live: quicklinkIDs) { .quicklink(id: $0) }
@@ -106,7 +85,6 @@ final class HotKeyManager {
         prune(key: boundCustomWindowSizeKey, live: customWindowSizeIDs) {
             .customWindowSize(id: $0)
         }
-        prune(key: boundQuickActionKey, live: quickActionIDs) { .quickAction(id: $0) }
         // After the prunes, so a dropped record can't survive in memory this session.
         for action in candidateActions { bindings[action] = storedBinding(for: action) }
         revision &+= 1
@@ -118,9 +96,6 @@ final class HotKeyManager {
             guard let self, let action = modifierTaps[binding] else { return }
             perform(action)
         }
-        modifierTapMonitor.onHoldPressed = { [weak self] in self?.perform(.dictation) }
-        modifierTapMonitor.onHoldReleased = { [weak self] in self?.onDictationReleased?() }
-        modifierTapMonitor.onHoldCancelled = { [weak self] in self?.onDictationCancelled?() }
         modifierTapMonitor.start()
         syncModifierTaps()
     }
@@ -150,8 +125,6 @@ final class HotKeyManager {
     var boundWindowRoomIDs: [UUID] { boundIDs(key: boundWindowRoomKey) }
 
     var boundCustomWindowSizeIDs: [UUID] { boundIDs(key: boundCustomWindowSizeKey) }
-
-    var boundQuickActionIDs: [UUID] { boundIDs(key: boundQuickActionKey) }
 
     /// Pruned by `AppleShortcutCoordinator` after a successful read, never here at launch.
     var boundAppleShortcutIDs: [UUID] { boundIDs(key: boundAppleShortcutKey) }
@@ -190,7 +163,6 @@ final class HotKeyManager {
     }
 
     func setBinding(_ binding: HotKeyBinding?, for action: HotKeyAction) {
-        if action == .dictation, binding != self.binding(for: action) { onDictationCancelled?() }
         let previous = bindings[action]
         clearSecureInputEquivalents()
         if let binding,
@@ -217,8 +189,6 @@ final class HotKeyManager {
             index(id, bound: binding != nil, key: boundCustomCommandKey)
         case .quicklink(let id):
             index(id, bound: binding != nil, key: boundQuicklinkKey)
-        case .quickAction(let id):
-            index(id, bound: binding != nil, key: boundQuickActionKey)
         case .windowLayout(let id):
             index(id, bound: binding != nil, key: boundWindowLayoutKey)
         case .windowRoom(let id):
@@ -231,7 +201,7 @@ final class HotKeyManager {
             index(id, bound: binding != nil, key: boundSnippetKey)
         case .extensionCommand(let entryID):
             index(entryID, bound: binding != nil, key: boundExtensionCommandKey)
-        case .togglePalette, .dictation, .command, .systemAction, .windowCommand:
+        case .togglePalette, .command, .systemAction, .windowCommand:
             break
         }
         candidateActionsCache = nil
@@ -291,16 +261,13 @@ final class HotKeyManager {
                 },
                 onKeyUp: { [weak self] in
                     isPressed = false
-                    if self?.secureInputPressedActions.removeValue(forKey: id) == .dictation {
-                        self?.onDictationReleased?()
-                    }
+                    self?.secureInputPressedActions.removeValue(forKey: id)
                 })
             secureInputEquivalentIDs.append(id)
         }
     }
 
     private func clearSecureInputEquivalents() {
-        if secureInputPressedActions.values.contains(.dictation) { onDictationCancelled?() }
         secureInputPressedActions.removeAll(keepingCapacity: true)
         secureInputEquivalentIDs.forEach { center.unregister(id: $0) }
         secureInputEquivalentIDs.removeAll(keepingCapacity: true)
@@ -325,11 +292,7 @@ final class HotKeyManager {
     func conflictOwner(of binding: HotKeyBinding, excluding action: HotKeyAction) -> String? {
         for candidate in candidateActions where candidate != action {
             guard let other = self.binding(for: candidate) else { continue }
-            let holdsModifier =
-                dictationHoldToTalk
-                && (action == .dictation && binding.holdKey != nil
-                    || candidate == .dictation && other.holdKey != nil)
-            if binding.conflicts(with: other, holdsModifier: holdsModifier) {
+            if binding.conflicts(with: other) {
                 return displayName(of: candidate)
             }
         }
@@ -344,7 +307,6 @@ final class HotKeyManager {
         actions += boundPaneBundleIDs.map { .settingsPane(bundleID: $0) }
         actions += boundCustomCommandIDs.map { .customCommand(id: $0) }
         actions += boundQuicklinkIDs.map { .quicklink(id: $0) }
-        actions += boundQuickActionIDs.map { .quickAction(id: $0) }
         actions += boundWindowLayoutIDs.map { .windowLayout(id: $0) }
         actions += boundWindowRoomIDs.map { .windowRoom(id: $0) }
         actions += boundCustomWindowSizeIDs.map { .customWindowSize(id: $0) }
@@ -361,8 +323,6 @@ final class HotKeyManager {
         switch action {
         case .togglePalette:
             return String(localized: "App Launcher")
-        case .dictation:
-            return String(localized: "Dictation")
         case .command(let id):
             return id.name
         case .app(let bundleID), .settingsPane(let bundleID):
@@ -381,8 +341,6 @@ final class HotKeyManager {
             return displayName?(action) ?? String(localized: "Custom Size")
         case .quicklink:
             return displayName?(action) ?? String(localized: "Quicklink")
-        case .quickAction:
-            return displayName?(action) ?? String(localized: "Quick Action")
         case .appleShortcut:
             return displayName?(action) ?? String(localized: "Apple Shortcut")
         case .snippet:
@@ -397,28 +355,17 @@ final class HotKeyManager {
         guard let shortcut = binding(for: action)?.shortcut else { return }
         center.register(
             id: action.defaultsKey, shortcut: shortcut,
-            onKeyDown: { [weak self] _ in self?.perform(action) },
-            onKeyUp: action == .dictation ? { [weak self] in self?.onDictationReleased?() } : nil)
+            onKeyDown: { [weak self] _ in self?.perform(action) })
     }
 
     /// Rebuilt wholesale, so the map can't drift from what is on disk.
     private func syncModifierTaps() {
         modifierTaps = [:]
-        let dictationBinding = binding(for: .dictation)
-        let holdKey = dictationHoldToTalk ? dictationBinding?.holdKey : nil
         for action in candidateActions {
             guard let binding = binding(for: action), binding.usesModifierTapMonitor else { continue }
-            if action == .dictation, !dictationEnabled { continue }
-            if action == .dictation, dictationHoldToTalk {
-                guard holdKey != nil, conflictOwner(of: binding, excluding: action) == nil else {
-                    continue
-                }
-            }
             modifierTaps[binding] = action
         }
-        modifierTapMonitor.update(
-            bound: Set(modifierTaps.keys),
-            holdKey: dictationBinding.flatMap { modifierTaps[$0] == .dictation ? holdKey : nil })
+        modifierTapMonitor.update(bound: Set(modifierTaps.keys))
     }
 
     private func perform(_ action: HotKeyAction) {
@@ -426,7 +373,6 @@ final class HotKeyManager {
         guard allowsAction?(action) ?? true else { return }
         switch action {
         case .togglePalette: onTogglePalette?()
-        case .dictation: onDictationPressed?()
         case .command(let id): onRunCommand?(id)
         case .app(let bundleID): AppLauncher.toggle(bundleID: bundleID)
         case .settingsPane(let bundleID): AppLauncher.openSettingsPane(bundleID: bundleID)
@@ -437,7 +383,6 @@ final class HotKeyManager {
         case .windowRoom(let id): onEnterRoom?(id)
         case .customWindowSize(let id): onRunCustomWindowSize?(id)
         case .quicklink(let id): onOpenQuicklink?(id)
-        case .quickAction(let id): onRunQuickAction?(id)
         case .appleShortcut(let id): onRunAppleShortcut?(id)
         case .snippet(let id): onExpandSnippet?(id)
         case .extensionCommand(let entryID): onRunExtensionCommand?(entryID)

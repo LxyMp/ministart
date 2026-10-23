@@ -42,7 +42,6 @@ final class FallbackCoordinator {
 
     func run(_ fallback: Fallback, query: String) {
         switch fallback {
-        case .builtin(.quickAI): core.quickAICoordinator.ask(query)
         case .builtin(.searchFiles): core.fileSearchCoordinator.show(query: query)
         case .builtin(.runShellCommand): core.customCommandCoordinator.runShellCommand(query)
         case .builtin(.define): core.dictionaryCoordinator.show(term: query)
@@ -69,7 +68,6 @@ final class FallbackCoordinator {
 
     private func isAvailable(_ builtin: Fallback.Builtin) -> Bool {
         switch builtin {
-        case .quickAI: return settings.aiEnabled
         case .searchFiles: return settings.fileSearchEnabled
         // Its own capability: this shell is not the custom-command library's switch to hold.
         case .runShellCommand: return true

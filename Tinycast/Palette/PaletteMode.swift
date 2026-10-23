@@ -3,8 +3,6 @@ import AppKit
 enum PaletteMode: String, CaseIterable, Identifiable {
     case launcher
     case clipboard
-    case ai
-    case aiHistory
     case calculatorHistory
     case emoji
     case fileSearch
@@ -38,8 +36,6 @@ enum PaletteMode: String, CaseIterable, Identifiable {
         switch self {
         case .launcher: return "magnifyingglass"
         case .clipboard: return "doc.on.doc"
-        case .ai: return "sparkles"
-        case .aiHistory: return "clock.arrow.circlepath"
         case .calculatorHistory: return "plus.forwardslash.minus"
         case .emoji: return "face.smiling"
         case .fileSearch: return "doc.text.magnifyingglass"
@@ -62,8 +58,6 @@ enum PaletteMode: String, CaseIterable, Identifiable {
         switch self {
         case .launcher: return String(localized: "Search for apps and commands…")
         case .clipboard: return String(localized: "Type to filter entries…")
-        case .ai: return String(localized: "Ask anything…")
-        case .aiHistory: return String(localized: "Search chats…")
         case .calculatorHistory:
             return String(localized: "Do math, convert units, or search your past calculations…")
         case .emoji: return String(localized: "Search emoji and symbols…")

@@ -1,13 +1,6 @@
 import Foundation
 
 enum CommandID: String, CaseIterable, Sendable {
-    /// The palette's chat keeps the id it shipped with, so its hotkeys and fallback still reach it.
-    case quickAI = "command:ai-chat"
-    case aiChat = "command:ai-chat-window"
-    case fixGrammar = "command:fix-grammar"
-    case rewrite = "command:rewrite"
-    case translate = "command:translate"
-    case summarize = "command:summarize"
     case calculatorHistory = "command:calculator-history"
     case clipboardHistory = "command:clipboard-history"
     case pasteSequentially = "command:paste-sequentially"
@@ -55,12 +48,6 @@ enum CommandID: String, CaseIterable, Sendable {
 
     private var nameResource: LocalizedStringResource {
         switch self {
-        case .quickAI: return "Quick AI"
-        case .aiChat: return "AI Chat"
-        case .fixGrammar: return BuiltInQuickAction.fixGrammar.titleResource
-        case .rewrite: return BuiltInQuickAction.rewrite.titleResource
-        case .translate: return BuiltInQuickAction.translate.titleResource
-        case .summarize: return BuiltInQuickAction.summarize.titleResource
         case .calculatorHistory: return "Calculator History"
         case .clipboardHistory: return "Clipboard History"
         case .pasteSequentially: return "Paste Sequentially"
@@ -106,12 +93,6 @@ enum CommandID: String, CaseIterable, Sendable {
 
     var sfSymbol: String {
         switch self {
-        case .quickAI: return "sparkles"
-        case .aiChat: return "bubble.left.and.bubble.right"
-        case .fixGrammar: return BuiltInQuickAction.fixGrammar.symbol
-        case .rewrite: return BuiltInQuickAction.rewrite.symbol
-        case .translate: return BuiltInQuickAction.translate.symbol
-        case .summarize: return BuiltInQuickAction.summarize.symbol
         case .calculatorHistory: return "plus.forwardslash.minus"
         case .clipboardHistory: return "doc.on.clipboard"
         case .pasteSequentially: return "list.bullet.clipboard"
@@ -151,35 +132,6 @@ enum CommandID: String, CaseIterable, Sendable {
         case .about: return "info.circle"
         case .support: return "heart"
         case .quit: return "power"
-        }
-    }
-
-    /// Exhaustive, so a fifth shipped action cannot reach the launcher without a row here.
-    init(_ action: BuiltInQuickAction) {
-        switch action {
-        case .fixGrammar: self = .fixGrammar
-        case .rewrite: self = .rewrite
-        case .translate: self = .translate
-        case .summarize: self = .summarize
-        }
-    }
-
-    var builtInQuickAction: BuiltInQuickAction? {
-        switch self {
-        case .fixGrammar: return .fixGrammar
-        case .rewrite: return .rewrite
-        case .translate: return .translate
-        case .summarize: return .summarize
-        default: return nil
-        }
-    }
-
-    /// Queries this command wins until the user opens a rival more.
-    var boostedTerms: Set<String> {
-        switch self {
-        case .quickAI: ["ai"]
-        case .aiChat: ["chat"]
-        default: []
         }
     }
 

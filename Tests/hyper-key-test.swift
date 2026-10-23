@@ -28,7 +28,7 @@ struct HyperKeyTest {
 
     static let toF18 = HIDKeyMapping.capsLockToF18
     static let toRightControl = HIDKeyMapping.capsLockToRightControl
-    static let toF20 = HIDKeyMapping.dictationKeyToF20
+    static let toSecondKey = HIDKeyMapping(source: 0x7_0000_0089, destination: 0x7_0000_006F)
     static let otherTool = HIDKeyMapping(source: 0x7_0000_0029, destination: 0x7_0000_0035)
 
     static func keyMappingReconcile() {
@@ -270,22 +270,22 @@ struct HyperKeyTest {
             check("missing HID SPI reports failure", !remapper.apply(toF18))
         }
         fixture { remapper, defaults in
-            let dictationKey = "dictationKeyKeyboardMappings"
-            let dictation = KeyboardRemapper(defaults: defaults, recoveryKey: dictationKey)
+            let secondKey = "secondKeyKeyboardMappings"
+            let second = KeyboardRemapper(defaults: defaults, recoveryKey: secondKey)
             HIDEventSystem.mappings[1] = [otherTool]
             remapper.apply(toF18)
-            dictation.apply(toF20)
+            second.apply(toSecondKey)
             check(
-                "Caps Lock and 🎤 remaps share a keyboard",
-                HIDEventSystem.mappings[1] == [otherTool, toF18, toF20])
+                "two remaps share a keyboard",
+                HIDEventSystem.mappings[1] == [otherTool, toF18, toSecondKey])
             check(
                 "each remapper keeps its own recovery journal",
-                defaults.data(forKey: recoveryKey) != nil && defaults.data(forKey: dictationKey) != nil)
-            dictation.apply(nil)
-            check("removing 🎤 keeps Caps Lock", HIDEventSystem.mappings[1] == [otherTool, toF18])
-            dictation.apply(toF20)
+                defaults.data(forKey: recoveryKey) != nil && defaults.data(forKey: secondKey) != nil)
+            second.apply(nil)
+            check("removing the second keeps Caps Lock", HIDEventSystem.mappings[1] == [otherTool, toF18])
+            second.apply(toSecondKey)
             remapper.apply(nil)
-            check("removing Caps Lock keeps 🎤", HIDEventSystem.mappings[1] == [otherTool, toF20])
+            check("removing Caps Lock keeps the second", HIDEventSystem.mappings[1] == [otherTool, toSecondKey])
         }
         fixture { remapper, _ in
             HIDEventSystem.devices = []

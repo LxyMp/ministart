@@ -4,7 +4,6 @@ import SwiftUI
 enum Theme {
     enum Spacing {
         static let xxs: CGFloat = 2
-        static let dictationWaveGap: CGFloat = 3
         static let xs: CGFloat = 4
         static let sm: CGFloat = 6
         static let md: CGFloat = 8
@@ -15,12 +14,8 @@ enum Theme {
         static let xxxl: CGFloat = 28
         /// Gap under a category header, shared by every palette list's `SectionHeader`.
         static let sectionHeaderBottom: CGFloat = 4
-        /// Clearance under the last message, so its actions row belongs to it, not to the footer.
-        static let chatTranscriptBottom: CGFloat = 28
-        /// A stream grows the transcript as the reader descends, so an exact-bottom test runs away.
+        /// A stream grows the view as the reader descends, so an exact-bottom test runs away.
         static let chatFollowTailSlack: CGFloat = 44
-        /// Extra leading between a transcript's lines, so a long reply reads as paragraphs.
-        static let chatLine: CGFloat = 4
         /// Space above every header but the first, reading as the previous section's close.
         static let sectionSpacing: CGFloat = 12
         /// Emoji tiles need a little more separation so adjacent category grids stay distinct.
@@ -194,25 +189,6 @@ enum Theme {
         static let settingsRowIcon: CGFloat = 20
         /// Inside its tinted tile, whose inset brings it to the row icon's size.
         static let settingsSidebarGlyph: CGFloat = 14
-        /// AI Chat's opening size; the user owns it from there, autosaved.
-        static let aiChatWindow = CGSize(width: 960, height: 660)
-        static let aiChatWindowMinimum = CGSize(width: 680, height: 440)
-        static let aiChatSidebarMinimum: CGFloat = 240
-        static let aiChatSidebarMaximum: CGFloat = 340
-        /// The sidebar's search capsule, a row's height so it lines up with the list below it.
-        static let aiChatSearchField: CGFloat = 28
-        static let aiChatDetailMinimum: CGFloat = 440
-        /// The transcript and composer column; past this a line of prose stops being readable.
-        static let aiChatReadingWidth: CGFloat = 960
-        static let aiChatComposerMaxLines: CGFloat = 15
-        static let aiChatComposerHeightFraction: CGFloat = 0.30
-        /// Every control on the composer's row, Send included, so the row reads as one line.
-        static let aiChatComposerControl: CGFloat = 28
-        /// One slot for every glyph on that row, so a plus and a brand mark weigh the same.
-        static let aiChatComposerGlyph: CGFloat = 16
-        static let chatContextGauge: CGFloat = 14
-        /// A source chip's title before it middle-truncates, so three chips share a row.
-        static let chatSourceTitle: CGFloat = 200
         static let chatSourceBadge: CGFloat = 18
         static let chatJumpToLatest: CGFloat = 30
         /// The context card's width: a label column and a value one, with room for a model name.
@@ -238,13 +214,8 @@ enum Theme {
         static let layoutPositionStroke: CGFloat = 1.5
         /// A position cell's clickable row; the glyph floats inside it, so the whole cell hits.
         static let layoutPositionCell: CGFloat = 34
-        static let aiProvidersPanel = CGSize(width: 840, height: 520)
-        static let aiProvidersList: CGFloat = 262
         /// What the system leaves either side of a segment's label once the control has settled.
         static let segmentLabelInset: CGFloat = 13
-        static let aiVariableName: CGFloat = 170
-        /// A Codex usage window's meter, beside its "72% left" readout.
-        static let aiUsageBar: CGFloat = 110
         /// Settings editor modals (Custom Commands, Snippets): fixed width, intrinsic height.
         static let editorSheetWidth: CGFloat = 480
         /// The multi-line box inside those modals; it scrolls rather than grows the panel.
@@ -266,21 +237,9 @@ enum Theme {
         static let cameraPreview = CGSize(width: 420, height: 236)
         /// 16:9 again, wider: the standalone camera is the surface, not a confirmation on one.
         static let cameraStage = CGSize(width: 560, height: 315)
-        /// Wider than a dialog: a Quick Action's result is prose to read, not a sentence to answer.
-        static let quickActionPanel: CGFloat = 520
-        /// Matched to the title's cap height; a row-sized glyph beside it reads as an error.
-        static let quickActionHeaderIcon: CGFloat = 14
-        /// The dissolve ramp below each bar's clear zone, measured against text behind the title.
-        static let quickActionScrollFade: CGFloat = 40
-        /// Past this the result scrolls, so a long summary cannot grow the panel off the screen.
-        static let quickActionPanelBody: CGFloat = 320
-        /// Keeps a two-word grammar fix from collapsing the panel to a slot.
-        static let quickActionPanelMinBody: CGFloat = 44
         /// Transient volume HUD shown after any volume or mute command.
         static let hudWidth: CGFloat = 200
         static let hudHeight: CGFloat = 100
-        static let dictationPanel = CGSize(width: 144, height: 44)
-        static let dictationWaveBar: CGFloat = 2
         /// Read-only volume bar geometry used by the HUD.
         static let volumeTrackHeight: CGFloat = 6
         /// Fixed slot for the level readout, sized to the widest string it ever holds.
@@ -474,29 +433,6 @@ enum Theme {
         static let terminalSurface = adaptive(
             dark: .srgbInk(0.07, alpha: 1), light: .srgbInk(0.99, alpha: 1))
 
-        enum Syntax {
-            static let keyword = pair(dark: 0xFC5FA3, light: 0xAD3DA4)
-            static let string = pair(dark: 0xFC6A5D, light: 0xD12F1B)
-            static let number = pair(dark: 0xD0BF69, light: 0x272AD8)
-            static let comment = pair(dark: 0x7F8C98, light: 0x5D6C79)
-            static let type = pair(dark: 0x5DD8FF, light: 0x1F7A85)
-            static let function = pair(dark: 0x67B7A4, light: 0x2B6A72)
-            static let constant = pair(dark: 0xD0A8FF, light: 0x6C36A9)
-            static let attribute = pair(dark: 0xFD8F3F, light: 0x78492A)
-            static let property = pair(dark: 0x6BBCDD, light: 0x0F68A0)
-            static let inserted = pair(dark: 0x67D97E, light: 0x1F7F3A)
-            static let deleted = pair(dark: 0xFC6A5D, light: 0xC0301F)
-
-            private static func pair(dark: UInt32, light: UInt32) -> Color {
-                adaptive(dark: rgb(dark), light: rgb(light))
-            }
-
-            private static func rgb(_ hex: UInt32) -> NSColor {
-                NSColor(
-                    srgbRed: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255,
-                    blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
-            }
-        }
     }
 }
 

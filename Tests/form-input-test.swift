@@ -15,6 +15,8 @@ struct FormInputTests {
 
     static func main() {
         _ = NSApplication.shared
+        // Dark is the baseline the tokens are tuned for; the ink probe assumes light-on-dark.
+        NSApp.appearance = NSAppearance(named: .darkAqua)
         testSingleLine()
         testCapAlignment()
         testTextArea()
