@@ -574,7 +574,7 @@ enum SystemActionRunner {
             if getPower() == requested { return requested == 1 }
         }
         throw SystemActionFailure(
-            String(localized: "Bluetooth did not change state. Check Tinycast’s Bluetooth permission."),
+            String(localized: "Bluetooth did not change state. Check Ministart’s Bluetooth permission."),
             settings: .bluetooth)
     }
 

@@ -96,7 +96,7 @@ struct ExtensionStoreClient: Sendable {
         let isGitHubAPI = url.host == "api.github.com"
         var request = URLRequest(url: url)
         // GitHub serves the old media type without it, and rejects a request with no user agent.
-        request.setValue("Tinycast", forHTTPHeaderField: "User-Agent")
+        request.setValue("Ministart", forHTTPHeaderField: "User-Agent")
         if isGitHubAPI {
             request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         }

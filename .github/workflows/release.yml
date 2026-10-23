@@ -1,6 +1,6 @@
 name: Release
 
-run-name: "Tinycast ${{ inputs.version }} · ${{ inputs.channel }} #${{ github.run_number }}"
+run-name: "Ministart ${{ inputs.version }} · ${{ inputs.channel }} #${{ github.run_number }}"
 
 # Beta builds get an auto-incrementing suffix so re-running never collides.
 on:
@@ -50,8 +50,8 @@ jobs:
           BASE_VERSION="${{ github.event.inputs.version }}"
           # Each channel is a distinct side-by-side app with its own name, bundle id and cask.
           case "$CHANNEL" in
-            beta)   SUFFIX="-beta.${GITHUB_RUN_NUMBER}";  DISPLAY="Tinycast Beta";  BUNDLE="com.tinycast.app.beta";  CASK="tinycast@beta";  PRERELEASE=true ;;
-            stable) SUFFIX="";                            DISPLAY="Tinycast";       BUNDLE="com.tinycast.app";       CASK="tinycast";       PRERELEASE=false ;;
+            beta)   SUFFIX="-beta.${GITHUB_RUN_NUMBER}";  DISPLAY="Ministart Beta";  BUNDLE="com.ministart.app.beta";  CASK="tinycast@beta";  PRERELEASE=true ;;
+            stable) SUFFIX="";                            DISPLAY="Ministart";       BUNDLE="com.ministart.app";       CASK="tinycast";       PRERELEASE=false ;;
           esac
           FULL="${BASE_VERSION}${SUFFIX}"
           {
@@ -59,8 +59,8 @@ jobs:
             echo "display_name=${DISPLAY}"
             echo "bundle_id=${BUNDLE}"
             echo "cask_name=${CASK}"
-            echo "dmg_file=Tinycast-${FULL}.dmg"
-            echo "zip_file=Tinycast-${FULL}.zip"
+            echo "dmg_file=Ministart-${FULL}.dmg"
+            echo "zip_file=Ministart-${FULL}.zip"
             echo "prerelease=${PRERELEASE}"
           } >> "$GITHUB_OUTPUT"
 
@@ -138,7 +138,7 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: Tinycast-${{ steps.meta.outputs.full_version }}
+          name: Ministart-${{ steps.meta.outputs.full_version }}
           path: dist/
 
       - name: Compose release notes
@@ -263,7 +263,7 @@ jobs:
       VERSION: ${{ needs.build.outputs.full_version }}
       DISPLAY_NAME: ${{ needs.build.outputs.display_name }}
       BUNDLE_ID: ${{ needs.build.outputs.bundle_id }}
-      CASK: tinycast-universal
+      CASK: ministart-universal
     steps:
       - uses: actions/checkout@v7
 
@@ -349,12 +349,12 @@ jobs:
           ln -s /Applications "$STAGE/Applications"
           mkdir -p dist
           diskutil image create from "$STAGE" --format UDZO --volumeName "$DISPLAY_NAME" \
-            "dist/Tinycast-Universal-${VERSION}.dmg"
-          ditto -c -k --keepParent --sequesterRsrc "$APP" "dist/Tinycast-Universal-${VERSION}.zip"
+            "dist/Ministart-Universal-${VERSION}.dmg"
+          ditto -c -k --keepParent --sequesterRsrc "$APP" "dist/Ministart-Universal-${VERSION}.zip"
 
       - uses: actions/upload-artifact@v7
         with:
-          name: Tinycast-Universal-${{ needs.build.outputs.full_version }}
+          name: Ministart-Universal-${{ needs.build.outputs.full_version }}
           path: dist/
 
       # Uploaded second, so clients predating arch-aware selection still take the thin zip first.
@@ -363,8 +363,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "v${VERSION}" \
-            "dist/Tinycast-Universal-${VERSION}.dmg" \
-            "dist/Tinycast-Universal-${VERSION}.zip"
+            "dist/Ministart-Universal-${VERSION}.dmg" \
+            "dist/Ministart-Universal-${VERSION}.zip"
 
       - name: Update Homebrew cask
         env:
@@ -374,7 +374,7 @@ jobs:
             echo "::warning::HOMEBREW_TAP_TOKEN secret not set — skipping cask bump."
             exit 0
           fi
-          SHA="$(shasum -a 256 "dist/Tinycast-Universal-${VERSION}.dmg" | awk '{print $1}')"
+          SHA="$(shasum -a 256 "dist/Ministart-Universal-${VERSION}.dmg" | awk '{print $1}')"
           git clone --depth 1 "https://x-access-token:${TAP_TOKEN}@github.com/abue-ammar/homebrew-tinycast.git" tap
           CASK_FILE="tap/Casks/${CASK}.rb"
           if [ ! -f "$CASK_FILE" ]; then

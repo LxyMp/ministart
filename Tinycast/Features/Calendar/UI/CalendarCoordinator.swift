@@ -119,7 +119,7 @@ final class CalendarCoordinator {
     private var consentMessage: String {
         switch settings.calendarSpan {
         case .today:
-            String(localized: "Tinycast reads today's events to find join links. Nothing leaves this Mac.")
+            String(localized: "Ministart reads today's events to find join links. Nothing leaves this Mac.")
         case .todayAndTomorrow:
             String(
                 localized: """

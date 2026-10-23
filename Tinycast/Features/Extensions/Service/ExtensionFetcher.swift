@@ -81,7 +81,7 @@ final class ExtensionFetcher: Sendable {
         }
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
-        let marker = "\nTinycastSocketResponse:"
+        let marker = "\nMinistartSocketResponse:"
         var arguments = [
             "--disable", "--silent", "--globoff", "--noproxy", "*", "--compressed",
             "--max-time", "60", "--unix-socket", socketPath,

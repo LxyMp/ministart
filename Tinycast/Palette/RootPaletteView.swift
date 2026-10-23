@@ -207,10 +207,10 @@ struct RootPaletteView: View {
                         openURL(url)
                     }
                 },
-                PopoverMenuItem(title: String(localized: "About Tinycast"), systemImage: "info.circle") {
+                PopoverMenuItem(title: String(localized: "About Ministart"), systemImage: "info.circle") {
                     core.settingsCoordinator.showAbout()
                 },
-                PopoverMenuItem(title: String(localized: "Support Tinycast"), systemImage: "heart") {
+                PopoverMenuItem(title: String(localized: "Support Ministart"), systemImage: "heart") {
                     core.supportCoordinator.showSupport()
                 },
                 PopoverMenuItem(

@@ -13,7 +13,7 @@ struct UpdateInstaller: Sendable {
                 return String(localized: "Downloading… \(Self.size(received)) of \(Self.size(expected))")
             case .extracting: return String(localized: "Expanding…")
             case .verifying: return String(localized: "Verifying…")
-            case .replacing: return String(localized: "Replacing Tinycast…")
+            case .replacing: return String(localized: "Replacing Ministart…")
             }
         }
 
@@ -73,7 +73,7 @@ struct UpdateInstaller: Sendable {
         guard result.succeeded else { throw UpdateFailure.extractFailed(result.tail) }
         let contents = try? FileManager.default.contentsOfDirectory(
             at: directory, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
-        // Named for its channel — "Tinycast Beta.app", not "Tinycast.app".
+        // Named for its channel — "Ministart Beta.app", not "Ministart.app".
         guard let app = contents?.first(where: { $0.pathExtension == "app" }) else {
             throw UpdateFailure.noAppInArchive
         }

@@ -17,19 +17,19 @@ enum UpdateFailure: LocalizedError, Equatable {
         case .extractFailed(let detail):
             return String(localized: "The downloaded archive could not be expanded. \(detail)")
         case .noAppInArchive:
-            return String(localized: "The downloaded archive does not contain Tinycast.")
+            return String(localized: "The downloaded archive does not contain Ministart.")
         case .quarantined:
             return String(
-                localized: "macOS quarantined the downloaded app and Tinycast could not clear the flag.")
+                localized: "macOS quarantined the downloaded app and Ministart could not clear the flag.")
         case .bundleMismatch:
-            return String(localized: "The downloaded app is not this build of Tinycast.")
+            return String(localized: "The downloaded app is not this build of Ministart.")
         case .identityMismatch:
             return String(
                 localized: "The downloaded app is not signed by the identity this copy was signed with.")
         case .versionMismatch(let expected, let found):
             return String(localized: "The downloaded app is version \(found), not \(expected).")
         case .replaceFailed(let detail):
-            return String(localized: "Tinycast could not be replaced. \(detail)")
+            return String(localized: "Ministart could not be replaced. \(detail)")
         }
     }
 

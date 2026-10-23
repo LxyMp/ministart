@@ -213,7 +213,7 @@ struct ExtensionCommandScreen: PaletteScreen {
                     openActions()
                 },
                 onFieldChange: { field, value in
-                    guard let handler = field.handler("onTinycastChange") else { return }
+                    guard let handler = field.handler("onMinistartChange") else { return }
                     extensions.dispatch(handler: handler, arguments: [value])
                 }
             )

@@ -18,7 +18,7 @@ enum SettingsFileIssue: Error, Equatable, Sendable {
         case .notAnObject(nil): String(localized: "the file must hold one JSON object")
         case .notAnObject(let path?): String(localized: "“\(path)” must be an object")
         case .unknownSetting(let path): String(localized: "unknown setting “\(path)”")
-        case .invalidValue(let key): String(localized: "“\(key.rawValue)” has a value Tinycast can't use")
+        case .invalidValue(let key): String(localized: "“\(key.rawValue)” has a value Ministart can't use")
         case .invalidEntry(let key, let detail): "“\(key.rawValue)”: \(detail)"
         case .unreadable: String(localized: "couldn't be read")
         case .unwritable: String(localized: "couldn't be saved")

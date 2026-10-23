@@ -55,7 +55,7 @@ private struct FileSearchAccessSection: View {
             } label: {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     SettingsRowTitle(.fileSearchFullDiskAccess, "Full Disk Access")
-                    Text(granted ? "Tinycast can index every folder." : "File Search can’t index without it.")
+                    Text(granted ? "Ministart can index every folder." : "File Search can’t index without it.")
                         .foregroundStyle(.secondary)
                 }
             }
