@@ -42,7 +42,7 @@ These are the things that quietly break the look if changed. Preserve them unles
 - **An icon is drawn for a surface *and* a system icon style, and both move under you.** macOS restyles the icons `NSWorkspace` hands out when System Settings → Appearance → **Icon & widget style** changes, so `IconStyleMonitor` and Tinycast's own appearance both call `IconCache.invalidateStyled()`. **The monitor may not invalidate on the notification itself.** AppKit posts `NSWorkspaceIconAppearanceConfigurationDidChange` before IconServices has swapped what `NSWorkspace` vends — measured at 25–120ms behind, jittering run to run — and the images it hands back are live objects macOS restyles in place, so flattening one on the signal freezes the *outgoing* style into a bitmap nothing ever invalidates again. `IconStyleMonitor` therefore polls `IconCache.styleFingerprint()` until the pixels actually move, and only then invalidates. Waiting also sidesteps the cost: re-flattening every icon the instant a restyle begins forces a cold IconServices regeneration, measured at 160× the settled draw cost. That drops the cached bitmaps, bumps every cache key so an in-flight decode cannot repopulate a stale one, and moves `IconCache.style.generation`. **Any view that draws an icon must key its fetch on that generation** — wrap the view's own key in `IconRequest`, or call `IconCache.observeStyle()` where the icon is resolved synchronously in a `body`. It is reached through `IconCache` rather than injected precisely because icons are drawn in menus, popovers and every list, where a missed injection would be a silent staleness bug.
 - **No hard dividers between the list and the bars.** The header and bottom bar are `safeAreaInset` overlays with no background; separation comes from `edgeDissolve()`, nothing else. (One deliberate exception: the vertical hairline between a list and its preview pane, as the clipboard and file search screens draw.)
 - **The panel corner is clipped once, at the root.** `RootPaletteView.body` ends with `.background(panelScrim) → .background(GlassEffectView()) → .clipShape(RoundedRectangle(26, .continuous))`. Keep that order; the scrim goes _over_ the glass, and the clip is last.
-- **Don't use the native scroll edge effect.** Inside a transparent panel it renders a hard-bounded rectangle. Use `edgeDissolve()`, or a gradient `mask` where a surface owns its own fade — `scrollEdgeEffectStyle` draws a *material* where a scroll view meets a safe area, so over a panel that already has `panelScrim` + `GlassEffectView` it composites to nothing. Tried and rejected on `QuickActionResultView`, with and without `safeAreaBar`. This is a rule about the borderless panels; the Settings window is a titled `NSWindow` whose system titlebar draws the band itself (see "Settings").
+- **Don't use the native scroll edge effect.** Inside a transparent panel it renders a hard-bounded rectangle. Use `edgeDissolve()`, or a gradient `mask` where a surface owns its own fade — `scrollEdgeEffectStyle` draws a *material* where a scroll view meets a safe area, so over a panel that already has `panelScrim` + `GlassEffectView` it composites to nothing. Tried and rejected on a result panel, with and without `safeAreaBar`. This is a rule about the borderless panels; the Settings window is a titled `NSWindow` whose system titlebar draws the band itself (see "Settings").
 - **Test over a light desktop.** Transparency and corner masking bugs only show over bright wallpaper. Dark wallpaper hides them.
 - **No `NSAlert` or system popovers.** Every confirmation, failure report, value prompt and transient readout is Tinycast's own SwiftUI surface (see "Dialogs & HUD"). An Aqua alert on an alpha-over-vibrancy app reads as a different product, and its `runModal` run loop keeps Carbon hotkeys firing underneath.
 - **Animations follow one switch.** General → Appearance → **Show animations**
@@ -53,7 +53,7 @@ These are the things that quietly break the look if changed. Preserve them unles
   `body`. A `.documentWindow` panel is an `AnimatedPanel` and sets its behaviour with `followMotion()`,
   and an `NSAnimationContext` group takes its duration from `Motion.duration(_:)`. So no animation
   site checks the setting itself, and Reduce Motion keeps trimming movement where it did while
-  animations are on. Activity indicators — spinners, `symbolEffect` loaders, the dictation pulse —
+  animations are on. Activity indicators — spinners, `symbolEffect` loaders —
   keep running, because they report work rather than move between states.
 - **A dialog has three independent axes; never let one infer another.** The **icon** (`DialogRequest.symbol`, required) is always the *subject's* own glyph — a command being confirmed uses its `SystemAction.sfSymbol`, so the Restart dialog shows the same icon as the Restart row. Tone never picks an icon. The **tone** (`DialogTone`: `.neutral` / `.success` / `.danger`) tints only that glyph. The **button** takes its color from `DialogAction.Role` (`.standard` white / `.destructive` red / `.cancel` secondary), so a red-glyph security warning can still carry a plain white button — as "Import executable commands?" does.
 - **Resolve every glyph through `SymbolImage`, not `Image(systemName:)`.** Some catalog symbols are bundled assets in `Assets.xcassets` (`toggleBluetooth`), and `Image(systemName:)` silently renders nothing for those.
@@ -76,7 +76,7 @@ Add a token rather than a magic number when introducing a new value.
 ### Interface Size (`InterfaceMetrics`)
 
 `AppSettings.interfaceSize` scales the palette and the surfaces that float with it — the ⌘K menu, the
-extension list panel, Quick Actions, dialogs and HUDs. Settings, Onboarding,
+extension list panel, dialogs and HUDs. Settings, Onboarding,
 Support, Update, About and Notes never scale.
 
 `DesignSystem/InterfaceMetrics.swift` stores **only a scale** and derives every value from the `Theme`
@@ -122,7 +122,7 @@ Their input menus have a 200pt minimum width and expand to the triggering contro
 form menus show 20pt more rows than other native menus; their chevrons use `MenuMotion.chevronAnimation`
 and follow the palette's open menu, without separate presentation state.
 
-`barControl` dresses the header pop-ups (type filter, AI model), which state a value and drop a menu
+`barControl` dresses the header pop-ups (type filter), which state a value and drop a menu
 the way a native pop-up button does — a rectangle, not a pill.
 
 **The footer action group stays a `Capsule`, and so do the buttons inside it.** It is the primary
@@ -181,24 +181,11 @@ panel, the shortcut-recorder callout and the Notes switcher, and `menuRow` is de
 `dialogIcon 32` · `hudWidth 200` ·
 `hudHeight 100` · `volumeTrackHeight 6` · `volumeReadout 38`
 
-The opt-in Dictation capsule adds `dictationPanel 144×44`, with 2pt waveform bars separated by 3pt.
-
 Notes adds `noteWindow 440×180` (opening size on a first run, and the floor), `noteWindowMaxHeight 860`,
 `noteTitlebar 44`, `noteTitleInset 120`, `noteEditorInset 16`, `noteSearchHeight 34`,
 `noteFooterHeight 28`, `noteGlyph 16`, `noteEmptyGlyph 28`, and `noteHeadingMenu 220×159`.
 
-AI Chat adds `aiChatWindow 960×660` (opening size), `aiChatWindowMinimum 680×440`, a sidebar of
-`aiChatSidebarMinimum 240`–`aiChatSidebarMaximum 340`, `aiChatDetailMinimum 440`,
-`aiChatReadingWidth 960` for the transcript and composer column, a composer of at most
-`aiChatComposerMaxLines 15` lines or `aiChatComposerHeightFraction 0.30` of the pane,
-`aiChatComposerControl 28` for every control on its row and `aiChatComposerGlyph 16` for their glyph
-slot, `chatContextGauge 14` for the composer's context ring, and `chatContextCard 300` for the card it
-raises on hover. The row's glyphs are `Typography.composerSymbol`; Send's arrow is `composerSend` and
-Stop's square `composerStop`.
-
-The AI Providers panel adds `aiProvidersPanel 840×520` (the height is its two columns', stated so
-that selecting a longer provider never resizes the panel), `aiProvidersList 262`, `aiUsageBar 110`
-and `aiVariableName 170`. `segmentLabelInset 13` is what the system leaves either side of a
+`segmentLabelInset 13` is what the system leaves either side of a
 segment's label once a segmented control has settled.
 
 `keyCap` sizes the palette's keycap chips; `recorderKeyCap` (both size and radius) is the intentionally-smaller Settings shortcut-recorder chip.
@@ -240,18 +227,11 @@ shipped. Light is the same stop with the ink inverted, and is the only column op
 | `cardStroke`      | white 0.10     | black 0.10     | settings/calc card border + inset dividers       |
 | `noteText`        | white 0.90     | black 0.85     | Notes body text                                  |
 | `dropGuide`       | white 0.35     | black 0.35     | the palette's drop guides while dragging         |
-| `composerSend`    | white 0.92     | black 0.92     | AI Chat's Send disc                              |
 
 `panelScrim` is the ramp's inverse — it darkens the dark surface and lightens the light one — so it
-is an `adaptive` pair, not a `ramp`. So is `composerSendInk`, black 0.85 on the dark disc and white
-on the light one.
+is an `adaptive` pair, not a `ramp`.
 `brand`, `primaryAction`, `destructive`, `success` and `dropGuideArmed` are fixed hues and adapt on
 their own.
-`Theme.Colors.Syntax` holds the code-colouring palette AI Chat paints into a fenced block — `keyword`,
-`string`, `number`, `comment`, `type`, `function`, `constant`, `attribute`, `property`, `inserted`
-and `deleted`. Each is an `adaptive` pair, a bright hue on the dark surface and a deeper one on the
-light, and it is the only place a syntax colour is chosen.
-
 Beyond these, `.secondary`/`.tertiary` foreground styles are fine for SF Symbols (they resolve against
 the environment's appearance). **Selection always beats hover** when a row is both.
 
@@ -352,35 +332,6 @@ than adding another toolbar or window.
 The switcher exposes activation, Rename, and Move to Trash as VoiceOver actions with the actual note
 title. Its hover buttons are hidden from accessibility so those actions are announced once. See
 [features/notes.md](features/notes.md).
-
----
-
-## AI Chat window
-
-Source: `Features/AI/UI/AIChatSplitViewController.swift`, `AIChatDetailView.swift`.
-
-AI Chat is a titled window built the way Settings is, not a palette sibling like Notes: a real
-`NSSplitViewController` whose sidebar item takes the system sidebar material, a unified toolbar with
-an inline title, and native `List`, `Menu` and context menus. Nothing about it scales with Interface
-Size. The composer is untinted Liquid Glass at `Radius.dialog`, stacked under the transcript so nothing
-scrolls behind it, with its controls on one row inside the glass, and its glass on a background layer
-rather than the box. The row's controls are stock `Menu`s and buttons wearing one face: bare at rest,
-a `controlSurface` fill at `Radius.barControl` under the pointer. Send is a solid disc in
-`Colors.composerSend` with a `composerSendInk` arrow, the row's one strong mark.
-The title bar keeps the system's own toolbar band, as any document window's does. The context card
-the gauge raises on hover is glass over a solid `windowBackgroundColor`, because it rises over
-transcript text, and sits in the transcript's own frame at its bottom edge, so no window size can
-push it off screen. A reply's choices are frosted capsules, centred, that rise out of the composer's
-top edge. Find marks words in `Colors.findMatch` / `findCurrent`, the system yellow, with
-`findCurrentInk` black on the solid one in both appearances. Transcript lines sit
-`spacing.chatLine 4` apart on both surfaces. A source chip is a frosted capsule like a choice, led
-by a `chatSourceBadge 18` number disc. Jump to Latest is a `chatJumpToLatest 30` arrow disc at the
-transcript's bottom edge. The transcript itself is the palette's `ChatTranscriptView`
-with `surface: .window`, which leaves out `edgeDissolve` and `thinScrollbar` — both are measured
-against the palette's bars — and caps the column at `aiChatReadingWidth`, centred. Its gutter sits
-outside that cap, as the composer's does, so a reply, its code blocks and the composer share both
-edges; a window reply takes no inset of its own, while the palette keeps `spacing.sm` to line up
-with its header's chevron.
 
 ---
 
@@ -588,18 +539,18 @@ sole owner rule) and is the only presenter, so every confirmation in the app loo
   outcome lands at a glance before the sentence is read. Auto-dismisses after
   `Duration.messageHUD` (2.4s) — longer than the volume box, since a sentence needs reading time and a
   level only needs a glance — and a repeat call replaces rather than stacks.
-- **The same pill reports work still running**, through `showProgress(message:onCancel:)`: a Quick Action set to
-  replace has no panel to watch the answer arrive in, so the pill says `Fixing Grammar…` in its place
-  and the result message replaces it when the model is done. Its leading mark is a spinner rather
-  than a tone, which is why `MessageHUDView.Accessory` exists — a tone says how something *went*, and
-  nothing has gone anywhere yet. When `onCancel` is provided, hovering over the pill lights it up,
+- **The same pill reports work still running**, through `showProgress(message:onCancel:)`: clipboard
+  text recognition has no window to watch the work arrive in, so the pill says `Reading text…` until
+  it is done. Its leading mark is a spinner rather than a tone, which is why `MessageHUDView.Accessory`
+  exists — a tone says how something *went*, and nothing has gone anywhere yet. When `onCancel` is
+  provided, hovering over the pill lights it up,
   turns the spinner into an `xmark`, and clicking anywhere on the pill cancels the in-flight task.
   The spinner is **`progress.indicator` with
   `.symbolEffect(.variableColor)`, never a `ProgressView`**: AppKit draws that one itself and ignores
   every tint given to it, so a blue spinner is only reachable as a symbol. Progress has no natural
   dwell, so it is shown with `dwells: false` and stays up until something replaces it or
-  `HUDPresenter.dismiss()` runs — the caller owns that, and `QuickActionCoordinator.produce` pairs the
-  two with a `defer` so a throw or a cancellation cannot strand it.
+  `HUDPresenter.dismiss()` runs — the caller owns that, and pairs the two with a `defer` so a throw
+  or a cancellation cannot strand it.
 - **`HUDPresenter`** is what keeps those two controllers from duplicating each other: one panel at a
   time, replace rather than stack, fade in, sit out its dwell, fade away, centred horizontally on
   a screen. The two HUDs differ only in their content, their anchor (`edgeInset(hudEdgeOffset 48)` for
@@ -730,23 +681,22 @@ system-drawn and a pane reads exactly as macOS System Settings does.
   Back/Forward chevrons. `SettingsWindowChrome` installs *before* the content mounts: the bridged toolbar
   restores the title flags it mounted over, so a later `titleVisibility = .visible` is undone on the
   first navigation.
-- **Settings and AI Chat are the windows that keep the system titlebar.** `AppWindowController` builds
+- **Settings is the window that keeps the system titlebar.** `AppWindowController` builds
   every window with `titlebarAppearsTransparent = true`, which opts the titlebar out of the system's
-  glass band; `SettingsWindowChrome.install(in:)` and `AIChatWindowChrome.install(in:)` set it back to
-  `false`, so the band and its scroll edge effect are drawn by AppKit as a pane's `Form` or the
-  transcript scrolls under it. `.fullSizeContentView` and `titlebarSeparatorStyle = .none` stay — the
-  content still runs under the bar, and a hairline would split the surface the band unifies. Both also
-  clear `isMovableByWindowBackground`: stock Settings isn't dragged by its content, and a drag across a
-  transcript selects text. Onboarding, Updates, Support and Command Output keep the transparent
-  titlebar they were tuned for. Never hand-draw a header band; a main surface takes the system's
-  material, not `glassEffect`.
+  glass band; `SettingsWindowChrome.install(in:)` sets it back to
+  `false`, so the band and its scroll edge effect are drawn by AppKit as a pane's `Form` scrolls
+  under it. `.fullSizeContentView` and `titlebarSeparatorStyle = .none` stay — the
+  content still runs under the bar, and a hairline would split the surface the band unifies. It also
+  clears `isMovableByWindowBackground`: stock Settings isn't dragged by its content. Onboarding,
+  Updates, Support and Command Output keep the transparent titlebar they were tuned for. Never
+  hand-draw a header band; a main surface takes the system's material, not `glassEffect`.
 - `SettingsComponents.swift` holds only what more than one pane or editor needs: **`SettingsRow`**,
   **`SettingsTabIcon`** (the sidebar tile reused by feature switches),
   **`SettingsFeatureToggleLabel`** (the icon, title and subtitle of a feature's master switch),
   **`FeatureSwitchSection`** (a feature's master switch plus its launcher-visibility companion),
   **`SettingsFilterField`** (the filter row above a long list), **`launcherVisibilityHelp()`**, and the
   Settings editor header, fields and surface. `ModalActionButtonStyle.swift` keeps every borderless surface's actions on one
-  implementation — dialogs, Settings editors, the camera footers and the Quick Action panel. `Onboarding/OnboardingCard.swift` keeps the older hand-drawn card,
+  implementation — dialogs, Settings editors and the camera footers. `Onboarding/OnboardingCard.swift` keeps the older hand-drawn card,
   which that window still uses.
 - **A Settings editor borrows the dialog language, not its job.** `SettingsEditorPresenter` hosts the
   existing form in an activating, transparent child `NSPanel`, with the same `panel 26` Liquid Glass

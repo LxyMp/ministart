@@ -45,10 +45,6 @@ The app target builds and embeds `ClipboardTextHelper` under `Contents/Helpers`,
 Build the app scheme to include it; copying only the main executable omits OCR support. The helper's
 executable name stays fixed even when release builds override the app's product name for a channel.
 
-Dictation similarly embeds its Swift/Core ML helper, named `Tinycast Dev Dictation` in Debug and
-`Tinycast Dictation` in Release, in an accessory `.app` bundle without a bundled icon. Model weights
-download on demand; none are app resources.
-
 ### The dev channel
 
 Debug builds are a separate channel: **`Tinycast Dev.app`**, bundle id `com.tinycast.app.dev`. Every
@@ -201,10 +197,6 @@ node Scripts/gen-emoji.js            # -> Tinycast/Features/Emoji/Model/EmojiDat
 node Scripts/gen-currencies.js       # -> Tinycast/Features/Calculator/Model/CurrencyData.generated.swift
 node Scripts/gen-countries.js        # -> Tinycast/Features/Calculator/Model/CountryZoneData.generated.swift
 ```
-
-`node Scripts/gen-dictation-sounds.js` synthesizes Dictation's start and stop chimes into
-`Tinycast/Resources/DictationStart.wav` and `DictationStop.wav`. It needs no network and writes the same
-bytes every run; change the notes or levels in the script, never the WAV files.
 
 `gen-emoji.js` also writes one CLDR keyword pack per language in its `KEYWORD_LOCALES`; adding a
 language is one line there. Pass a directory to keep the downloads between runs:

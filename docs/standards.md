@@ -92,7 +92,7 @@ fit the table.
 type, so there are only four: `ClipboardManager` (polls, and owns the capture policy and the
 paste-side handshake), `HotKeyManager` (persists bindings, and drives Carbon registration and
 double-tap dispatch), `HyperKeyManager` (drives the tap, the remap and their pauses, and owns the
-conflict and Secure Input policy) and `DictationKeyManager` (the 🎤 remap). Another is fine if it
+conflict and Secure Input policy). Another is fine if it
 genuinely owns both halves — but check first whether `Store`, `Monitor` or `Coordinator` describes it
 better, because usually one of them does.
 

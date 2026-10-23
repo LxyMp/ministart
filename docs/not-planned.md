@@ -145,26 +145,6 @@ Tinycast is an all-in-one launcher, not a full window manager. Its window tools 
 - **Turn off "always on top".** Most people want Notes to float. ([#670](https://github.com/abue-ammar/tinycast/issues/670))
 - **Collect everything you copy into a note (AutoPaste).** ([#307](https://github.com/abue-ammar/tinycast/issues/307))
 
-## AI and dictation
-
-- **Send your selected text or file to AI on its own.** macOS often won't share the selection.
-  ([#1420](https://github.com/abue-ammar/tinycast/issues/1420), [#415](https://github.com/abue-ammar/tinycast/issues/415))
-- **Send prompts with ⌘↵.** ([#1377](https://github.com/abue-ammar/tinycast/issues/1377))
-- **Different default models for Quick AI and AI Chat.** They are one feature with two sizes.
-  ([#1108](https://github.com/abue-ammar/tinycast/issues/1108))
-- **Open and close Quick AI with the main shortcut.** **Instead:** give Quick AI its own shortcut.
-  ([#1356](https://github.com/abue-ammar/tinycast/issues/1356))
-- **More command-line AI tools (like Pi Coding Agent).** Providers can block these tools at any
-  time, so they may stop working. ([#929](https://github.com/abue-ammar/tinycast/issues/929), [#1610](https://github.com/abue-ammar/tinycast/issues/1610))
-- **Voice control, screen reading, or AI command suggestions.** Tinycast won't become a Siri-style
-  assistant. ([#1550](https://github.com/abue-ammar/tinycast/issues/1550), [#1151](https://github.com/abue-ammar/tinycast/issues/1151), [#1145](https://github.com/abue-ammar/tinycast/issues/1145))
-- **AI-powered "smart" search.** Search stays fast and on-device. ([#1574](https://github.com/abue-ammar/tinycast/issues/1574), [#1528](https://github.com/abue-ammar/tinycast/issues/1528), [#1114](https://github.com/abue-ammar/tinycast/issues/1114))
-- **Old Raycast AI chats on import.** Raycast doesn't share that data. ([#1286](https://github.com/abue-ammar/tinycast/issues/1286))
-- **Quick Action results inside the palette, or a preview that stays open.** **Instead:** copy the
-  result with its copy button. ([#1360](https://github.com/abue-ammar/tinycast/issues/1360), [#1023](https://github.com/abue-ammar/tinycast/issues/1023))
-- **A proxy setting.** ([#430](https://github.com/abue-ammar/tinycast/issues/430))
-- **Your own dictation models or a personal word list.** Tinycast is not a dictation app.
-  ([#1529](https://github.com/abue-ammar/tinycast/issues/1529), [#1332](https://github.com/abue-ammar/tinycast/issues/1332))
 
 ## Raycast extensions
 
@@ -173,7 +153,6 @@ Tinycast is an all-in-one launcher, not a full window manager. Its window tools 
   shortcuts (like Tab) win over an extension's. Our future is native Tinycast extensions.
   ([#1592](https://github.com/abue-ammar/tinycast/issues/1592), [#1585](https://github.com/abue-ammar/tinycast/issues/1585), [#1557](https://github.com/abue-ammar/tinycast/issues/1557), [#1561](https://github.com/abue-ammar/tinycast/issues/1561), [#1541](https://github.com/abue-ammar/tinycast/issues/1541), [#1520](https://github.com/abue-ammar/tinycast/issues/1520), [#1495](https://github.com/abue-ammar/tinycast/issues/1495), [#1452](https://github.com/abue-ammar/tinycast/issues/1452), [#1341](https://github.com/abue-ammar/tinycast/issues/1341), [#1129](https://github.com/abue-ammar/tinycast/issues/1129), [#976](https://github.com/abue-ammar/tinycast/issues/976), [#672](https://github.com/abue-ammar/tinycast/issues/672), [#664](https://github.com/abue-ammar/tinycast/issues/664), [#660](https://github.com/abue-ammar/tinycast/issues/660),
   [#1121](https://github.com/abue-ammar/tinycast/issues/1121), [#1200](https://github.com/abue-ammar/tinycast/issues/1200), [#1397](https://github.com/abue-ammar/tinycast/issues/1397))
-- **Let extensions use Tinycast's AI.** ([#1462](https://github.com/abue-ammar/tinycast/issues/1462))
 - **⚠️ Locking extensions down.** An extension can do anything you can do on your Mac. **Install only
   extensions you trust.** ([#946](https://github.com/abue-ammar/tinycast/issues/946))
 

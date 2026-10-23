@@ -67,13 +67,10 @@ Closing a palette menu explicitly restores search focus after its panel returns 
 
 Hiding schedules Pop to Root Search, and `PaletteWindowController.popToRoot` is its only path: the
 palette returns to the launcher _and_ chat starts a new conversation, at once or after
-`popToRootTimeout`, unless a re-summon inside that window consumes the pending reset first. An
-unfinished chat is a thing being done, exactly like a typed query, so the screen and the conversation
-are reset together rather than the screen alone. A reply still streaming is one exception — it was
-asked for, and resetting would throw the answer away. Nothing is lost either way: a conversation is
-written to Chat History, and the AI Chat window's sidebar, as soon as it has a message. The other is
-an extension's browser sign-in: while `ExtensionManager.isSigningIn`, hiding schedules no reset and a
-re-summon counts as preserved, because a reset would stop the command and cancel its sign-in.
+`popToRootTimeout`, unless a re-summon inside that window consumes the pending reset first. The other
+exception is an extension's browser sign-in: while `ExtensionManager.isSigningIn`, hiding schedules no
+reset and a re-summon counts as preserved, because a reset would stop the command and cancel its
+sign-in.
 
 Each `PaletteMode` maps to one type conforming to `PaletteScreen`, and the protocol is what keeps the
 selection invariant honest: a screen exposes `rows` as its single source of visible order, and the
@@ -110,12 +107,11 @@ every screen but two: the clipboard lands past its pins
 | `.dictionary`        | `DictionaryScreen`        | `DictionaryEntryView` (see [dictionary.md](dictionary.md))                       |
 | `.extensionCommand`  | `ExtensionCommandScreen`  | `ExtensionCommandView` (see [extensions.md](extensions.md))                      |
 
-**Tab rings the three surfaces a reader opens directly — launcher → AI chat → clipboard → launcher**
+**Tab rings the two surfaces a reader opens directly — launcher → clipboard → launcher**
 — unless the screen claims it through `tab(at:backwards:)` (native editors and extension forms walk
 their own fields), or the selected row declares arguments, in which case it walks those fields first (see
 below); every other mode stays off the ring, and is reached by a command or a global hotkey, with
-Uninstall only from a launcher app's Actions menu, scoped to that app. Chat is skipped whole when
-`aiEnabled` is off, which leaves the launcher ↔ clipboard flip the ring replaced.
+Uninstall only from a launcher app's Actions menu, scoped to that app.
 
 ### Navigation
 
@@ -171,23 +167,13 @@ pops, a root one closes — so `backHelp` says which, rather than promising a st
 a close. It lights to `textPrimary` under the pointer over `Theme.Duration.hover`, and
 `HeaderBackButton` keeps that hover state to itself so the header around it never re-renders.
 
-The launcher advertises the first hop in the header — `Quick AI` beside a ⇥ key cap.
-It is drawn only when Tab really would open Quick AI, a condition read
-back out of `PaletteTabAction` rather than restated, so a hint can never promise a destination the
-key does not go to: an argument field to walk takes Tab first, and the hint steps aside for it.
-
 `PaletteTabAction` decides where Tab goes _and_ what happens to the typed text. The clipboard hands
-the query over, since one search narrows either list. **From the launcher, Tab `.ask`s** — Quick AI opens
-fresh with the typed text already sent, so one key turns a search into a question. Leaving chat is
-still a `.freshScreen`: that field holds a half-written message rather than a query, and a draft
-dropped into a filter matches nothing. `.ask` is its own case rather than a `carryQuery(.ai)` because
-the text is submitted, not seeded, and the hint reads the case back out (`== .ask`) instead of
-restating the rule.
+the query over, since one search narrows either list.
 
-**A ring hop is a step, so Escape walks back out the way Tab came in** — launcher → chat → clipboard
-takes two presses to unwind, and the back chevron's tooltip stops promising a step it cannot take.
+**A ring hop is a step, so Escape walks back out the way Tab came in** — launcher → clipboard
+takes one press to unwind, and the back chevron's tooltip stops promising a step it cannot take.
 The launcher is the ring's root, so the hop that closes the ring resets the stack instead of stacking
-a third screen; ringing round forever therefore never grows the stack past two.
+a third screen.
 
 ### Inline row arguments
 
@@ -432,7 +418,7 @@ The textarea routes undo/redo to its own manager, as the Notes editor does in a 
 `RootPaletteView` holds a single `OpenMenu?` rather than a flag per menu, so "at most one is open" is
 structural instead of a pair of `onChange` handlers pushing each other closed. The ⌘K Actions menu
 hangs `.bottomTrailing`, the app menu `.bottomLeading`, and everything drawn as a header control —
-the clipboard type filter, the AI model and effort menus, an `options=` argument field's choices and
+the clipboard type filter, an `options=` argument field's choices and
 a running command's `searchBarAccessory` dropdown — hangs `.belowHeaderTrailing`, under its own
 button. Native editor inputs supply their own choices and control frame through `openInputOptions`;
 `.belowControl` aligns the menu with either edge of that field and allows it beyond the palette's bounds.
@@ -448,7 +434,7 @@ both its ⌘K panel and its search-bar dropdown, and the reason the seam exists 
 [extensions.md](extensions.md)). The view is a closure because `moveMenu` resolves the open menu on
 every arrow key and needs the row count alone. Every open path goes through `open(_:highlighting:)`
 and states where the highlight starts: the first row, except the pop-up-shaped menus — the type
-filter, the AI model and effort menus, an extension's search-bar dropdown — which open on the choice
+filter, an extension's search-bar dropdown — which open on the choice
 they already hold.
 
 **The palette window consumes a click-away press through its release.** While a menu is open,

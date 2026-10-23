@@ -52,7 +52,7 @@ Independently of the folder tree, every mature subsystem has converged on the sa
 └──────────────────────────────────┬─────────────────────────────────────────┘
                                    │ published through
 ┌─ OBSERVABLE STATE ───────────────▼─────────────────────────────────────────┐
-│ 39 @MainActor @Observable stores, sessions, indices and State types        │
+│ @MainActor @Observable stores, sessions, indices and State types           │
 └──────────────────────────────────┬─────────────────────────────────────────┘
                                    │ rendered by
 ┌─ VIEW ───────────────────────────▼─────────────────────────────────────────┐
@@ -93,10 +93,10 @@ app: the stores (`AppIndex`, `ClipboardStore`, `SnippetsStore`, `QuicklinkStore`
 `FavoritesStore`, `VisibilityStore`, `AliasStore`, `LauncherRankingStore`, `CalculatorHistoryStore`,
 `CurrencyRateStore`, `FrequentEmojiStore`, `CalendarStore`), the managers, monitors and clocks
 (`ClipboardManager`, the opt-in `ClipboardTextIndexer`, the opt-in `SettingsFileRepository`,
-`HotKeyManager`, `HyperKeyManager`, `DictationKeyManager`, `RunningAppsMonitor`,
+`HotKeyManager`, `HyperKeyManager`, `RunningAppsMonitor`,
 `SnippetKeywordListener`), the shared state
 (`AppSettings`, `PaletteState`, `FileSearchSession`, `MenuSearchSession`, `UninstallSession`,
-`MeetingClock`), `NotesStore`, the twenty-one feature coordinators, and the
+`MeetingClock`), `NotesStore`, the sixteen feature coordinators, and the
 window controllers.
 
 `AppDelegate.applicationDidFinishLaunching` calls `AppCore.shared.start(launchedByUser:)` and nothing
@@ -120,11 +120,6 @@ the stateless `ClipboardTextWorker` runs one bundled `ClipboardTextHelper` per i
 to a process that exits, and the helper — which has no database, clipboard or settings access — is
 handed an input path and answers with bounded text down a pipe. Its `thumbnail` mode writes the
 clipboard's downscaled image copies, so a full-size decode stays out of the app unless that fails.
-
-Dictation similarly runs its model adapters in a bundled helper, with bounded in-memory audio and
-text over pipes. The coordinator keeps microphone capture, UI and insertion in Tinycast; the model
-store starts the helper on demand and reaps it after the selected idle delay or a model switch.
-`AppCore` owns the audio ducker and starts volume recovery on every launch, even when Dictation is off.
 
 ## Entry points and windows
 
@@ -152,13 +147,9 @@ driven imperatively from AppKit. Extension menu extras are dynamic `NSStatusItem
   Markdown over the literal source, switches among local Markdown files and stays visible on focus
   loss. The displayed string is the canonical file source; there is no source/display mapping.
   See [features/notes.md](features/notes.md).
-- **AI Chat** — a titled `AppWindowController` window owned by `AIChatCoordinator`: an
-  `NSSplitViewController` with a collapsible sidebar of saved chats beside the open conversation, as
-  Settings is built. The conversation lives on `AppCore.aiChats`, not the window, so closing it cancels
-  nothing. Quick AI is the same feature's palette screen. See [features/ai.md](features/ai.md).
-- **The main menu** — shaped by `TinycastApp`'s `.commands`, which rebinds ⌘Q to Close Window: the AI
-  Chat window when it is key, otherwise Settings. It is only ever on screen while a titled window is
-  open, so it is those windows' menu bar. It must stay declarative.
+- **The main menu** — shaped by `TinycastApp`'s `.commands`, which rebinds ⌘Q to Close Window for
+  Settings. It is only ever on screen while a titled window is open, so it is those windows' menu bar.
+  It must stay declarative.
 - **Dialogs** — borderless `DialogPanel`s driven by `DialogController`, the app's only presenter for
   confirmations, failure reports and value prompts. Presentation is `async`, so nothing blocks the main
   actor, and the presenter refuses a second dialog while one is up — that, not a flag, is what stops a
@@ -184,7 +175,8 @@ every live `AnimatedPanel` (see [ui.md](ui.md#non-negotiable-invariants)).
 
 ## Observation
 
-39 types are `@MainActor @Observable`. Nothing uses `ObservableObject` or `@Published`, and views read
+Every store and session type is `@MainActor @Observable`. Nothing uses `ObservableObject` or
+`@Published`, and views read
 state through `@Environment` rather than `@EnvironmentObject`.
 
 Three things about this model are easy to get wrong:
@@ -243,7 +235,7 @@ Tinycast/
     PaletteRowIndex.swift   the flat selection index — palette-owned, so it sits at the top
     Launcher/ Clipboard/ Calculator/ Calendar/ Emoji/ FileSearch/ MenuSearch/ Notes/
     Quicklinks/ Snippets/ Uninstall/ SystemActions/ CustomCommands/ HotKeys/ Backup/
-    WindowManagement/ Onboarding/ Updates/ Support/ AI/ Settings/
+    WindowManagement/ Onboarding/ Updates/ Support/ Settings/
     Extensions/
         Model/      pure — the harness inputs
         Service/    effects — stores, monitors, runners, AppKit glue

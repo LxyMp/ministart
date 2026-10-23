@@ -160,9 +160,8 @@ snippets. Inserted clipboard, selection, and argument values are literal: token-
 value is not expanded again.
 
 `{selection}` is read through Accessibility. When that reads nothing, a snippet you insert yourself —
-from the launcher, Search Snippets or its shortcut — falls back to a ⌘C, as described in
-[quick-actions.md](quick-actions.md#reading-the-selection). Keyword expansion never sends one: a typed
-keyword leaves nothing selected.
+from the launcher, Search Snippets or its shortcut — falls back to a ⌘C. Keyword expansion never
+sends one: a typed keyword leaves nothing selected.
 
 Snippet references are case-insensitive. Duplicate names or keywords resolve deterministically by
 file-path identity. Nested references support five levels, detect cycles by file identity, and leave
@@ -301,8 +300,8 @@ not report completion and therefore cannot show it.
 
 There are two delivery tiers, and the target picks which one runs.
 
-`InjectionTarget.ownEditor` is one of our own views — `NoteTextView` and AI Chat's
-`ComposerTextView`, which opt in by adopting `InjectableTextView`. It is written in process with
+`InjectionTarget.ownEditor` is one of our own views — `NoteTextView`, which opts in by adopting
+`InjectableTextView`. It is written in process with
 `insertText(_:replacementRange:)`:
 undoable in the editor's own `UndoManager`, and needing no Accessibility grant, no pasteboard lease,
 no app activation and no event posting. Rules 1, 3 and 4 below do not apply — our own storage is
@@ -394,8 +393,8 @@ as `.ignored`, so a fallback never cancels itself. The argument prompt is the on
 into the prompt and clicking **Expand** is the reader finishing the expansion, not abandoning it.
 The flag clears the buffer on both edges, so argument text can never trigger a nested expansion.
 Delivery then settles exactly once either way:
-Quick Actions raise a HUD and keep the reply on the clipboard, while snippets pass no failure handler
-and stay as silent as before, because a speculative expansion that declined is not news.
+snippets pass no failure handler and stay as silent as before, because a speculative expansion that
+declined is not news.
 
 ## External edits and conflicts
 

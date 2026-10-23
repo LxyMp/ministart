@@ -19,7 +19,7 @@ Raycast 扩展。
 | UI | SwiftUI + AppKit，`LSUIElement` 配件应用（无 Dock 图标） |
 | 依赖 | 零第三方依赖；Carbon 仅用于系统级组合键注册（刻意的能力缺口） |
 | 工程 | XcodeGen 生成工程（改 `project.yml` 后必须 `xcodegen generate`） |
-| 规模参考 | `Tinycast/` 下约 830 个 Swift 文件、30 个功能模块（2026-10 统计） |
+| 规模参考 | `Tinycast/` 下约 660 个 Swift 文件、26 个功能模块（2026-10 统计） |
 
 ## 2. 顶层目录地图
 
@@ -61,7 +61,7 @@ Raycast 扩展。
   （`core.quicklinkCoordinator.deleteQuicklink(…)`），视图永不绕过 coordinator 直改 store；
   只读渲染 store 合法。
 - 重活（应用扫描、图片解码、shell 执行、汇率拉取）一律离主线程。仅有一个 actor，是刻意的。
-- 剪贴板 OCR 与听写模型适配器跑在独立 bundled helper 进程，管道通信、用完即回收。
+- 剪贴板 OCR 跑在独立 bundled helper 进程，管道通信、用完即回收。
 
 ## 5. 窗口与表面
 
@@ -70,7 +70,6 @@ Raycast 扩展。
 | 命令面板 | 无边框浮动 `NSPanel` + `NSHostingView`（`Palette/PalettePanel.swift`） | `PaletteWindowController` 独占 frame |
 | Settings / Onboarding | 有标题 `NSWindow`（`Windows/AppWindowController.swift`） | `SettingsCoordinator` / `OnboardingCoordinator` |
 | Notes | 常驻非激活 `NotesPanel` | `NotesWindowController` |
-| AI Chat | 有标题窗口，`NSSplitViewController` 带侧栏 | `AIChatCoordinator`；会话状态在 `AppCore.aiChats` |
 | 对话框 | `DialogPanel` | `DialogController`（唯一 presenter，async 呈现，一次一个） |
 | HUD | `MessageHUDController`、`VolumeHUDController` | `HUDPresenter`（独占一次性自动消退策略） |
 | Camera | 非激活浮动 `CameraPanel`，两形态共一 `CameraSession` | `CalendarCoordinator`（join 门禁）/ `CameraCoordinator`（独立命令） |
@@ -98,15 +97,11 @@ Raycast 扩展。
 | `Quicklinks/` | URL/搜索/文件/deeplink 变一等命令 | | [quicklinks.md](docs/features/quicklinks.md) |
 | `Snippets/` | 文本片段模板与关键词展开 | | [snippets.md](docs/features/snippets.md) |
 | `CustomCommands/` | 自定义 shell 命令注册为可搜索命令 | | [custom-commands.md](docs/features/custom-commands.md) |
-| `SystemActions/` | 系统操作（音量、睡眠、锁定等） | | [quick-actions.md](docs/features/quick-actions.md) 之外另见 Model/`SystemAction` |
+| `SystemActions/` | 系统操作（音量、睡眠、锁定等） | Model/`SystemAction` 为纯模型 | |
 | `TextInjection/` | 文本注入（`TextInjector`/`Paster`） | 仅 `Service/` | |
 | `Uninstall/` | 卸载应用并清理残留文件 | 无 `Settings/` | [uninstall.md](docs/features/uninstall.md) |
 | `WindowManagement/` | Rectangle 式窗口操作 + 窗口布局 + Rooms | | [window-management.md](docs/features/window-management.md)、[window-layouts.md](docs/features/window-layouts.md)、[window-rooms.md](docs/features/window-rooms.md) |
 | `WindowSwitcher/` | 窗口切换器 | 无 `Settings/` | |
-| `AI/` | 全局 AI 提供商层 + 聊天窗口 + Quick AI 面板屏 | | [ai.md](docs/features/ai.md) |
-| `MCP/` | 连接 MCP 服务器（stdio + OAuth），向 AI 提供工具 | | [mcp.md](docs/features/mcp.md) |
-| `QuickActions/` | 对选中文本的操作（Fix Grammar 等四个） | | [quick-actions.md](docs/features/quick-actions.md) |
-| `Dictation/` | 语音听写（实验性），模型适配器在 bundled helper | 含 `Helper/` | [dictation.md](docs/features/dictation.md) |
 | `Dictionary/` | Define Word 词典查询 | | [dictionary.md](docs/features/dictionary.md) |
 | `AppleShortcuts/` | Apple Shortcuts 作为 launcher 独立分区 | | [apple-shortcuts.md](docs/features/apple-shortcuts.md) |
 | `Backup/` | `.tinycast` 备份导出/导入 | 无 `UI/` | [backup.md](docs/features/backup.md) |
@@ -140,7 +135,6 @@ Raycast 扩展。
 | `EmojiData.generated.swift`、`Resources/EmojiKeywords/` | `node Scripts/gen-emoji.js` |
 | `CurrencyData.generated.swift` | `node Scripts/gen-currencies.js` |
 | `CountryZoneData.generated.swift` | `node Scripts/gen-countries.js` |
-| `Resources/DictationStart.wav`、`DictationStop.wav` | `node Scripts/gen-dictation-sounds.js` |
 | `Resources/RaycastRuntime.generated.js` | `Scripts/raycast-runtime/build.mjs`（已提交，构建无需 Node） |
 
 ## 8. 测试与脚本
@@ -160,7 +154,6 @@ Raycast 扩展。
 | 改面板（palette）外观/交互 | `Palette/` + `DesignSystem/Theme` |
 | 改热键行为 | `Features/HotKeys/` |
 | 改窗口管理/布局/Rooms | `Features/WindowManagement/` |
-| 改 AI 聊天或提供商 | `Features/AI/`；工具接入在 `Features/MCP/` |
 | 改 Raycast 扩展运行 | `Features/Extensions/`；runtime 改动走 `Scripts/raycast-runtime/build.mjs` 重新生成 |
 | 改对话框/HUD | `Windows/Dialog/`、`Windows/HUD/`，经 `DialogController`/`HUDPresenter`，禁 `NSAlert` |
 | 加长生命周期状态 | `App/AppCore.swift` + `start()` 接线，禁新单例 |

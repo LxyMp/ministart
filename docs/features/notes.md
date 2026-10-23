@@ -43,8 +43,7 @@ commands and global shortcuts can show, search, or extend the collection.
   `didChange`.
 - **The editor is a surface snippets expand into.** `NoteTextView` adopts `InjectableTextView`,
   so a typed keyword — and the Snippets browser's ↵ — is written straight into the text storage
-  rather than posted as events at whichever app happens to be frontmost. Quick Actions also read and
-  replace its selected text in process. Only AI Chat's composer adopts it too: see
+  rather than posted as events at whichever app happens to be frontmost: see
   [snippets.md](snippets.md#text-delivery-and-pasteboard-safety).
 
 ## Storage and identity
@@ -167,8 +166,7 @@ indented code, footnotes, reference links and blocks nested inside quotes stay p
 (a pipe row, a delimiter row with as many cells, then the pipe rows after it) also stays plain text, but
 is recognised so it gets no inline styling: it shows in the code font, with wrapped rows hanging under
 their first line, and a delimiter row typed under existing rows restyles all of them.
-The whole note is reparsed on each edit. The AI chat's `MarkdownBlock` is a separate read-only parser
-and is not shared.
+The whole note is reparsed on each edit.
 
 ### Rendering
 
