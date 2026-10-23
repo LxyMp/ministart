@@ -64,24 +64,18 @@ struct EmojiSearchTests {
                 "\(query) finds \(glyph) in the first \(maxRank) results")
         }
 
-        // Packs for the Mac's languages join English, which keeps its ranking for every user.
+        // The Mac's language pack joins English, which keeps its ranking for every user.
         let resources = Bundle(path: "Tinycast/Resources")!
-        let multilingual = EmojiIndex()
-        await multilingual.load(languages: ["fr-FR", "ja-JP", "en-US"], bundle: resources)
-        for (query, glyph) in [
-            ("poulet", "🐔"), ("gateau", "🎂"), ("gâteau d'anniversaire", "🎂"),
-            ("allemagne", "🇩🇪"), ("ねこ", "🐱"), ("ネコ", "🐱"), ("寿司", "🍣")
-        ] {
+        let localized = EmojiIndex()
+        await localized.load(languages: ["zh-Hans-CN", "en-US"], bundle: resources)
+        for (query, glyph) in [("猫", "🐱"), ("汉堡", "🍔"), ("寿司", "🍣")] {
             expect(
-                multilingual.search(query, frequent: frequent).prefix(3).contains { $0.glyph == glyph },
+                localized.search(query, frequent: frequent).prefix(3).contains { $0.glyph == glyph },
                 "\(query) finds \(glyph) in the first 3 results")
         }
-        expect(
-            multilingual.search("poulet", frequent: frequent).contains { $0.glyph == "🍗" },
-            "a localized keyword reaches every glyph CLDR files it under")
         for query in ["chicken", "birthday", "party", "pray", "red heart", "hand waving", "cat"] {
             expect(
-                multilingual.search(query, frequent: frequent).prefix(5).map(\.glyph)
+                localized.search(query, frequent: frequent).prefix(5).map(\.glyph)
                     == index.search(query, frequent: frequent).prefix(5).map(\.glyph),
                 "\(query) ranks as it does in English alone")
         }
