@@ -95,7 +95,6 @@ Raycast 扩展。
 | `Quicklinks/` | URL/搜索/文件/deeplink 变一等命令 | | [quicklinks.md](docs/features/quicklinks.md) |
 | `Snippets/` | 文本片段模板与关键词展开 | | [snippets.md](docs/features/snippets.md) |
 | `CustomCommands/` | 自定义 shell 命令注册为可搜索命令 | | [custom-commands.md](docs/features/custom-commands.md) |
-| `SystemActions/` | 系统操作（音量、睡眠、锁定等） | Model/`SystemAction` 为纯模型 | |
 | `TextInjection/` | 文本注入（`TextInjector`/`Paster`） | 仅 `Service/` | |
 | `Uninstall/` | 卸载应用并清理残留文件 | 无 `Settings/` | [uninstall.md](docs/features/uninstall.md) |
 | `Dictionary/` | Define Word 词典查询 | | [dictionary.md](docs/features/dictionary.md) |

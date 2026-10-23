@@ -139,13 +139,12 @@ reserved while Secure Input lasts. Other apps' Hyper shortcuts still don't work 
 <kbd>⇧</kbd><kbd>⌘</kbd><kbd>H</kbd> in the launcher, only changes what search shows.
 
 **A section's switch turns off its shortcuts.** **Enable Applications**, **Enable System Settings**,
-**Enable System Actions** and **Enable Commands** each turn off every shortcut in their pane.
+**Enable Commands** turns off every shortcut in its pane.
 
 **Turning off a feature turns off its shortcuts.** File Search, Notes,
 quicklinks, snippets, custom commands and extensions all check
 their switch before doing anything. Turn the feature back on and its shortcuts work again.
 
-A [system action's confirmation](/docs/launcher/system-actions#confirmation) appears when you use its
 shortcut, the same as in the palette.
 
 ## Keeping them
