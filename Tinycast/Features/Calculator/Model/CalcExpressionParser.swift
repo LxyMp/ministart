@@ -160,6 +160,10 @@ struct CalcExpressionParser {
     ) -> CalcValue? {
         let direction = op == .add ? 1.0 : -1.0
         if right.isPercent {
+            // Two percentages add as absolute amounts: `10% + 5%` is 0.15 either way round.
+            if left.isPercent {
+                return CalcValue(amount: left.effective + direction * right.effective, kind: .scalar)
+            }
             let output = left.effective * (1 + direction * right.amount / 100)
             return CalcValue(amount: output, kind: left.kind)
         }

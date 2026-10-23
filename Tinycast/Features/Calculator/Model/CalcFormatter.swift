@@ -8,9 +8,9 @@ enum CalcFormatter {
             .replacingOccurrences(of: "/", with: "÷")
     }
 
-    /// Human-facing: ≤10 significant digits, trailing zeros trimmed, thousands separators.
+    /// Human-facing: ≤10 significant digits, trailing zeros trimmed, no grouping.
     static func display(_ value: Double) -> String {
-        grouped(copyText(value))
+        copyText(value)
     }
 
     /// Every integer up to 2^53 is exactly representable as a Double.
@@ -60,7 +60,7 @@ enum CalcFormatter {
         for step in timespanSteps where remainder >= step.seconds {
             let count = (remainder / step.seconds).rounded(.towardZero)
             remainder -= count * step.seconds
-            parts.append("\(grouped(String(format: "%.0f", count))) \(step.symbol)")
+            parts.append("\(String(format: "%.0f", count)) \(step.symbol)")
         }
         // Sub-second input has no whole part to show, so it keeps its own precision.
         if parts.isEmpty { return "\(display(seconds)) s" }
@@ -73,20 +73,4 @@ enum CalcFormatter {
     ]
 
     /// Insert `,` every three integer digits. Exponent-form strings pass through untouched.
-    static func grouped(_ text: String) -> String {
-        let bytes = text.utf8
-        guard !bytes.contains(101), !bytes.contains(69) else { return text }
-        let signCount = bytes.first == 45 ? 1 : 0
-        let integer = bytes.prefix { $0 != 46 }
-        guard integer.count - signCount > 3 else { return text }
-        var output: [UInt8] = []
-        output.reserveCapacity(bytes.count + integer.count / 3)
-        for (index, byte) in bytes.enumerated() {
-            if index > signCount, index < integer.count, (integer.count - index) % 3 == 0 {
-                output.append(44)
-            }
-            output.append(byte)
-        }
-        return String(bytes: output, encoding: .utf8)!
-    }
 }

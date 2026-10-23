@@ -39,7 +39,6 @@ enum SettingsFileSchema {
         case .showFavoritesInCompactMode: return bind(settings, \.showFavoritesInCompactMode)
         case .openOnCursorScreen: return bind(settings, \.openOnCursorScreen)
         case .paletteDraggable: return bind(settings, \.paletteDraggable)
-        case .calcNumberStyle: return bind(settings, \.calcNumberStyle)
         case .launcherShowsSuggestions: return bind(settings, \.launcherShowsSuggestions)
         case .rootSearchSensitivity: return bind(settings, \.rootSearchSensitivity)
         case .applicationsEnabled: return launcher.kindBinding(for: key, kind: .application)
@@ -96,7 +95,6 @@ extension EscapeKeyBehavior: SettingsFileRawValue {}
 extension AppAppearance: SettingsFileRawValue {}
 extension AppLanguage: SettingsFileRawValue {}
 extension InterfaceSize: SettingsFileRawValue {}
-extension CalcNumberStyle: SettingsFileRawValue {}
 extension SearchSensitivity: SettingsFileRawValue {}
 extension ClipboardDefaultAction: SettingsFileRawValue {}
 extension EmojiSkinTone: SettingsFileRawValue {}

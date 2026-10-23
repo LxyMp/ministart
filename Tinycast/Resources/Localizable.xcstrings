@@ -13992,16 +13992,6 @@
         }
       }
     },
-    "Number format": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "数字格式"
-          }
-        }
-      }
-    },
     "Numbered List": {
       "localizations": {
         "zh-Hans": {
@@ -21739,16 +21729,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "窗口模式"
-          }
-        }
-      }
-    },
-    "With a decimal comma, use ; to separate arguments.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用逗号作为小数分隔符时，以 ; 分隔参数。"
           }
         }
       }

@@ -2,7 +2,6 @@ import SwiftUI
 
 extension AppCore {
     /// Reads both observables, so a changed setting or region re-renders every calculator surface.
-    var calcNumberFormat: CalcNumberFormat { regionNumberFormat.format(for: settings.calcNumberStyle) }
 }
 
 /// One-deep memo over `CalcEngine.evaluate`, keyed on the rate snapshot's `fetchedAt`.
@@ -12,23 +11,20 @@ enum CalcMemo {
         let query: String
         let stamp: Date?
         let region: String?
-        let format: CalcNumberFormat
         let result: CalcResult?
     }
 
     private static var cache: Cache?
 
-    /// The answer stays canonical, so history keeps one spelling whatever the format becomes.
-    static func evaluate(_ query: String, rates: CurrencyRates?, format: CalcNumberFormat) -> CalcResult? {
+    /// The answer stays canonical, so history keeps one spelling.
+    static func evaluate(_ query: String, rates: CurrencyRates?) -> CalcResult? {
         let region = RegionCurrency.code
-        if let cache, cache.query == query, cache.stamp == rates?.fetchedAt, cache.region == region,
-            cache.format == format
-        {
+        if let cache, cache.query == query, cache.stamp == rates?.fetchedAt, cache.region == region {
             return cache.result
         }
         let result = CalcEngine.evaluate(
-            query, now: Date(), calendar: .current, rates: rates, region: region, format: format)
-        cache = Cache(query: query, stamp: rates?.fetchedAt, region: region, format: format, result: result)
+            query, now: Date(), calendar: .current, rates: rates, region: region)
+        cache = Cache(query: query, stamp: rates?.fetchedAt, region: region, result: result)
         return result
     }
 }
@@ -40,7 +36,6 @@ struct CalculatorCard: View {
     let selected: Bool
 
     var body: some View {
-        let result = core.calcNumberFormat.localized(result)
         return Group {
             switch result.payload {
             case .value(let display, _):
@@ -176,6 +171,6 @@ enum CalcActionsMenu {
                 core.calculatorCoordinator.copyCalculationWithExpression(result)
             })
         return PopoverMenuContent(
-            header: core.calcNumberFormat.localizedExpression(result.expression), items: items)
+            header: result.expression, items: items)
     }
 }

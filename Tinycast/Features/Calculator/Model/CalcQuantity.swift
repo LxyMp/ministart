@@ -147,7 +147,7 @@ enum CalcQuantity {
             expression: expression,
             sourceBadge: sourceBadge, targetBadge: definition.name,
             payload: .value(
-                display: "\(CalcFormatter.grouped(formatted)) \(definition.code)",
+                display: "\(formatted) \(definition.code)",
                 copyText: "\(formatted) \(definition.code)"),
             isCurrency: true)
     }

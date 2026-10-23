@@ -12,12 +12,11 @@ final class CalculatorCoordinator {
     }
 
     /// History records the canonical answer; only what reaches the pasteboard is localized.
-    private var format: CalcNumberFormat { core.calcNumberFormat }
 
     func copyCalculatorResult(_ result: CalcResult) {
         guard case .value(let display, let copyText) = result.payload else { return }
         paletteCoordinator.hidePalette(restoreFocus: false)
-        Paster.copyPlainText(format.localized(copyText))
+        Paster.copyPlainText(copyText)
     }
 
     /// `⌘↵` on the card: the answer becomes the query, so the next step chains onto it.
@@ -26,16 +25,15 @@ final class CalculatorCoordinator {
         guard case .value(let display, let copyText) = result.payload, result.canChain,
             !core.palette.isComposing
         else { return false }
-        core.palette.rewriteQuery(format.localized(copyText))
+        core.palette.rewriteQuery(copyText)
         return true
     }
 
     func copyCalculationWithExpression(_ result: CalcResult) {
         guard case .value(let display, let copyText) = result.payload else { return }
         paletteCoordinator.hidePalette(restoreFocus: false)
-        let format = format
         Paster.copyPlainText(
-            "\(format.localizedExpression(result.expression)) = \(format.localized(copyText))")
+            "\(result.expression) = \(copyText)")
     }
 
 }

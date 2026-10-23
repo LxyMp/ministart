@@ -156,9 +156,6 @@ enum SettingsSearchCatalog {
             .generalAppearance, "Drag to move the launcher",
             keywords: ["move", "position", "window"]),
         .init(
-            .generalCalculator, "Number format",
-            keywords: ["decimal", "comma", "separator", "locale", "region", "thousands"]),
-        .init(
             .generalSearch, "Show suggestions",
             keywords: ["frequent", "recent", "recommended", "empty", "root search"]),
         .init(

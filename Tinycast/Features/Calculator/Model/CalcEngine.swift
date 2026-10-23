@@ -2,14 +2,13 @@ import Foundation
 
 struct CalcResult: Equatable, Sendable {
     enum Payload: Equatable, Sendable {
-        /// `display` is grouped ("1,234,567"); `copyText` is the same answer, ungrouped.
         case value(display: String, copyText: String)
         /// A friendly error, only for a clear conversion attempt — never a half-typed expression.
         case error(message: String)
 
         static func number(_ value: Double, suffix: String = "") -> Self {
             let text = CalcFormatter.copyText(value)
-            return .value(display: CalcFormatter.grouped(text) + suffix, copyText: text + suffix)
+            return .value(display: text + suffix, copyText: text + suffix)
         }
 
         /// CSS lengths copy unspaced ("24px") so the answer pastes straight into a stylesheet.
@@ -17,7 +16,7 @@ struct CalcResult: Equatable, Sendable {
             let text = CalcFormatter.copyText(value)
             let copySeparator = unit.category == .pixels ? "" : " "
             return .value(
-                display: "\(CalcFormatter.grouped(text)) \(unit.symbol)",
+                display: "\(text) \(unit.symbol)",
                 copyText: text + copySeparator + unit.symbol)
         }
     }
@@ -55,10 +54,14 @@ enum CalcEngine {
     /// Every environment fact is injected; the answer is canonical, for `format` to localize.
     static func evaluate(
         _ raw: String, now: Date, calendar: Calendar, rates: CurrencyRates? = nil,
-        region: String? = nil, format: CalcNumberFormat = .english
+        region: String? = nil
     ) -> CalcResult? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty, trimmed.count <= 256, let query = format.canonical(trimmed) else {
+        guard !trimmed.isEmpty, trimmed.count <= 256 else {
+            return nil
+        }
+        let query = trimmed
+        guard !query.isEmpty else {
             return nil
         }
         if query.utf8.allSatisfy({ (65...90).contains($0) || (97...122).contains($0) }) {
@@ -85,7 +88,7 @@ enum CalcEngine {
         // A lone literal reads as an app search, so no card — except a radix one ("0xff").
         if tokens.count == 1 {
             if case .intLiteral(let value, let base) = tokens[0], base != .decimal {
-                let display = CalcFormatter.grouped(String(value))
+                let display = String(value)
                 return CalcResult(
                     expression: query,
                     sourceBadge: base.name, targetBadge: String(localized: "Decimal"),
@@ -137,7 +140,7 @@ enum CalcEngine {
                     sourceBadge: from.name,
                     targetBadge: to.name,
                     payload: .value(
-                        display: "\(CalcFormatter.grouped(amount)) \(to.code)",
+                        display: "\(amount) \(to.code)",
                         copyText: "\(amount) \(to.code)"),
                     isCurrency: true)
             case .mismatch(let from, let to):
@@ -295,21 +298,21 @@ enum CalcEngine {
         {
             source = UInt64(value)
             sourceBadge = String(localized: "Decimal")
-            sourceText = CalcFormatter.grouped(String(source))
+            sourceText = String(source)
         } else {
             return nil
         }
 
         let output =
             target == .decimal
-            ? CalcFormatter.grouped(String(source))
+            ? String(source)
             : target.prefix + String(source, radix: target.rawValue, uppercase: true)
         return CalcResult(
             expression: sourceText,
             sourceBadge: sourceBadge,
             targetBadge: target.name,
             payload: .value(
-                display: output, copyText: output.replacingOccurrences(of: ",", with: "")))
+                display: output, copyText: output))
     }
 
     // Both spellings of a plain decimal literal — "255" and the compact "10k" — echo verbatim.

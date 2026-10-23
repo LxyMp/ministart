@@ -41,8 +41,6 @@ enum CalcTokenizer {
                     let c = chars[i]
                     if isDigit(c) {
                         text.unicodeScalars.append(c)
-                    } else if c == "," && functionDepth == nil && i + 1 < chars.count && isDigit(chars[i + 1])
-                    {
                     } else if c == "." && !seenDot {
                         seenDot = true
                         text.unicodeScalars.append(c)

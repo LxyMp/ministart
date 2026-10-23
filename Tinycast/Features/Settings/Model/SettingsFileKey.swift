@@ -17,7 +17,6 @@ enum SettingsFileKey: String, CaseIterable, Sendable {
     case showFavoritesInCompactMode = "appearance.showFavoritesInCompactMode"
     case openOnCursorScreen = "appearance.followCursorAcrossDisplays"
     case paletteDraggable = "appearance.dragToReposition"
-    case calcNumberStyle = "calculator.numberStyle"
     case launcherShowsSuggestions = "search.showsSuggestions"
     case rootSearchSensitivity = "search.sensitivity"
     case applicationsEnabled = "applications.enabled"

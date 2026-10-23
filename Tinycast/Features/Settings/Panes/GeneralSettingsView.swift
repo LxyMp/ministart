@@ -86,19 +86,6 @@ struct GeneralSettingsView: View {
             }
 
 
-            Section {
-                Picker(selection: $settings.calcNumberStyle) {
-                    ForEach(CalcNumberStyle.allCases) { style in
-                        let sample = core.regionNumberFormat.format(for: style).localized("1,234,567.89")
-                        Text(verbatim: "\(style.title) (\(sample))").tag(style)
-                    }
-                } label: {
-                    SettingsRowTitle(.generalCalculator, "Number format")
-                    Text("With a decimal comma, use ; to separate arguments.")
-                }
-            } header: {
-                SettingsSectionHeader(.generalCalculator)
-            }
 
             Section {
                 Toggle(isOn: $settings.launcherShowsSuggestions) {

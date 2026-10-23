@@ -463,7 +463,7 @@ enum CalcDateTime {
                 expression: echo, sourceBadge: String(localized: "Date"),
                 targetBadge: scale == 1
                     ? String(localized: "Unix Seconds") : String(localized: "Unix Milliseconds"),
-                payload: .value(display: CalcFormatter.grouped(text), copyText: text))
+                payload: .value(display: text, copyText: text))
         }
         let source = query.hasSuffix(" to date") ? String(query.dropLast(8)) : query
         guard CalcTimestamp.isoDate(source) != nil || CalcTimestamp.epochDate(source) != nil else {

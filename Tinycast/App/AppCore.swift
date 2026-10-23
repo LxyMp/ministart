@@ -29,7 +29,6 @@ final class AppCore {
     let aliases = AliasStore()
     let fallbacks = FallbackStore()
     let currencyRates = CurrencyRateStore()
-    let regionNumberFormat = RegionNumberFormatMonitor()
     let updateChecker = UpdateCheckStore()
     let supportReminders: SupportReminderStore
     let emojiIndex = EmojiIndex()
