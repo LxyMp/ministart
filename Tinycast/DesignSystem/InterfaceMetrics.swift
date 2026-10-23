@@ -124,8 +124,6 @@ struct InterfaceMetrics: Equatable, Sendable {
         }
         var dialogIcon: CGFloat { scaledPoints(Theme.Size.dialogIcon, scale) }
         var hudMaxWidth: CGFloat { scaledPoints(Theme.Size.hudMaxWidth, scale) }
-        var hudWidth: CGFloat { scaledPoints(Theme.Size.hudWidth, scale) }
-        var hudHeight: CGFloat { scaledPoints(Theme.Size.hudHeight, scale) }
     }
 
     /// `NSFont` is the only public source of a text style's size and face.

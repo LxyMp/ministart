@@ -18,13 +18,6 @@ const CLDR_URL = "https://raw.githubusercontent.com/unicode-org/cldr-json/main/c
 
 // Widely used languages: CLDR locale → the pack name `Bundle.preferredLocalizations` matches.
 const KEYWORD_LOCALES = {
-  de: "de",
-  es: "es",
-  fr: "fr",
-  ja: "ja",
-  ko: "ko",
-  pt: "pt",
-  ru: "ru",
   zh: "zh-Hans",
 };
 

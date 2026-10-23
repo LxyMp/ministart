@@ -236,8 +236,6 @@ enum Theme {
         /// 16:9 again, wider: the standalone camera is the surface, not a confirmation on one.
         static let cameraStage = CGSize(width: 560, height: 315)
         /// Transient volume HUD shown after any volume or mute command.
-        static let hudWidth: CGFloat = 200
-        static let hudHeight: CGFloat = 100
         /// Read-only volume bar geometry used by the HUD.
         /// Fixed slot for the level readout, sized to the widest string it ever holds.
         static let roomCardTitleBar: CGFloat = 40
