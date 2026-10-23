@@ -244,16 +244,6 @@
         }
       }
     },
-    "%@ doesn't support macOS.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 不支持 macOS。"
-          }
-        }
-      }
-    },
     "%@ doesn't update itself": {
       "localizations": {
         "zh-Hans": {
@@ -366,16 +356,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "此 Mac 上未安装 %@。"
-          }
-        }
-      }
-    },
-    "%@ isn't supported yet": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "尚不支持 %@"
           }
         }
       }
@@ -3776,16 +3756,6 @@
         }
       }
     },
-    "Apple Intelligence does not support this language yet.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Intelligence 尚不支持此语言。"
-          }
-        }
-      }
-    },
     "Apple Intelligence is already answering. Try again shortly.": {
       "localizations": {
         "zh-Hans": {
@@ -3852,16 +3822,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "快捷指令"
-          }
-        }
-      }
-    },
-    "Apple's translator does not support this language pair.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple 翻译不支持此语言对。"
           }
         }
       }
@@ -4567,16 +4527,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "置于最前"
-          }
-        }
-      }
-    },
-    "Bring your shortcuts, favorites, and clipboard history along.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "一并带上你的快捷键、个人收藏和剪贴板历史记录。"
           }
         }
       }
@@ -6700,16 +6650,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法创建事件"
-          }
-        }
-      }
-    },
-    "Couldn't enable text recognition for clipboard history.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法为剪贴板历史记录启用文本识别。"
           }
         }
       }
@@ -11091,16 +11031,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "按下前其菜单已发生变化。请重新搜索并重试。"
-          }
-        }
-      }
-    },
-    "Its private support folder could not be prepared.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法准备其私有支持文件夹。"
           }
         }
       }
@@ -17440,16 +17370,6 @@
         }
       }
     },
-    "Search the models available to this key and add one or more. Exact model IDs remain available when discovery is unsupported.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索此密钥可用的模型并添加一个或多个。在不支持发现功能时，仍可使用确切的模型 ID。"
-          }
-        }
-      }
-    },
     "Searched web": {
       "localizations": {
         "zh-Hans": {
@@ -18866,42 +18786,12 @@
         }
       }
     },
-    "Support %@": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "支持 %@"
-          }
-        }
-      }
-    },
-    "Support %@…": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "支持 %@…"
-          }
-        }
-      }
-    },
     "Support Ministart": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "支持 Ministart"
-          }
-        }
-      }
-    },
-    "Support…": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "支持…"
           }
         }
       }
@@ -19341,16 +19231,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "授权服务器已更改。请输入新服务器的客户端凭证。"
-          }
-        }
-      }
-    },
-    "The authorization server must advertise PKCE S256 support.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "授权服务器必须声明支持 PKCE S256。"
           }
         }
       }
@@ -20131,16 +20011,6 @@
         }
       }
     },
-    "This Mac does not support Apple Intelligence.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "这台 Mac 不支持 Apple Intelligence。"
-          }
-        }
-      }
-    },
     "This Month": {
       "localizations": {
         "zh-Hans": {
@@ -20281,16 +20151,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "此命令需要先设置其偏好设置：%@。"
-          }
-        }
-      }
-    },
-    "This command renders %@, which Ministart doesn't support yet. See docs/extensions.md.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此命令渲染 %@，Ministart 尚不支持。请参阅 docs/extensions.md。"
           }
         }
       }
@@ -21252,16 +21112,6 @@
         }
       }
     },
-    "Unsupported frontmatter key '%@'": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "不支持的 frontmatter 键“%@”"
-          }
-        }
-      }
-    },
     "Unterminated escape sequence": {
       "localizations": {
         "zh-Hans": {
@@ -21849,16 +21699,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "位置"
-          }
-        }
-      }
-    },
-    "Where the app supports it.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "App 支持时。"
           }
         }
       }
