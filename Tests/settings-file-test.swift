@@ -46,7 +46,7 @@ struct SettingsFileTest {
             SettingsFileKey.sections == [
                 "general", "appearance", "hyperKey", "calculator", "search", "applications",
                 "systemSettings", "systemActions", "commands", "quicklinks", "appleShortcuts",
-                "fileSearch", "notes", "snippets", "windowManagement", "clipboard",
+                "fileSearch", "notes", "snippets", "clipboard",
                 "emoji", "extensions"
             ])
 
@@ -108,15 +108,13 @@ struct SettingsFileTest {
 
     private static func testFormat() {
         let values: [SettingsFileKey: SettingsFileJSON] = [
-            .windowShortcuts: .object([]),
             .autoSwitchInputSource: .null,
             .searchScopes: .array(["/Applications", "~/Applications"]),
             .showInMenuBar: true,
             .automaticallyCheckForUpdates: false,
             .escapeKeyBehavior: "say \"hi\"\\ / é\n\t\u{01}",
             .fileSearchIgnorePatterns: .array([]),
-            .popToRootTimeout: 5,
-            .windowGap: .number(-1.5)
+            .popToRootTimeout: 5
         ]
         let golden = """
             {
@@ -135,10 +133,6 @@ struct SettingsFileTest {
               },
               "fileSearch": {
                 "ignorePatterns": []
-              },
-              "windowManagement": {
-                "gap": -1.5,
-                "shortcuts": {}
               }
             }
 

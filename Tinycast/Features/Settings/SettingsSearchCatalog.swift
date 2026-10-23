@@ -107,7 +107,7 @@ enum SettingsSearchCatalog {
 
     static let entries: [SettingsSearchEntry] =
         general + applications + systemSettings + systemActions + commands + quicklinks
-        + appleShortcuts + fallbacks + clipboard + snippets + fileSearch + windowManagement
+        + appleShortcuts + fallbacks + clipboard + snippets + fileSearch
         + notes + emoji + extensions + permissions
         + backup + about
 
@@ -333,65 +333,6 @@ enum SettingsSearchCatalog {
         .init(
             .snippetsLibrary, "Snippets Folder",
             keywords: ["reveal", "finder", "markdown", "files", "location", "path", "dotfiles"])
-    ]
-
-    private static let windowManagement: [SettingsSearchEntry] = [
-        .init(
-            pane: .windowManagement,
-            keywords: ["tile", "halves", "thirds", "maximize", "snap", "layouts", "arrangement"]),
-        .init(
-            .windowManagementWindowManagement, "Enable window management",
-            keywords: ["tile", "accessibility"]),
-        .init(
-            .windowManagementOptions, "Cycling",
-            keywords: ["repeat", "thirds", "halves", "displays", "monitor", "screens"]),
-        .init(
-            .windowManagementOptions, "Gap between windows",
-            keywords: ["padding", "spacing", "margin", "points"]),
-        .init(
-            .windowManagementOptions, "Shortcut preset",
-            keywords: ["rectangle", "magnet", "spectacle", "defaults", "import", "shortcuts"]),
-        .init(
-            group: .windowManagementOptions, "Window commands",
-            keywords: ["shortcut", "alias", "left half", "maximize", "center"]),
-        .init(
-            group: .windowManagementLayoutCommands, "Layout and room commands",
-            keywords: [
-                "shortcut", "launcher", "create layout", "capture", "switch room", "create room"
-            ]),
-        .init(
-            group: .windowManagementLayouts, "Window Layouts",
-            keywords: [
-                "layout", "arrangement", "workspace", "preset", "restore windows",
-                "multi display", "monitor", "alias"
-            ]),
-        .init(
-            .windowManagementLayouts, "Show layouts in launcher",
-            keywords: ["hide", "visibility", "search"]),
-        .init(
-            .windowManagementLayouts, "New Layout",
-            keywords: ["add", "create", "arrangement", "preset"]),
-        .init(
-            .windowManagementLayouts, "Create Layout from Current Windows",
-            keywords: ["capture", "snapshot", "current", "save arrangement"]),
-        .init(
-            group: .windowManagementRooms, "Rooms",
-            keywords: [
-                "room", "project", "workspace", "tile", "focus", "columns", "grid", "stack",
-                "hide other apps", "switch project", "alias"
-            ]),
-        .init(
-            .windowManagementRooms, "Show rooms in launcher",
-            keywords: ["hide", "visibility", "search"]),
-        .init(
-            .windowManagementRooms, "New Room",
-            keywords: ["add", "create", "project", "windows"]),
-        .init(
-            group: .windowManagementCustomSizes, "Custom Sizes",
-            keywords: ["custom", "size", "resize", "dimensions", "pixels", "points", "percent", "alias"]),
-        .init(
-            .windowManagementCustomSizes, "New Custom Size",
-            keywords: ["add", "create", "resize", "window size"])
     ]
 
     private static let clipboard: [SettingsSearchEntry] = [

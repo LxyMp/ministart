@@ -113,7 +113,6 @@ struct LanguageTests {
             ("extensions-installed-section", "Installed", ["fr": "Extensions installées"]),
             ("extensions-install-section", "Install", ["fr": "Installation"]),
             ("unit-category-time", "Time", ["fr": "Durée"]),
-            ("window-position-center", "Center", ["fr": "Centre"]),
             ("onboarding-open-launcher", "App Launcher", ["fr": "Ouvrir le lanceur"]),
             (
                 "emoji-skin-tone-light", "Light",

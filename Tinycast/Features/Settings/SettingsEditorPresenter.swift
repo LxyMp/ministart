@@ -381,11 +381,6 @@ extension View {
             .environment(core.snippetCoordinator)
             .environment(core.quicklinks)
             .environment(core.quicklinkCoordinator)
-            .environment(core.windowLayouts)
-            .environment(core.rooms)
-            .environment(core.roomCoordinator)
-            .environment(core.customWindowSizes)
-            .environment(core.customWindowSizeCoordinator)
             .scrollContentBackground(.hidden)
             .motionScope()
     }

@@ -153,7 +153,6 @@ struct SettingsHistoryTests {
             ("automatically check for updates", .general),
             ("popup", .general),
             ("paste history", .clipboard),
-            ("window manage", .windowManagement),
             ("skin tone", .emoji)
         ]
         for (query, tab) in cases {
