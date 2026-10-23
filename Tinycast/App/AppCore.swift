@@ -11,7 +11,6 @@ final class AppCore {
     let customCommands = CustomCommandStore()
     let quicklinks = QuicklinkStore()
     let clipboardStore = ClipboardStore()
-    @ObservationIgnored private var clipboardTextIndexer: ClipboardTextIndexer?
     let clipboardManager: ClipboardManager
     let snippetsStore: SnippetsStore
     let snippetListener = SnippetKeywordListener(
@@ -20,7 +19,6 @@ final class AppCore {
     let hotKeys = HotKeyManager()
     @ObservationIgnored private(set) lazy var hyperKey = HyperKeyManager(
         settings: settings, hotKeys: hotKeys)
-    let inputSourceSwitcher = InputSourceSwitcher()
     let settings: AppSettings
     /// Mirrors settings into settings.json; nil while the Backup pane's switch is off.
     @ObservationIgnored private var settingsFile: SettingsFileRepository?
@@ -32,7 +30,6 @@ final class AppCore {
     let visibility = VisibilityStore()
     let aliases = AliasStore()
     let fallbacks = FallbackStore()
-    let calcHistory = CalculatorHistoryStore()
     let currencyRates = CurrencyRateStore()
     let regionNumberFormat = RegionNumberFormatMonitor()
     let updateChecker = UpdateCheckStore()
@@ -123,12 +120,11 @@ final class AppCore {
         frequentEmoji: frequentEmoji, settings: settings, windowController: windowController,
         paletteCoordinator: paletteCoordinator)
     @ObservationIgnored private(set) lazy var calculatorCoordinator = CalculatorCoordinator(
-        calcHistory: calcHistory, paletteCoordinator: paletteCoordinator, core: self)
+        paletteCoordinator: paletteCoordinator, core: self)
 @ObservationIgnored private(set) lazy var fileSearchCoordinator = FileSearchCoordinator(
         settings: settings, appIndex: appIndex, session: fileSearch, indexer: fileIndexer,
         palette: palette, paletteCoordinator: paletteCoordinator,
         windowController: windowController, core: self)
-    @ObservationIgnored private(set) lazy var cameraCoordinator = CameraCoordinator(core: self)
     @ObservationIgnored private(set) lazy var dictionaryCoordinator = DictionaryCoordinator(
         paletteCoordinator: paletteCoordinator)
     @ObservationIgnored private(set) lazy var updateCoordinator = UpdateCoordinator(
@@ -353,34 +349,6 @@ final class AppCore {
         await notesCoordinator.prepareForTermination()
     }
 
-    /// Idempotent: both switches are tracked, and either one flipping re-runs the whole decision.
-    func applyClipboardTextSearch() {
-        guard settings.clipboardEnabled, settings.clipboardTextSearchEnabled else {
-            clipboardStore.onItemsChanged = nil
-            clipboardStore.onSearchResultsChanged = nil
-            clipboardStore.setTextSearchEnabled(false)
-            clipboardTextIndexer?.stop()
-            return
-        }
-        guard clipboardStore.setTextSearchEnabled(true) else {
-            showMessage(
-                String(localized: "Couldn't enable text recognition for clipboard history."),
-                tone: .danger)
-            return
-        }
-        clipboardStore.setTextSearchActive(palette.isVisible)
-        // Kept across a disable: the indexer reschedules itself once a cancelled run winds down.
-        let indexer =
-            clipboardTextIndexer
-            ?? ClipboardTextIndexer(store: clipboardStore, canRun: { ClipboardTextIndexer.isSystemIdle })
-        clipboardTextIndexer = indexer
-        clipboardStore.onItemsChanged = { [weak indexer] in indexer?.schedule() }
-        clipboardStore.onSearchResultsChanged = { [weak self] query, previous, current in
-            self?.clipboardCoordinator.followSearchResults(query: query, previous: previous, current: current)
-        }
-        indexer.start()
-    }
-
     func relaunch() {
         guard !relaunchRequested else { return }
         relaunchRequested = true
@@ -392,10 +360,8 @@ final class AppCore {
 
     func prepareForTermination() {
         settingsFile?.flush()
-        clipboardTextIndexer?.stop()
         // HID remaps first: they outlive the process.
         hyperKey.prepareForTermination()
-        inputSourceSwitcher.endSession()
         textInjector.prepareForTermination()
         snippetListener.stop()
         snippetsStore.stop()
@@ -423,8 +389,6 @@ final class AppCore {
             reproject: { $0.appleShortcutCoordinator.applyPresence() })
         track(
             { _ = $0.clipboardEnabled }, reproject: { $0.clipboardCoordinator.applyEnabled() })
-        track(
-            { _ = $0.clipboardTextSearchEnabled }, reproject: { $0.applyClipboardTextSearch() })
         track({ _ = $0.fileSearchEnabled }, reproject: { $0.fileSearchCoordinator.applyEnabled() })
         track(
             { _ = $0.fileSearchShowInLauncher },

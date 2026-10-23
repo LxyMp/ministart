@@ -80,11 +80,8 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
             positionPanel(panel, collapsed: core.paletteCoordinator.paletteIsCollapsed)
             // Flush first-mount layout off-screen, so the safe-area settle isn't visible.
             panel.contentView?.layoutSubtreeIfNeeded()
-            core.inputSourceSwitcher.beginSession(
-                preferredInputSourceID: core.settings.autoSwitchInputSourceID)
             core.palette.noteVisible(true)
-            core.clipboardStore.setTextSearchActive(true)
-            // Non-activating, so summoning never raises our own aux windows behind it.
+                // Non-activating, so summoning never raises our own aux windows behind it.
             panel.makeKeyAndOrderFront(nil)
             panel.orderFrontRegardless()
             // A never-activated login item can drop the first key request, so re-assert.
@@ -126,9 +123,7 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
         panel?.orderOut(nil)
         NotesPanel.refusesInheritedKey = false
         commandEscapeTap.disable()
-        core.inputSourceSwitcher.endSession()
         core.palette.noteVisible(false)
-        core.clipboardStore.setTextSearchActive(false)
         // Drop the anchor, so the next summon re-resolves for the screen in use then.
         anchor = nil
         // The guides must never outlive the panel they point at.
@@ -221,7 +216,6 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
             // A re-summon leaves first responder where it was, so neither of these gets an event.
             panel?.trackComposition()
             if let context = panel?.fieldEditorContext {
-                core.inputSourceSwitcher.applySession(to: context)
             }
             if queryWasPreserved {
                 queryWasPreserved = false
@@ -345,7 +339,6 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
         panel.paletteState = core.palette
         // The switch is scoped to the palette's own editing context, never applied globally.
         panel.onFieldEditorFocused = { [weak self] context in
-            self?.core.inputSourceSwitcher.applySession(to: context)
         }
         // Backspace takes Escape's back step but never closes: a root screen falls to the launcher.
         panel.onBareBackspace = { [weak self] in

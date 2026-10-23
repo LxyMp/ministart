@@ -42,7 +42,6 @@ enum SettingsBackupCoverage {
         "snippetsShowInLauncher": .snippetsShowInLauncher,
         "quicklinksEnabled": .quicklinksEnabled,
         "quicklinksShowInLauncher": .quicklinksShowInLauncher,
-        "quicklinkOpensNewWindow": .quicklinkOpensNewWindow,
         "quicklinkPassesSelectedText": .quicklinkPassesSelectedText,
         "quicklinkConfirmsBeforeDelete": .quicklinkConfirmsBeforeDelete,
         "appleShortcutsEnabled": .appleShortcutsEnabled,
@@ -57,8 +56,6 @@ enum SettingsBackupCoverage {
 
     /// Keys kept out of a backup on purpose, each with the reason it has to stay out.
     static let deliberatelyExcluded: [String: String] = [
-        AppSettingsKey.clipboardTextSearchEnabled.rawValue:
-            "Background OCR is an opt-in processing choice on this Mac; a backup must not enable it.",
         AppSettingsKey.snippetsEnabled.rawValue:
             "Doubles as keyword-expansion consent; an import must not enable keystroke listening.",
         AppSettingsKey.extensionPackageManager.rawValue:
@@ -72,8 +69,6 @@ enum SettingsBackupCoverage {
             "Machine-local geometry: every entry names a display this Mac has, and no other one.",
         AppSettingsKey.paletteExpandedCenterDisplays.rawValue:
             "Machine-local geometry: every entry names a display this Mac has, and no other one.",
-        AppSettingsKey.autoSwitchInputSource.rawValue:
-            "Names a keyboard input source installed on this Mac; another Mac may not have it.",
         AppSettingsKey.snippetsFolder.rawValue:
             "Names a folder on this Mac; the one a backup lands on may not have it.",
         AppSettingsKey.notesFolder.rawValue:

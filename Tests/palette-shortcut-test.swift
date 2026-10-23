@@ -52,11 +52,7 @@ struct PaletteShortcutTests {
 
         expect(resolve("v", command: true, shift: true), .pasteFile, "⇧⌘V pastes the file")
         expect(resolve("v", command: true), nil, "bare ⌘V stays with the search field")
-        expect(resolve("t", command: true, shift: true), .copyText, "⇧⌘T copies an image's text")
         expect(resolve("t", command: true), nil, "bare ⌘T stays with the search field")
-        expect(
-            resolve("t", command: true, shift: true, option: true), .copyText,
-            "an extra Option still reads ⇧⌘T")
         expect(resolve("y", command: true), .quickLook, "⌘Y is the Quick Look chord")
         expect(resolve("y", command: true, shift: true), .quickLook, "an extra Shift still reads ⌘Y")
         expect(resolve("o", command: true), .openInApp, "⌘O opens the row in its own app")
@@ -105,7 +101,7 @@ struct PaletteShortcutTests {
         expect(resolve("a"), nil, "typing is never a chord")
 
         let expanded: [PaletteShortcut] = [
-            .copyFile, .copyName, .copyPath, .copyText, .pasteFile, .quickLook, .openInApp,
+            .copyFile, .copyName, .copyPath, .pasteFile, .quickLook, .openInApp,
             .showDetails, .toggleFavorite, .hideFromSearch, .quit, .forceQuit, .minimizeWindow,
             .hideApp, .restart, .edit, .duplicate, .showInFinder
         ]
@@ -121,7 +117,7 @@ struct PaletteShortcutTests {
         }
 
         let closing: [PaletteShortcut] = [
-            .delete, .deleteAll, .copyFile, .copyName, .copyPath, .copyText, .copyCalculation,
+            .delete, .deleteAll, .copyFile, .copyName, .copyPath, .copyCalculation,
             .quickLook, .openInApp, .showDetails, .toggleFavorite, .hideFromSearch, .minimizeWindow,
             .newItem, .settings, .edit, .duplicate, .showInFinder
         ]

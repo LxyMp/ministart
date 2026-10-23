@@ -11,8 +11,6 @@ final class ClipboardCoordinator {
     private let paletteCoordinator: PaletteCoordinator
     /// Dialogs, for the one action here that can't be undone.
     private unowned let core: AppCore
-    /// One Copy Text at a time: a newer trigger cancels the helper an older one is waiting on.
-    private var textTask: Task<Void, Never>?
     private var pasteSequence: PasteSequence?
 
     init(
@@ -39,7 +37,6 @@ final class ClipboardCoordinator {
     func applyEnabled() {
         appIndex.setCommandsVisible([.clipboardHistory, .pasteSequentially], settings.clipboardEnabled)
         guard settings.clipboardEnabled else {
-            core.applyClipboardTextSearch()
             clipboardManager.stop()
             if palette.mode == .clipboard { palette.prepare(mode: .launcher) }
             clipboardStore.close()
@@ -48,20 +45,8 @@ final class ClipboardCoordinator {
         clipboardStore.open()
         clipboardStore.maxAge = settings.clipboardRetention.maxAge
         clipboardManager.start()
-        core.applyClipboardTextSearch()
         // Deferred off the launch path: the palette fills in behind the SQLite read and prune.
         Task { clipboardStore.load() }
-    }
-
-    func followSearchResults(query: String, previous: [ClipboardItem], current: [ClipboardItem]) {
-        guard palette.isVisible, palette.mode == .clipboard,
-            palette.query.trimmingCharacters(in: .whitespaces) == query,
-            previous.indices.contains(palette.selection)
-        else { return }
-        let selectedID = previous[palette.selection].id
-        if let index = current.firstIndex(where: { $0.id == selectedID }) {
-            palette.selection = index
-        }
     }
 
     func applyRetention(_ retention: ClipboardRetention) {
@@ -209,40 +194,6 @@ final class ClipboardCoordinator {
         paletteCoordinator.hidePalette(restoreFocus: false)
         Paster.copyPlainText(path)
         core.showMessage(String(localized: "Copied path"))
-    }
-
-    func copyImageText(_ item: ClipboardItem) {
-        guard let path = item.imagePath ?? item.filePath else { return }
-        paletteCoordinator.hidePalette(restoreFocus: false)
-        core.showProgress(String(localized: "Reading text…"))
-        let changeCount = NSPasteboard.general.changeCount
-        textTask?.cancel()
-        textTask = Task {
-            do {
-                // A stat on an unmounted or network volume can stall, so it stays off-main.
-                let exists = await Task.detached { FileManager.default.fileExists(atPath: path) }.value
-                try Task.checkCancellation()
-                guard exists else {
-                    return item.kind == .file
-                        ? reportUnavailable(item)
-                        : core.showMessage(
-                            String(localized: "That image is no longer available."), tone: .danger)
-                }
-                let text = try await ClipboardTextWorker.extract(item)
-                guard !text.isEmpty else {
-                    return core.showMessage(String(localized: "No text found"), tone: .neutral)
-                }
-                guard NSPasteboard.general.changeCount == changeCount else {
-                    return core.showMessage(
-                        String(localized: "Clipboard changed, text not copied"), tone: .neutral)
-                }
-                Paster.copyPlainText(text)
-                core.showMessage(String(localized: "Copied text"))
-            } catch is CancellationError {
-            } catch {
-                core.showMessage(String(localized: "Couldn’t read the text"), tone: .danger)
-            }
-        }
     }
 
     /// Nil once the file is gone, so every action reports rather than silently no-opping.

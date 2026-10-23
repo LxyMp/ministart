@@ -248,7 +248,10 @@ private enum ThumbnailSource {
         switch self {
         case .image(let derived):
             return await ImageThumbnail.loadAsync(
-                url, maxPixel: maxPixel, copyingWith: derived ? ClipboardTextWorker.executable : nil)
+                url, maxPixel: maxPixel,
+                copyingWith: derived
+                    ? Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/ClipboardTextHelper")
+                    : nil)
         case .file: return await FilePreviewThumbnail.loadAsync(url, maxPixel: maxPixel)
         }
     }

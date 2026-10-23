@@ -29,10 +29,9 @@ enum QuicklinkLauncher {
     }
 
     /// Browsers that don't support it ignore it, so passing it always is safe.
-    private static let newWindowArgument = "--new-window"
 
     static func open(
-        _ link: String, openWithBundleID: String?, inNewWindow: Bool
+        _ link: String, openWithBundleID: String?
     ) async throws(Failure) {
         guard let destination = QuicklinkDestination.detect(link) else {
             throw .unresolvable(link)
@@ -48,7 +47,6 @@ enum QuicklinkLauncher {
         }
 
         let configuration = NSWorkspace.OpenConfiguration()
-        if inNewWindow { configuration.arguments = [newWindowArgument] }
 
         var application: URL?
         if let openWithBundleID {

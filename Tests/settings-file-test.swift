@@ -108,7 +108,6 @@ struct SettingsFileTest {
 
     private static func testFormat() {
         let values: [SettingsFileKey: SettingsFileJSON] = [
-            .autoSwitchInputSource: .null,
             .searchScopes: .array(["/Applications", "~/Applications"]),
             .showInMenuBar: true,
             .automaticallyCheckForUpdates: false,
@@ -122,8 +121,7 @@ struct SettingsFileTest {
                 "showInMenuBar": true,
                 "automaticallyCheckForUpdates": false,
                 "popToRootSeconds": 5,
-                "escapeKeyBehavior": "say \\"hi\\"\\\\ / é\\n\\t\\u0001",
-                "autoSwitchInputSource": null
+                "escapeKeyBehavior": "say \\"hi\\"\\\\ / é\\n\\t\\u0001"
               },
               "applications": {
                 "searchScopes": [
@@ -194,8 +192,8 @@ struct SettingsFileTest {
             SettingsFileBinding(.popToRootTimeout, fixture, \.seconds) {
                 (0...90).contains($0) ? $0 : nil
             },
-            SettingsFileBinding(.autoSwitchInputSource, fixture, \.name),
-            SettingsFileBinding(.searchScopes, fixture, \.scopes)
+            SettingsFileBinding(.searchScopes, fixture, \.scopes),
+            SettingsFileBinding(.clipboardDefaultAction, fixture, \.name)
         ]
     }
 

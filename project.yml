@@ -38,9 +38,8 @@ targets:
     platform: macOS
     sources:
       - path: Tinycast
-        # Helper-only sources: compiling them in would link Vision and PDFKit into the app.
+        # Helper-only sources: compiling them in would link ImageIO's full decode into the app.
         excludes:
-          - Features/Clipboard/Service/ClipboardTextExtractor.swift
           - Features/Clipboard/Service/ClipboardTextHelper.swift
           - Features/FileSearch/Helper
           - Resources/EmojiKeywords
@@ -87,7 +86,6 @@ targets:
     type: tool
     platform: macOS
     sources:
-      - Tinycast/Features/Clipboard/Service/ClipboardTextExtractor.swift
       - Tinycast/Features/Clipboard/Service/ClipboardTextHelper.swift
     settings:
       base:

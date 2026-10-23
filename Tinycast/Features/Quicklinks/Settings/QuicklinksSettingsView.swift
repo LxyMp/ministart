@@ -82,10 +82,6 @@ struct QuicklinksSettingsView: View {
     private var behaviour: some View {
         @Bindable var settings = settings
         return Section {
-            Toggle(isOn: $settings.quicklinkOpensNewWindow) {
-                SettingsRowTitle(.quicklinksBehaviour, "Open in a new window")
-                Text("Where the app supports it.")
-            }
             Toggle(isOn: $settings.quicklinkPassesSelectedText) {
                 SettingsRowTitle(.quicklinksBehaviour, "Pass selected text as argument")
                 Text("Fills the first argument when a shortcut opens the quicklink.")

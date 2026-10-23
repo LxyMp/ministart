@@ -45,10 +45,6 @@ struct ClipboardScreen: PaletteScreen {
             return true
         case .pin: return pin(at: selection)
         case .favoriteSlot(let index): return activatePinned(at: index)
-        case .copyText:
-            guard let item = item(at: selection), item.offersTextExtraction else { return false }
-            core.clipboardCoordinator.copyImageText(item)
-            return true
         case .showInFinder:
             guard let item = item(at: selection), item.kind != .text else { return false }
             core.clipboardCoordinator.revealClip(item)
@@ -209,15 +205,6 @@ enum ClipboardActionsMenu {
             ) {
                 core.clipboardCoordinator.togglePinnedClip(item)
             })
-        if item.offersTextExtraction {
-            items.append(
-                PopoverMenuItem(
-                    title: String(localized: "Copy Text"), systemImage: "doc.text.viewfinder",
-                    shortcut: "⇧⌘T"
-                ) {
-                    core.clipboardCoordinator.copyImageText(item)
-                })
-        }
         if item.kind != .text {
             items.append(
                 PopoverMenuItem(

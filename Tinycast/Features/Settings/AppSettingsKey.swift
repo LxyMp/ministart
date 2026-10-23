@@ -4,7 +4,6 @@ import Foundation
 enum AppSettingsKey: String, CaseIterable {
     // Every raw value is spelled out so renaming a case can never rename a persisted key.
     case clipboardEnabled = "clipboardEnabled"
-    case clipboardTextSearchEnabled = "clipboardTextSearchEnabled"
     case clipboardRetention = "clipboardRetentionDays"
     case clipboardDefaultAction = "clipboardDefaultAction"
     case clipboardDisabledApps = "clipboardDisabledApps"
@@ -28,7 +27,6 @@ enum AppSettingsKey: String, CaseIterable {
     case launcherShowsSuggestions = "launcherShowsSuggestions"
     case rootSearchSensitivity = "rootSearchSensitivity"
     case openOnCursorScreen = "openOnCursorScreen"
-    case autoSwitchInputSource = "autoSwitchInputSource"
     case paletteDraggable = "paletteDraggable"
     case animationsEnabled = "animationsEnabled"
     case palettePosition = "palettePosition"
@@ -49,7 +47,6 @@ enum AppSettingsKey: String, CaseIterable {
     case snippetsFolder = "snippetsFolder"
     case quicklinksEnabled = "quicklinksEnabled"
     case quicklinksShowInLauncher = "quicklinksShowInLauncher"
-    case quicklinkOpensNewWindow = "quicklinkOpensNewWindow"
     case quicklinkPassesSelectedText = "quicklinkPassesSelectedText"
     case quicklinkConfirmsBeforeDelete = "quicklinkConfirmsBeforeDelete"
     case appleShortcutsEnabled = "appleShortcutsEnabled"

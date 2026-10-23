@@ -61,7 +61,6 @@ struct SettingsBackup: Codable {
         var quicklinksEnabled: Bool?
         var quicklinksShowInLauncher: Bool?
         var extensionsShowInLauncher: Bool?
-        var quicklinkOpensNewWindow: Bool?
         var quicklinkPassesSelectedText: Bool?
         var quicklinkConfirmsBeforeDelete: Bool?
         // Carried like quicklinks: running a shortcut the user built grants no permission class.
@@ -145,7 +144,6 @@ extension SettingsBackup {
             quicklinksEnabled: s.quicklinksEnabled,
             quicklinksShowInLauncher: s.quicklinksShowInLauncher,
             extensionsShowInLauncher: s.extensionsShowInLauncher,
-            quicklinkOpensNewWindow: s.quicklinkOpensNewWindow,
             quicklinkPassesSelectedText: s.quicklinkPassesSelectedText,
             quicklinkConfirmsBeforeDelete: s.quicklinkConfirmsBeforeDelete,
             appleShortcutsEnabled: s.appleShortcutsEnabled,
@@ -390,10 +388,6 @@ extension SettingsBackup {
         }
         if let flag = s.appleShortcutsEnabled {
             settings.appleShortcutsEnabled = flag
-            count += 1
-        }
-        if let flag = s.quicklinkOpensNewWindow {
-            settings.quicklinkOpensNewWindow = flag
             count += 1
         }
         if let flag = s.quicklinkPassesSelectedText {

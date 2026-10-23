@@ -123,10 +123,6 @@ enum BackupApplier {
             core.frequentEmoji.replace(records)
             applied += records.count
         }
-        if let entries = bundle.decodeLearning(.calculator, as: [CalcHistoryEntry].self) {
-            core.calcHistory.replace(entries)
-            applied += entries.count
-        }
         return applied
     }
 

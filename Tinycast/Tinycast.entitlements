@@ -11,7 +11,5 @@
 	<key>com.apple.security.automation.apple-events</key>
 	<true/>
 	<!-- Undeclared, tccd refuses the prompt outright: no dialog, and the request resolves as denied. -->
-	<key>com.apple.security.device.camera</key>
-	<true/>
 </dict>
 </plist>

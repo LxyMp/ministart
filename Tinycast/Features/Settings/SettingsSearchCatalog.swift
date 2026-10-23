@@ -135,9 +135,6 @@ enum SettingsSearchCatalog {
             .generalGeneral, "Escape Key Behavior",
             keywords: ["escape", "esc", "back", "close", "navigate"]),
         .init(
-            .generalGeneral, "Auto-switch input source",
-            keywords: ["keyboard", "layout", "language", "abc"]),
-        .init(
             .generalAppearance, "Appearance",
             keywords: ["dark", "light", "mode", "theme"]),
         .init(
@@ -232,9 +229,6 @@ enum SettingsSearchCatalog {
         .init(
             group: .quicklinksCommands, "Quicklink commands",
             keywords: ["shortcut", "launcher", "search", "import", "export"]),
-        .init(
-            .quicklinksBehaviour, "Open in a new window",
-            keywords: ["browser", "tab"]),
         .init(
             .quicklinksBehaviour, "Pass selected text as argument",
             keywords: ["selection", "hotkey", "shortcut", "argument"]),
@@ -339,9 +333,6 @@ enum SettingsSearchCatalog {
         .init(
             .clipboardHistory, "Keep history for",
             keywords: ["retention", "delete", "privacy", "expire"]),
-        .init(
-            .clipboardHistory, "Search text in images and PDFs",
-            keywords: ["OCR", "recognize", "scan", "screenshot", "background", "idle"]),
         .init(
             .clipboardHistory, "Default action",
             keywords: ["enter", "return", "paste", "copy", "primary"]),

@@ -29,10 +29,6 @@ struct ClipboardSettingsView: View {
                 } label: {
                     SettingsRowTitle(.clipboardHistory, "Keep history for")
                 }
-                Toggle(isOn: $settings.clipboardTextSearchEnabled) {
-                    SettingsRowTitle(.clipboardHistory, "Search text in images and PDFs")
-                    Text("Recognized on this Mac while idle.")
-                }
                 Picker(selection: $settings.clipboardDefaultAction) {
                     ForEach(ClipboardDefaultAction.allCases) { action in
                         Text(action.title).tag(action)

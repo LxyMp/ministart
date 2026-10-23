@@ -48,10 +48,6 @@ final class AppSettings {
         didSet { defaults.set(clipboardEnabled, forKey: Key.clipboardEnabled.rawValue) }
     }
 
-    var clipboardTextSearchEnabled: Bool {
-        didSet { defaults.set(clipboardTextSearchEnabled, forKey: Key.clipboardTextSearchEnabled.rawValue) }
-    }
-
     var clipboardRetention: ClipboardRetention {
         didSet {
             defaults.set(clipboardRetention.rawValue, forKey: Key.clipboardRetention.rawValue)
@@ -174,16 +170,6 @@ final class AppSettings {
     /// Summon the palette on the display under the pointer instead of the one holding the menu bar.
     var openOnCursorScreen: Bool {
         didSet { defaults.set(openOnCursorScreen, forKey: Key.openOnCursorScreen.rawValue) }
-    }
-
-    var autoSwitchInputSourceID: String? {
-        didSet {
-            guard let autoSwitchInputSourceID else {
-                defaults.removeObject(forKey: Key.autoSwitchInputSource.rawValue)
-                return
-            }
-            defaults.set(autoSwitchInputSourceID, forKey: Key.autoSwitchInputSource.rawValue)
-        }
     }
 
     /// Lets the panel be dragged by its top edge; off by default, so most launches never grab it.
@@ -353,12 +339,6 @@ final class AppSettings {
     }
 
     /// Ask for a new window rather than a tab; off is the macOS default.
-    var quicklinkOpensNewWindow: Bool {
-        didSet {
-            defaults.set(quicklinkOpensNewWindow, forKey: Key.quicklinkOpensNewWindow.rawValue)
-        }
-    }
-
     var quicklinkPassesSelectedText: Bool {
         didSet {
             defaults.set(
@@ -402,7 +382,6 @@ final class AppSettings {
             defaults.object(forKey: Key.clipboardEnabled.rawValue) == nil
             || defaults.bool(forKey: Key.clipboardEnabled.rawValue)
         // `integer(forKey:)` returns 0 when unset, which no case matches.
-        clipboardTextSearchEnabled = defaults.bool(forKey: Key.clipboardTextSearchEnabled.rawValue)
         clipboardRetention =
             ClipboardRetention(rawValue: defaults.integer(forKey: Key.clipboardRetention.rawValue))
             ?? .threeMonths
@@ -470,7 +449,6 @@ final class AppSettings {
         openOnCursorScreen =
             defaults.object(forKey: Key.openOnCursorScreen.rawValue) == nil
             || defaults.bool(forKey: Key.openOnCursorScreen.rawValue)
-        autoSwitchInputSourceID = defaults.string(forKey: Key.autoSwitchInputSource.rawValue)
         paletteDraggable = defaults.bool(forKey: Key.paletteDraggable.rawValue)
         animationsEnabled =
             defaults.object(forKey: Key.animationsEnabled.rawValue) == nil
@@ -524,7 +502,6 @@ final class AppSettings {
             defaults.object(forKey: Key.quicklinksShowInLauncher.rawValue) == nil
             || defaults.bool(forKey: Key.quicklinksShowInLauncher.rawValue)
         appleShortcutsEnabled = defaults.bool(forKey: Key.appleShortcutsEnabled.rawValue)
-        quicklinkOpensNewWindow = defaults.bool(forKey: Key.quicklinkOpensNewWindow.rawValue)
         quicklinkPassesSelectedText = defaults.bool(
             forKey: Key.quicklinkPassesSelectedText.rawValue)
         quicklinkConfirmsBeforeDelete =

@@ -5,7 +5,6 @@ struct GeneralSettingsView: View {
     @Environment(AppSettings.self) private var settings
     private var launcherRanking: LauncherRankingStore { core.launcherRanking }
     @State private var confirmingRankingReset = false
-    @State private var inputSources: [InputSourceSwitcher.Option] = []
 
     var body: some View {
         @Bindable var settings = settings
@@ -52,18 +51,6 @@ struct GeneralSettingsView: View {
                 } label: {
                     SettingsRowTitle(.generalGeneral, "Escape Key Behavior")
                     Text("When the search field is empty.")
-                }
-                // Empty only when TIS fails; one layout still lists, so the row stays put.
-                if !inputSources.isEmpty {
-                    Picker(selection: $settings.autoSwitchInputSourceID) {
-                        Text("None").tag(nil as String?)
-                        ForEach(inputSources) { source in
-                            Text(source.title).tag(Optional(source.id))
-                        }
-                    } label: {
-                        SettingsRowTitle(.generalGeneral, "Auto-switch input source")
-                        Text("While the launcher is open.")
-                    }
                 }
             } header: {
                 SettingsSectionHeader(.generalGeneral)
@@ -154,17 +141,6 @@ struct GeneralSettingsView: View {
         } message: {
             Text("Ministart will relearn your preferred results as you use the launcher.")
         }
-        .onAppear(perform: refreshInputSources)
-        .onReceive(
-            DistributedNotificationCenter.default().publisher(
-                for: InputSourceSwitcher.sourcesDidChange)
-        ) { _ in
-            refreshInputSources()
-        }
-    }
-
-    private func refreshInputSources() {
-        inputSources = core.inputSourceSwitcher.options(selecting: settings.autoSwitchInputSourceID)
     }
 }
 

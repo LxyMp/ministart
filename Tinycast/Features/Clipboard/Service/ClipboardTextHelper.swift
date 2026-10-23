@@ -4,21 +4,11 @@ import UniformTypeIdentifiers
 
 @main
 nonisolated enum ClipboardTextHelper {
-    static func main() async {
-        if CommandLine.arguments.count == 5, CommandLine.arguments[1] == "thumbnail" {
-            exit(writeThumbnail() ? 0 : 1)
+    static func main() {
+        guard CommandLine.arguments.count == 5, CommandLine.arguments[1] == "thumbnail" else {
+            exit(2)
         }
-        guard CommandLine.arguments.count == 3,
-            ["image", "pdf"].contains(CommandLine.arguments[1])
-        else { exit(2) }
-        do {
-            let text = try await ClipboardTextExtractor.extract(
-                at: URL(fileURLWithPath: CommandLine.arguments[2]),
-                isPDF: CommandLine.arguments[1] == "pdf")
-            try FileHandle.standardOutput.write(contentsOf: Data(text.utf8))
-        } catch {
-            exit(1)
-        }
+        exit(writeThumbnail() ? 0 : 1)
     }
 
     /// `thumbnail <source> <copy> <edge>`: the full-size decode's memory leaves with this process.

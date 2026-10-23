@@ -7,7 +7,6 @@ struct RootPaletteView: View {
     @Environment(ClipboardStore.self) private var store
     @Environment(FavoritesStore.self) private var favorites
     @Environment(VisibilityStore.self) private var visibility
-    @Environment(CalculatorHistoryStore.self) private var calcHistory
     /// Observed so the card re-evaluates when a snapshot lands or consent changes.
     @Environment(CurrencyRateStore.self) private var currencyRates
     @Environment(EmojiIndex.self) private var emojiIndex
@@ -88,10 +87,6 @@ struct RootPaletteView: View {
                 scrollToFollow: { scroll = ScrollIntent(kind: .follow) })
         case .dictionary:
             return DictionaryScreen(session: dictionary, core: core, vm: vm)
-        case .calculatorHistory:
-            return CalculatorHistoryScreen(
-                history: calcHistory, currencyRates: currencyRates, core: core, vm: vm,
-                openActions: openActions)
         case .extensionCommand:
             return ExtensionCommandScreen(
                 screen: extensionScreen, extensions: extensions, vm: vm, openActions: openActions)

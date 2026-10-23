@@ -106,8 +106,6 @@ final class LauncherCoordinator {
     /// The one funnel a built-in command runs through, from a palette row or its global shortcut.
     func runCommand(_ id: CommandID) {
         switch id {
-        case .calculatorHistory:
-            paletteCoordinator.togglePalette(mode: .calculatorHistory)
         case .clipboardHistory:
             paletteCoordinator.togglePalette(mode: .clipboard)
         case .pasteSequentially:
@@ -116,9 +114,6 @@ final class LauncherCoordinator {
             paletteCoordinator.togglePalette(mode: .emoji)
         case .searchFiles:
             fileSearchCoordinator.show()
-        case .openCamera:
-            dismissPalette()
-            Task { await core.cameraCoordinator.show() }
         case .define:
             core.dictionaryCoordinator.show()
         case .openInBrowser, .runShellCommand:
@@ -167,9 +162,6 @@ final class LauncherCoordinator {
         case .about:
             dismissPalette()
             settingsCoordinator.showAbout()
-        case .support:
-            dismissPalette()
-            core.supportCoordinator.showSupport()
         case .quit:
             NSApp.terminate(nil)
         }

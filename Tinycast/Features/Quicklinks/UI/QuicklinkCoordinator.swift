@@ -219,9 +219,7 @@ final class QuicklinkCoordinator {
         let openWith = forcingDefaultApp ? nil : quicklink.openWithBundleID
         Task {
             do throws(QuicklinkLauncher.Failure) {
-                try await QuicklinkLauncher.open(
-                    link, openWithBundleID: openWith,
-                    inNewWindow: settings.quicklinkOpensNewWindow)
+                try await QuicklinkLauncher.open(link, openWithBundleID: openWith)
             } catch {
                 await presentQuicklinkFailure(quicklink, link: link, failure: error)
             }

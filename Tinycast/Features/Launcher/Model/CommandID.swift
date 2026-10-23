@@ -1,12 +1,10 @@
 import Foundation
 
 enum CommandID: String, CaseIterable, Sendable {
-    case calculatorHistory = "command:calculator-history"
     case clipboardHistory = "command:clipboard-history"
     case pasteSequentially = "command:paste-sequentially"
     case searchEmoji = "command:search-emoji"
     case searchFiles = "command:search-files"
-    case openCamera = "command:open-camera"
     case openInBrowser = "command:open-in-browser"
     case runShellCommand = "command:run-shell-command"
     case createCustomCommand = "command:create-custom-command"
@@ -26,7 +24,6 @@ enum CommandID: String, CaseIterable, Sendable {
     case checkForUpdates = "command:check-for-updates"
     case settings = "command:settings"
     case about = "command:about"
-    case support = "command:support"
     case quit = "command:quit"
 
     var name: String { nameResource.resolved() }
@@ -35,12 +32,10 @@ enum CommandID: String, CaseIterable, Sendable {
 
     private var nameResource: LocalizedStringResource {
         switch self {
-        case .calculatorHistory: return "Calculator History"
         case .clipboardHistory: return "Clipboard History"
         case .pasteSequentially: return "Paste Sequentially"
         case .searchEmoji: return "Search Emoji & Symbols"
         case .searchFiles: return "Search Files"
-        case .openCamera: return "Open Camera"
         case .openInBrowser: return "Open in Browser"
         case .runShellCommand: return "Run Shell Command"
         case .createCustomCommand: return "Create Custom Command"
@@ -60,19 +55,16 @@ enum CommandID: String, CaseIterable, Sendable {
         case .checkForUpdates: return "Check for Updates"
         case .settings: return "Ministart Settings"
         case .about: return "About Ministart"
-        case .support: return "Support Ministart"
         case .quit: return "Quit Ministart"
         }
     }
 
     var sfSymbol: String {
         switch self {
-        case .calculatorHistory: return "plus.forwardslash.minus"
         case .clipboardHistory: return "doc.on.clipboard"
         case .pasteSequentially: return "list.bullet.clipboard"
         case .searchEmoji: return "face.smiling"
         case .searchFiles: return "doc.text.magnifyingglass"
-        case .openCamera: return "camera"
         case .openInBrowser: return "globe"
         case .runShellCommand: return "terminal"
         case .createCustomCommand: return "terminal"
@@ -92,7 +84,6 @@ enum CommandID: String, CaseIterable, Sendable {
         case .checkForUpdates: return "arrow.down.circle"
         case .settings: return "gearshape"
         case .about: return "info.circle"
-        case .support: return "heart"
         case .quit: return "power"
         }
     }

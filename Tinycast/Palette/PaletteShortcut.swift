@@ -15,7 +15,6 @@ enum PaletteShortcut: Equatable {
     /// ⌃⌘C.
     case copyPath
     /// ⇧⌘T.
-    case copyText
     /// ⇧⌘↵, matched by the Return handler rather than `resolve`.
     case copyCalculation
     /// ⇧⌘V.
@@ -69,7 +68,6 @@ enum PaletteShortcut: Equatable {
             return control ? .copyPath : nil
         }
         if command, shift, matches("v") { return .pasteFile }
-        if command, shift, matches("t") { return .copyText }
         if command, matches("y") { return .quickLook }
         if command, !shift, matches("o") { return .openInApp }
         if command, !shift, matches("i") { return .showDetails }
@@ -91,7 +89,7 @@ enum PaletteShortcut: Equatable {
     /// The compact bar shows no selection, so a chord aimed at a row waits for the list.
     var requiresExpanded: Bool {
         switch self {
-        case .copyFile, .copyName, .copyPath, .copyText, .pasteFile, .quickLook, .openInApp,
+        case .copyFile, .copyName, .copyPath, .pasteFile, .quickLook, .openInApp,
             .showDetails, .toggleFavorite, .hideFromSearch, .quit, .forceQuit, .minimizeWindow,
             .hideApp, .restart, .edit, .duplicate, .showInFinder:
             true
@@ -103,7 +101,7 @@ enum PaletteShortcut: Equatable {
 
     var closesMenu: Bool {
         switch self {
-        case .delete, .deleteAll, .copyFile, .copyName, .copyPath, .copyText, .copyCalculation,
+        case .delete, .deleteAll, .copyFile, .copyName, .copyPath, .copyCalculation,
             .quickLook, .openInApp, .showDetails, .toggleFavorite, .hideFromSearch, .minimizeWindow,
             .newItem, .settings, .edit, .duplicate, .showInFinder:
             true

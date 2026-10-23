@@ -39,7 +39,6 @@ struct ClipboardTests {
         importedFilesArriveOncePerPath()
         defaultActionChords()
         plainTextSkipsTheFile()
-        offersTextExtraction()
 
         print("\(passes)/\(passes + failures) passed")
         if failures > 0 { exit(1) }
@@ -886,33 +885,6 @@ struct ClipboardTests {
     }
 
     /// Copy Text is an image answer: a captured blob, or an image file — never text or a PDF.
-    static func offersTextExtraction() {
-        expect(
-            ClipboardItem(imagePath: "/tmp/shot.png", sourceBundleID: nil).offersTextExtraction,
-            "a captured image offers Copy Text")
-        expect(
-            !ClipboardItem(
-                id: UUID(), kind: .image, text: nil, imagePath: nil, createdAt: Date(),
-                sourceBundleID: nil
-            ).offersTextExtraction,
-            "an image entry without its blob does not")
-        expect(
-            !ClipboardItem(text: "hello", sourceBundleID: nil).offersTextExtraction,
-            "a text entry does not")
-        expect(
-            ClipboardItem(filePath: "/Users/me/shot.png", sourceBundleID: nil)
-                .offersTextExtraction,
-            "an image file copied in Finder offers Copy Text")
-        expect(
-            !ClipboardItem(filePath: "/Users/me/notes.txt", sourceBundleID: nil)
-                .offersTextExtraction,
-            "a text file does not")
-        expect(
-            !ClipboardItem(filePath: "/Users/me/report.pdf", sourceBundleID: nil)
-                .offersTextExtraction,
-            "a PDF stays a background-indexing capability")
-    }
-
     // MARK: - Harness
 
     /// Runs `body` against a store rooted in a fresh temp directory, torn down afterwards.

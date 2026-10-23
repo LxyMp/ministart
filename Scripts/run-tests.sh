@@ -193,13 +193,7 @@ run clipboard-thumbnail-test Tinycast/Features/Clipboard/Model/ClipboardStore.sw
                            Tinycast/Platform/Images/ThumbnailCache.swift
 # `Q` is the URL detector a drag payload builds its link with, rather than a second one.
 Q=Tinycast/Features/Quicklinks/Model/QuicklinkDestination.swift
-run clipboard-search-test  Tinycast/Features/Clipboard/Model/*.swift Tinycast/Platform/Images/ImageDerivative.swift $Q
 run paste-sequence-test    Tinycast/Features/Clipboard/Model/*.swift Tinycast/Platform/Images/ImageDerivative.swift $Q
-run clipboard-text-test    Tinycast/Features/Clipboard/Model/*.swift Tinycast/Platform/Images/ImageDerivative.swift $Q \
-                           Tinycast/Features/Clipboard/Service/ClipboardTextExtractor.swift \
-                           Tinycast/Features/Clipboard/Service/ClipboardTextIndexer.swift \
-                           Tinycast/Features/Clipboard/Service/ClipboardTextWorker.swift \
-                           Tinycast/Platform/ProcessExit.swift
 run pasteboard-test        Tinycast/Platform/PasteboardFiles.swift \
                            Tinycast/Features/Clipboard/Model/ClipboardStore.swift \
                            Tinycast/Platform/Images/ImageDerivative.swift \

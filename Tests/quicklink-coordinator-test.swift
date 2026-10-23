@@ -528,7 +528,7 @@ enum QuicklinkLauncher {
         case refused
         var missingApplicationBundleID: String? { nil }
     }
-    static func open(_ link: String, openWithBundleID: String?, inNewWindow: Bool) async throws(Failure) {
+    static func open(_ link: String, openWithBundleID: String?) async throws(Failure) {
         opened.append(Opened(link: link, app: openWithBundleID))
     }
 }

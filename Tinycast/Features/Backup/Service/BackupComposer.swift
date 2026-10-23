@@ -39,10 +39,9 @@ enum BackupComposer {
             let encoder = BackupBundle.encoder
             plan.learning[.ranking] = try? encoder.encode(core.launcherRanking.visits)
             plan.learning[.emoji] = try? encoder.encode(core.frequentEmoji.records)
-            plan.learning[.calculator] = try? encoder.encode(core.calcHistory.entries)
             plan.learningRecords =
                 core.launcherRanking.visits.count + core.frequentEmoji.records.count
-                + core.calcHistory.entries.count
+
         }
         return plan
     }
