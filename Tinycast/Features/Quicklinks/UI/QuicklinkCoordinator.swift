@@ -430,7 +430,7 @@ final class QuicklinkCoordinator {
         }
     }
 
-    /// Merges into the library the way Settings → Import does, so Raycast and JSON share one rule.
+    /// Merges into the library the way Settings → Backup import does.
     @discardableResult
     func addImportedQuicklinks(_ incoming: [Quicklink]) -> [Quicklink] {
         let merge = QuicklinkArchive.merge(incoming, into: store.quicklinks)

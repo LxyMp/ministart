@@ -180,63 +180,6 @@ final class CustomCommandCoordinator {
         return count
     }
 
-    // MARK: - Importing
-
-    /// Adds a folder of Raycast script commands, skipping any name already in the library.
-    func importScriptDirectory() async {
-        guard let directory = chooseScriptDirectory() else { return }
-        let drafts = await Task.detached(priority: .userInitiated) {
-            RaycastScriptImport.scan(directory: directory)
-        }.value
-        guard !drafts.isEmpty else {
-            await core.showNotice(
-                title: String(localized: "Nothing to Import"),
-                message: String(localized: "No Raycast script commands were found in this folder."),
-                symbol: CustomCommand.sfSymbol, tone: .neutral)
-            return
-        }
-        guard await confirmScriptImport(count: drafts.count) else { return }
-        let added = store.add(contentsOf: drafts)
-        // Everything offered was already here, so say so rather than "0 imported".
-        guard added > 0 else {
-            await core.showNotice(
-                title: String(localized: "Nothing to Import"),
-                message: String(localized: "Every script in this folder is already in your library."),
-                symbol: CustomCommand.sfSymbol, tone: .neutral)
-            return
-        }
-        await core.showNotice(
-            title: String(localized: "Scripts Imported"),
-            message: importSummary(added: added, offered: drafts.count),
-            symbol: CustomCommand.sfSymbol, tone: .success)
-    }
-
-    /// An accessory app must activate first, or the panel opens behind the frontmost app.
-    private func chooseScriptDirectory() -> URL? {
-        let panel = NSOpenPanel()
-        panel.canChooseDirectories = true
-        panel.canChooseFiles = false
-        panel.allowsMultipleSelection = false
-        panel.prompt = String(localized: "Import")
-        panel.message = String(localized: "Choose a folder of Raycast script commands.")
-        NSApp.activate(ignoringOtherApps: true)
-        guard panel.runModal() == .OK else { return nil }
-        return panel.url
-    }
-
-    /// Scripts run arbitrary code, so this warns the way a backup of custom commands does.
-    private func confirmScriptImport(count: Int) async -> Bool {
-        await core.confirm(
-            title: String(localized: "Import \(count) scripts?"),
-            message: String(
-                localized: """
-                    Imported commands run these files with your user account. Only import scripts you \
-                    trust.
-                    """),
-            symbol: CustomCommand.sfSymbol, confirmTitle: String(localized: "Import"),
-            confirmRole: .standard)
-    }
-
     private func importSummary(added: Int, offered: Int) -> String {
         guard offered > added else { return String(localized: "Imported \(added) commands.") }
         return String(

@@ -232,7 +232,6 @@ final class LauncherCoordinator {
         case .importSettings:
             dismissPalette()
             Task { await BackupActions.runImportCommand(core: core) }
-        case .importFromRaycast:
             dismissPalette()
             settingsCoordinator.showBackupSettings()
         case .checkForUpdates:

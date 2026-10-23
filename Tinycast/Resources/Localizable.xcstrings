@@ -1128,110 +1128,6 @@
         }
       }
     },
-    "%@ doesn't contain a Raycast extension (no package.json with commands).": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ enthält keine Raycast-Erweiterung (keine package.json mit Befehlen)."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ no contiene una extensión de Raycast (no hay ningún package.json con comandos)."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ ne contient pas d’extension Raycast (aucun package.json avec des commandes)."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@にはRaycast拡張機能が含まれていません（コマンドを含むpackage.jsonがありません）。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@에 Raycast 확장 프로그램이 없습니다(명령이 포함된 package.json 없음)."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ não contém uma extensão do Raycast (sem package.json com comandos)."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "«%@» не содержит расширения Raycast (нет package.json с командами)."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 不包含 Raycast 扩展（没有带命令的 package.json）。"
-          }
-        }
-      }
-    },
-    "%@ doesn't contain a Raycast extension manifest.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ enthält kein Raycast-Erweiterungsmanifest."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ no contiene un manifiesto de extensión de Raycast."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ ne contient pas de manifeste d’extension Raycast."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@にはRaycast拡張機能のマニフェストが含まれていません。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@에 Raycast 확장 프로그램 매니페스트가 없습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ não contém um manifesto de extensão do Raycast."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "«%@» не содержит манифеста расширения Raycast."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 不包含 Raycast 扩展清单。"
-          }
-        }
-      }
-    },
     "%@ doesn't share its text with Ministart.": {
       "localizations": {
         "de": {
@@ -1494,58 +1390,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ 没有已构建的包，请重新安装该扩展。"
-          }
-        }
-      }
-    },
-    "%@ has no built command bundles. Ministart installs prebuilt extensions — run `ray build` in the extension folder first, or import one from an installed Raycast.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ hat keine erstellten Befehls-Bundles. Ministart installiert vorgefertigte Erweiterungen – führe zuerst `ray build` im Erweiterungsordner aus oder importiere eine aus einem installierten Raycast."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ no tiene paquetes de comandos compilados. Ministart instala extensiones ya compiladas; ejecuta `ray build` primero en la carpeta de la extensión o importa una desde un Raycast instalado."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ n’a pas de bundles de commandes compilés. Ministart installe des extensions précompilées : exécutez d’abord `ray build` dans le dossier de l’extension, ou importez-en une depuis un Raycast installé."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@にはビルド済みのコマンドバンドルがありません。Ministartはビルド済みの拡張機能をインストールします。先に拡張機能のフォルダで`ray build`を実行するか、インストール済みのRaycastから読み込んでください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@에 빌드된 명령 번들이 없습니다. Ministart는 미리 빌드된 확장 프로그램을 설치합니다. 먼저 확장 프로그램 폴더에서 `ray build`를 실행하거나 설치된 Raycast에서 가져오십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ não tem pacotes de comandos compilados. O Ministart instala extensões já compiladas — execute `ray build` na pasta da extensão primeiro ou importe uma de um Raycast instalado."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "У «%@» нет собранных пакетов команд. Ministart устанавливает уже собранные расширения — сначала выполните `ray build` в папке расширения или импортируйте его из установленного Raycast."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 没有已构建的命令包。Ministart 只安装预构建的扩展，请先在扩展文件夹中运行 `ray build`，或从已安装的 Raycast 导入。"
           }
         }
       }
@@ -3316,59 +3160,6 @@
         }
       }
     },
-    "%@ — Raycast export": {
-      "comment": "File name, then whether it is a valid export file",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ – Raycast-Export"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — exportación de Raycast"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — export Raycast"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — Raycastの書き出し"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — Raycast 내보내기"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — exportação do Raycast"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — экспорт Raycast"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — Raycast 导出文件"
-          }
-        }
-      }
-    },
     "%@ — couldn't be read": {
       "localizations": {
         "de": {
@@ -3417,59 +3208,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ — 无法读取"
-          }
-        }
-      }
-    },
-    "%@ — not a Raycast export": {
-      "comment": "File name, then whether it is a valid export file",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ – kein Raycast-Export"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — no es una exportación de Raycast"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — n’est pas un export Raycast"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — Raycastの書き出しではありません"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — Raycast 내보내기 파일이 아님"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — não é uma exportação do Raycast"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — не экспорт Raycast"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ — 不是 Raycast 导出文件"
           }
         }
       }
@@ -15955,58 +15693,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "7 天"
-          }
-        }
-      }
-    },
-    "A .rayconfig file from Raycast 2.0 or later.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Eine .rayconfig-Datei aus Raycast 2.0 oder neuer."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Un archivo .rayconfig de Raycast 2.0 o posterior."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Un fichier .rayconfig de Raycast 2.0 ou version ultérieure."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 2.0以降の.rayconfigファイル。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 2.0 이상의 .rayconfig 파일입니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Um arquivo .rayconfig do Raycast 2.0 ou posterior."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Файл .rayconfig из Raycast 2.0 или новее."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "来自 Raycast 2.0 或更高版本的 .rayconfig 文件。"
           }
         }
       }
@@ -30586,110 +30272,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "选取窗口…"
-          }
-        }
-      }
-    },
-    "Choose a .rayconfig file exported from Raycast v2.0 or newer.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wähle eine .rayconfig-Datei, die aus Raycast ab Version 2.0 exportiert wurde."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elige un archivo .rayconfig exportado desde Raycast v2.0 o posterior."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choisissez un fichier .rayconfig exporté depuis Raycast v2.0 ou version ultérieure."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast v2.0以降から書き出した.rayconfigファイルを選択してください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast v2.0 이상에서 내보낸 .rayconfig 파일을 선택하십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escolha um arquivo .rayconfig exportado do Raycast v2.0 ou posterior."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Выберите файл .rayconfig, экспортированный из Raycast 2.0 или новее."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选取从 Raycast v2.0 或更高版本导出的 .rayconfig 文件。"
-          }
-        }
-      }
-    },
-    "Choose a folder of Raycast script commands.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wähle einen Ordner mit Raycast-Skriptbefehlen aus."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elige una carpeta de comandos de script de Raycast."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choisissez un dossier de commandes de script Raycast."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastスクリプトコマンドのフォルダを選択してください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 스크립트 명령이 있는 폴더를 선택하십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escolha uma pasta de comandos de script do Raycast."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Выберите папку со скриптовыми командами Raycast."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选取包含 Raycast 脚本命令的文件夹。"
           }
         }
       }
@@ -58187,58 +57769,6 @@
         }
       }
     },
-    "Import Raycast Scripts": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast-Skripte importieren"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar scripts de Raycast"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importer les scripts Raycast"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastスクリプトを読み込む"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 스크립트 가져오기"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar scripts do Raycast"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Импортировать скрипты Raycast"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入 Raycast 脚本"
-          }
-        }
-      }
-    },
     "Import executable commands?": {
       "localizations": {
         "de": {
@@ -58391,58 +57921,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "导入快速链接"
-          }
-        }
-      }
-    },
-    "Import reads a folder of Raycast script commands.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Der Import liest einen Ordner mit Raycast-Skriptbefehlen."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar lee una carpeta de comandos de script de Raycast."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sélectionnez un dossier contenant les scripts Raycast à importer."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastスクリプトコマンドのフォルダを読み込みます。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 스크립트 명령이 있는 폴더를 읽어 가져옵니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importar lê uma pasta de comandos de script do Raycast."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Импорт читает папку со скриптовыми командами Raycast."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“导入”会读取包含 Raycast 脚本命令的文件夹。"
           }
         }
       }
@@ -60454,58 +59932,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "包含 Shift (⇧)"
-          }
-        }
-      }
-    },
-    "Incorrect passphrase, or the file is corrupted.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Falsche Passphrase oder die Datei ist beschädigt."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Contraseña incorrecta o el archivo está dañado."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe incorrect ou fichier endommagé."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "パスフレーズが正しくないか、ファイルが破損しています。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "암호가 올바르지 않거나 파일이 손상되었습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Senha incorreta ou o arquivo está corrompido."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Неверная парольная фраза, либо файл повреждён."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "密码短语不正确，或文件已损坏。"
           }
         }
       }
@@ -75122,58 +74548,6 @@
         }
       }
     },
-    "No Raycast script commands were found in this folder.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In diesem Ordner wurden keine Raycast-Skriptbefehle gefunden."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se encontraron comandos de script de Raycast en esta carpeta."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucune commande de script Raycast n’a été trouvée dans ce dossier."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このフォルダにRaycastスクリプトコマンドが見つかりませんでした。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이 폴더에서 Raycast 스크립트 명령을 찾을 수 없습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhum comando de script do Raycast foi encontrado nesta pasta."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "В этой папке не найдено скриптовых команд Raycast."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在此文件夹中未找到 Raycast 脚本命令。"
-          }
-        }
-      }
-    },
     "No Results": {
       "localizations": {
         "de": {
@@ -78758,58 +78132,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "没有可捕获的窗口"
-          }
-        }
-      }
-    },
-    "Node wasn't found. Install Node.js, add the folder it lives in to Custom search paths, or install this extension from the Raycast Store instead.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Node wurde nicht gefunden. Installiere Node.js, füge den Ordner, in dem es liegt, zu den eigenen Suchpfaden hinzu oder installiere diese Erweiterung stattdessen aus dem Raycast Store."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se encontró Node. Instala Node.js, añade la carpeta en la que se encuentra a Rutas de búsqueda personalizadas o instala esta extensión desde Raycast Store."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Node est introuvable. Installez Node.js, ajoutez son dossier aux chemins de recherche personnalisés, ou installez plutôt cette extension depuis le Raycast Store."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nodeが見つかりません。Node.jsをインストールするか、そのフォルダを「カスタム検索パス」に追加するか、代わりにRaycast Storeからこの拡張機能をインストールしてください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Node를 찾을 수 없습니다. Node.js를 설치하거나 해당 폴더를 사용자 지정 검색 경로에 추가하거나, 대신 Raycast Store에서 이 확장 프로그램을 설치하십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O Node não foi encontrado. Instale o Node.js, adicione a pasta em que ele está aos Caminhos de busca personalizados ou instale esta extensão pela Raycast Store."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Node не найден. Установите Node.js, добавьте папку, в которой он находится, в «Свои пути поиска» либо установите это расширение из Raycast Store."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到 Node。请安装 Node.js，将其所在文件夹添加到“自定义搜索路径”，或改为从 Raycast Store 安装此扩展。"
           }
         }
       }
@@ -85846,58 +85168,6 @@
         }
       }
     },
-    "Passphrase": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Passphrase"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Contraseña"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "パスフレーズ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "암호"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Senha"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Парольная фраза"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "密码短语"
-          }
-        }
-      }
-    },
     "Paste": {
       "comment": "Action verb",
       "localizations": {
@@ -90476,58 +89746,6 @@
         }
       }
     },
-    "Quit Raycast": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast beenden"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salir de Raycast"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quitter Raycast"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastを終了"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 종료"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encerrar Raycast"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Завершить Raycast"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "退出 Raycast"
-          }
-        }
-      }
-    },
     "Quit and reopen Ministart to finish.": {
       "localizations": {
         "de": {
@@ -90964,110 +90182,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "比率"
-          }
-        }
-      }
-    },
-    "Raycast Export": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast-Export"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exportación de Raycast"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fichier d’export Raycast"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastの書き出し"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 내보내기"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exportação do Raycast"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Экспорт Raycast"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 导出文件"
-          }
-        }
-      }
-    },
-    "Raycast is running — quit it to avoid hotkey conflicts.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast läuft – beende es, um Konflikte bei Kurzbefehlen zu vermeiden."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast está en ejecución; ciérralo para evitar conflictos entre atajos."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast est en cours d’exécution ; quittez-le pour éviter les conflits de raccourcis."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastが実行中です。ホットキーの競合を避けるため終了してください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast가 실행 중입니다. 단축키 충돌을 방지하려면 종료하십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O Raycast está em execução — encerre-o para evitar conflitos de atalhos."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast запущен — завершите его, чтобы избежать конфликтов сочетаний клавиш."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 正在运行，请退出它以避免快捷键冲突。"
           }
         }
       }
@@ -112058,58 +111172,6 @@
         }
       }
     },
-    "The Raycast export could not be read.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Der Raycast-Export konnte nicht gelesen werden."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se pudo leer la exportación de Raycast."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "L’exportation Raycast n’a pas pu être lue."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastの書き出しファイルを読み込めませんでした。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 내보내기 파일을 읽을 수 없습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não foi possível ler a exportação do Raycast."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Не удалось прочитать экспорт Raycast."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法读取 Raycast 导出文件。"
-          }
-        }
-      }
-    },
     "The app this quicklink opens with isn't installed any more.": {
       "localizations": {
         "de": {
@@ -114504,58 +113566,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "最早的信息不再发送给模型。"
-          }
-        }
-      }
-    },
-    "The password you set when exporting from Raycast.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Das Passwort, das du beim Export aus Raycast festgelegt hast."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La contraseña que estableciste al exportar desde Raycast."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le mot de passe défini lors de l’exportation depuis Raycast."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastから書き出すときに設定したパスワード。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast에서 내보낼 때 설정한 암호입니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A senha definida ao exportar do Raycast."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пароль, заданный при экспорте из Raycast."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你从 Raycast 导出时设置的密码。"
           }
         }
       }
@@ -117730,58 +116740,6 @@
         }
       }
     },
-    "This doesn't look like a Raycast export (.rayconfig).": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Das scheint kein Raycast-Export (.rayconfig) zu sein."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Esto no parece una exportación de Raycast (.rayconfig)."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ce fichier n’est pas une exportation Raycast (.rayconfig)."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycastの書き出しファイル（.rayconfig）ではないようです。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast 내보내기 파일(.rayconfig)이 아닌 것 같습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Isso não parece ser uma exportação do Raycast (.rayconfig)."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Это не похоже на экспорт Raycast (.rayconfig)."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "这看起来不像 Raycast 导出文件 (.rayconfig)。"
-          }
-        }
-      }
-    },
     "This doesn't look like a URL, file path, or deeplink.": {
       "localizations": {
         "de": {
@@ -117882,58 +116840,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "此端点不提供模型列表。请手动输入模型 ID。"
-          }
-        }
-      }
-    },
-    "This export is too large to import. Clear some Raycast clipboard history and export again.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dieser Export ist zu groß zum Importieren. Lösche einen Teil des Raycast-Zwischenablageverlaufs und exportiere erneut."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Esta exportación es demasiado grande para importarla. Borra parte del historial del portapapeles de Raycast y vuelve a exportar."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cette exportation est trop volumineuse pour être importée. Effacez une partie de l’historique du presse-papiers de Raycast et exportez à nouveau."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この書き出しファイルは大きすぎて読み込めません。Raycastのクリップボード履歴を一部消去してから、もう一度書き出してください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "이 내보내기 파일이 너무 커서 가져올 수 없습니다. Raycast 클립보드 기록을 일부 지우고 다시 내보내십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Esta exportação é grande demais para importar. Apague parte do histórico da área de transferência do Raycast e exporte novamente."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Этот экспорт слишком велик для импорта. Очистите часть истории буфера обмена Raycast и экспортируйте снова."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "此导出文件太大，无法导入。请清除部分 Raycast 剪贴板历史记录，然后重新导出。"
           }
         }
       }
@@ -123283,58 +122189,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消选择文件"
-          }
-        }
-      }
-    },
-    "Unset matching Raycast shortcuts to avoid conflicts.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Entferne übereinstimmende Raycast-Kurzbefehle, um Konflikte zu vermeiden."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Elimina los atajos de Raycast coincidentes para evitar conflictos."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Retirez les raccourcis identiques dans Raycast pour éviter les conflits."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "競合を避けるため、同じRaycastショートカットの設定を解除してください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "충돌을 방지하려면 같은 Raycast 단축키의 설정을 해제하십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remova os atalhos correspondentes do Raycast para evitar conflitos."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Удалите совпадающие сочетания клавиш Raycast, чтобы избежать конфликтов."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "取消设置相同的 Raycast 快捷键，以避免冲突。"
           }
         }
       }
@@ -131647,64 +130501,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "© 2026 Abue Ammar · 基于 AGPL-3.0 发布"
-          }
-        }
-      }
-    },
-    "“%@/%@” is unavailable in the Raycast Store.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "„%@/%@“ ist im Raycast Store nicht verfügbar."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@/%2$@” is unavailable in the Raycast Store."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%@/%@” no está disponible en Raycast Store."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "« %@/%@ » n’est pas disponible dans le Raycast Store."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "「%@/%@」はRaycast Storeで利用できません。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast Store에서 ‘%@/%@’을(를) 사용할 수 없습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“%1$@/%2$@” não está disponível na Raycast Store."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "«%1$@/%2$@» недоступно в Raycast Store."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Raycast Store 中的“%@/%@”不可用。"
           }
         }
       }
