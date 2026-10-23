@@ -22,10 +22,6 @@ struct SettingsBackup: Codable {
         var clipboardDefaultAction: String?
         var clipboardDisabledApps: [String]?
         var launchAtLogin: Bool?
-        var hyperKey: String?
-        var hyperKeyIncludesShift: Bool?
-        var hyperKeyQuickPress: String?
-        var hyperKeySecureInputCompatibility: Bool?
         var emojiSkinTone: String?
         var emojiGridColumns: Int?
         var showInMenuBar: Bool?
@@ -108,10 +104,6 @@ extension SettingsBackup {
             clipboardDefaultAction: s.clipboardDefaultAction.rawValue,
             clipboardDisabledApps: s.clipboardDisabledApps,
             launchAtLogin: s.launchAtLogin,
-            hyperKey: s.hyperKey.rawValue,
-            hyperKeyIncludesShift: s.hyperKeyIncludesShift,
-            hyperKeyQuickPress: s.hyperKeyQuickPress.rawValue,
-            hyperKeySecureInputCompatibility: s.hyperKeySecureInputCompatibility,
             emojiSkinTone: s.emojiSkinTone.rawValue,
             emojiGridColumns: s.emojiGridColumns.rawValue,
             showInMenuBar: s.showInMenuBar,
@@ -239,22 +231,6 @@ extension SettingsBackup {
         }
         if let launch = s.launchAtLogin {
             settings.launchAtLogin = launch
-            count += 1
-        }
-        if let raw = s.hyperKey, let key = HyperKeyPhysicalKey(rawValue: raw) {
-            settings.hyperKey = key
-            count += 1
-        }
-        if let flag = s.hyperKeyIncludesShift {
-            settings.hyperKeyIncludesShift = flag
-            count += 1
-        }
-        if let raw = s.hyperKeyQuickPress, let quick = HyperKeyQuickPress(rawValue: raw) {
-            settings.hyperKeyQuickPress = quick
-            count += 1
-        }
-        if let flag = s.hyperKeySecureInputCompatibility {
-            settings.hyperKeySecureInputCompatibility = flag
             count += 1
         }
         if let raw = s.emojiSkinTone, let tone = EmojiSkinTone(rawValue: raw) {

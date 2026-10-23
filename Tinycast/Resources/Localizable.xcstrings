@@ -2344,58 +2344,6 @@
         }
       }
     },
-    "%@ runs its own Hyper Key. Quit it to use this one.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ verwendet eine eigene Hyper Key. Beende es, um diese zu verwenden."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ ejecuta su propia Hyper Key. Sal de la app para usar esta."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ utilise sa propre Hyper Key. Quittez-le pour utiliser celle-ci."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@は独自のHyper Keyを実行しています。こちらを使用するには終了してください。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@에서 자체 Hyper Key를 실행하고 있습니다. 이 Hyper Key를 사용하려면 해당 앱을 종료하십시오."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ executa a própria Hyper Key. Encerre-o para usar esta."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ использует собственную Hyper Key. Завершите его, чтобы использовать эту."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 运行着自己的 Hyper Key。请退出它以使用此 Hyper Key。"
-          }
-        }
-      }
-    },
     "%@ sends %@, shown as ✦ in shortcuts.": {
       "localizations": {
         "de": {
@@ -25416,110 +25364,6 @@
         }
       }
     },
-    "Caps Lock (⇪)": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Feststelltaste (⇪)"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bloq Mayús (⇪)"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verrouillage majuscules (⇪)"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lock（⇪）"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lock (⇪)"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lock (⇪)"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lock (⇪)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "大写锁定 (⇪)"
-          }
-        }
-      }
-    },
-    "Caps Lock Mapping Conflicts": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Konflikte bei der Belegung der Feststelltaste"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conflictos de asignación de Bloq Mayús"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conflits d’assignation de Verrouillage majuscules"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lockの割り当ての競合"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lock 매핑 충돌"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conflitos de mapeamento do Caps Lock"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Конфликты назначения Caps Lock"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "大写锁定映射冲突"
-          }
-        }
-      }
-    },
     "Center": {
       "comment": "Window anchor position",
       "localizations": {
@@ -29163,58 +29007,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "关闭窗口并返回主搜索"
-          }
-        }
-      }
-    },
-    "Closing that app turns off Secure Input.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wenn du diese App beendest, wird sie ausgeschaltet."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Al cerrar esa app, se desactiva."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quitter cette app la désactive."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "そのAppを閉じるとオフになります。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "해당 앱을 닫으면 꺼집니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fechar esse app o desativa."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Закрытие этого приложения отключает его."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "关闭该 App 会将其停用。"
           }
         }
       }
@@ -51634,58 +51426,6 @@
         }
       }
     },
-    "Hyper Key Diagnostics": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper-Key-Diagnose"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnóstico de Hyper Key"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnostic Hyper Key"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Keyの診断"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key 진단"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diagnóstico da Hyper Key"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Диагностика Hyper Key"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key 诊断"
-          }
-        }
-      }
-    },
     "Icon": {
       "localizations": {
         "de": {
@@ -57104,110 +56844,6 @@
         }
       }
     },
-    "Karabiner Conflict": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabiner-Konflikt"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conflicto con Karabiner"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conflit avec Karabiner"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabinerの競合"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabiner 충돌"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conflito do Karabiner"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Конфликт с Karabiner"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabiner 冲突"
-          }
-        }
-      }
-    },
-    "Karabiner keyboards: %@": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabiner-Tastaturen: %@"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teclados de Karabiner: %@"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claviers Karabiner : %@"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabinerのキーボード: %@"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabiner 키보드: %@"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teclados do Karabiner: %@"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Клавиатуры Karabiner: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabiner 键盘：%@"
-          }
-        }
-      }
-    },
     "Keep conversations": {
       "localizations": {
         "de": {
@@ -57516,58 +57152,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "缺少密钥"
-          }
-        }
-      }
-    },
-    "Key presses can't reach the Hyper Key while Secure Input is on.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tastenanschläge erreichen die Hyper Key nicht, solange „Sichere Eingabe“ aktiv ist."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Las pulsaciones de teclas no pueden llegar a la Hyper Key mientras la entrada segura está activada."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La saisie sécurisée empêche Hyper Key de recevoir les frappes."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "セキュアな入力がオンの間は、キー入力がHyper Keyに届きません。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "보안 입력이 켜져 있는 동안에는 키 입력이 Hyper Key에 전달되지 않습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "As teclas pressionadas não chegam à Hyper Key enquanto a Entrada Segura estiver ativada."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Пока включён защищённый ввод, нажатия клавиш не доходят до Hyper Key."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“安全键盘输入”开启时，按键无法到达 Hyper Key。"
           }
         }
       }
@@ -60548,58 +60132,6 @@
         }
       }
     },
-    "Logging out and back in turns off Secure Input.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wenn du dich abmeldest und wieder anmeldest, wird es ausgeschaltet."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Al cerrar sesión y volver a iniciarla, se desactiva."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fermer puis rouvrir la session désactive la saisie sécurisée."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ログアウトしてからログインし直すとオフになります。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "로그아웃한 후 다시 로그인하면 꺼집니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encerrar a sessão e iniciá-la novamente o desativa."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Завершение сеанса и повторный вход выключают это."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "退出登录后再重新登录会将其关闭。"
-          }
-        }
-      }
-    },
     "Look up a word…": {
       "localizations": {
         "de": {
@@ -63469,110 +63001,6 @@
         }
       }
     },
-    "Ministart's Hyper shortcuts also work in password fields and secure terminals, where Right Control (⌃) with the same key triggers them. While on, Right Control (⌃) acts as the Hyper Key too.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Die Hyper-Kurzbefehle von Ministart funktionieren auch in Passwortfeldern und sicheren Terminals. Dort werden sie durch die rechte Control-Taste (⌃) mit derselben Taste ausgelöst. Solange diese Option aktiviert ist, dient die rechte Control-Taste (⌃) auch als Hyper Key."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los atajos Hyper de Ministart también funcionan en campos de contraseña y terminales seguros, donde Control derecho (⌃) junto con la misma tecla los activa. Mientras esta opción esté activada, Control derecho (⌃) también funciona como Hyper Key."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Permet d’utiliser les raccourcis Hyper dans les champs de mot de passe et les terminaux sécurisés avec Contrôle droit (⌃). Cette touche sert aussi d’Hyper Key lorsque l’option est activée."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MinistartのHyperショートカットは、パスワードフィールドやセキュアなターミナルでも使えます。同じキーと右Control（⌃）を組み合わせると実行されます。有効な間は、右Control（⌃）もHyper Keyとして機能します。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ministart의 Hyper 단축키는 암호 필드와 보안 터미널에서도 작동합니다. 같은 키와 오른쪽 Control(⌃)을 함께 누르면 실행됩니다. 켜져 있는 동안 오른쪽 Control(⌃)도 Hyper Key로 작동합니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Os atalhos Hyper do Ministart também funcionam em campos de senha e terminais seguros, onde Control direito (⌃) com a mesma tecla os aciona. Quando ativado, Control direito (⌃) também funciona como Hyper Key."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сочетания Hyper в Ministart также работают в полях паролей и защищенных терминалах: их вызывает правый Control (⌃) с той же клавишей. Когда функция включена, правый Control (⌃) также действует как Hyper Key."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ministart 的 Hyper 快捷键也能在密码栏和安全终端中使用，只需用右侧 Control（⌃）配合相同的按键触发。启用期间，右侧 Control（⌃）也会充当 Hyper Key。"
-          }
-        }
-      }
-    },
-    "Ministart's Hyper shortcuts use Right Control while Secure Input is on.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Die Hyper-Kurzbefehle von Ministart verwenden bei aktivierter sicherer Eingabe die rechte Control-Taste."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Los atajos Hyper de Ministart usan Control derecho mientras la entrada segura está activada."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les raccourcis Hyper de Ministart utilisent Contrôle droit lorsque la saisie sécurisée est activée."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "セキュア入力がオンの間、MinistartのHyperショートカットは右Controlを使用します。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "보안 입력이 켜져 있으면 Ministart의 Hyper 단축키는 오른쪽 Control을 사용합니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Os atalhos Hyper do Ministart usam Control direito enquanto a Entrada Segura está ativada."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сочетания Hyper в Ministart используют правый Control, когда включен защищенный ввод."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "安全输入开启时，Ministart 的 Hyper 快捷键使用右侧 Control。"
-          }
-        }
-      }
-    },
     "Mint": {
       "localizations": {
         "de": {
@@ -64145,58 +63573,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "修改时间"
-          }
-        }
-      }
-    },
-    "Modifier Keys in System Settings remaps Caps Lock, which blocks the Hyper Key.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "„Sondertasten“ in den Systemeinstellungen belegt die Feststelltaste neu, wodurch die Hyper Key blockiert wird."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teclas de modificación en Ajustes del Sistema reasigna Bloq Mayús, lo que bloquea la Hyper Key."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les touches de modification dans les Réglages Système réassignent Verrouillage majuscules, ce qui bloque la Hyper Key."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "システム設定の「修飾キー」でCaps Lockが再割り当てされているため、Hyper Keyが使用できません。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "시스템 설정의 보조 키가 Caps Lock을 재할당하여 Hyper Key를 차단합니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teclas Modificadoras em Ajustes do Sistema remapeia o Caps Lock, o que bloqueia a Hyper Key."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Раздел «Клавиши-модификаторы» в Системных настройках переназначает Caps Lock, что блокирует Hyper Key."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“系统设置”中的“修饰键”重新映射了大写锁定键，这会阻止 Hyper Key。"
           }
         }
       }
@@ -66925,58 +66301,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "没有可推出的磁盘"
-          }
-        }
-      }
-    },
-    "No Karabiner keyboard found.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keine Karabiner-Tastatur gefunden."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No se encontró ningún teclado de Karabiner."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucun clavier Karabiner trouvé."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabinerのキーボードが見つかりません。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Karabiner 키보드를 찾을 수 없습니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhum teclado do Karabiner encontrado."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Клавиатура Karabiner не найдена."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到 Karabiner 键盘。"
           }
         }
       }
@@ -80284,58 +79608,6 @@
         }
       }
     },
-    "Quit %@ to use the Hyper Key": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Beende %@, um die Hyper Key zu verwenden"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sal de %@ para usar Hyper Key"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quittez %@ pour utiliser la Hyper Key"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Keyを使用するには%@を終了してください"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key를 사용하려면 %@을(를) 종료하십시오"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encerre %@ para usar a Hyper Key"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Завершите «%@», чтобы использовать Hyper Key"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "退出 %@ 以使用 Hyper Key"
-          }
-        }
-      }
-    },
     "Quit %lld applications?": {
       "localizations": {
         "de": {
@@ -85844,58 +85116,6 @@
         }
       }
     },
-    "Restart Hyper Key": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key neu starten"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reiniciar Hyper Key"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Redémarrer Hyper Key"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Keyを再起動"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key 다시 시작"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reiniciar Hyper Key"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Перезапустить Hyper Key"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "重新启动 Hyper Key"
-          }
-        }
-      }
-    },
     "Restore Defaults": {
       "localizations": {
         "de": {
@@ -90374,58 +89594,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "安全键盘输入"
-          }
-        }
-      }
-    },
-    "Secure Input Compatibility": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kompatibilität mit „Sichere Eingabe“"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compatibilidad con entrada segura"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compatibilité avec la saisie sécurisée"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "セキュアな入力との互換性"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "보안 입력 호환성"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compatibilidade com Entrada Segura"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Совместимость с защищённым вводом"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "安全键盘输入兼容性"
           }
         }
       }
@@ -99549,58 +98717,6 @@
         }
       }
     },
-    "The Hyper Key can't work while Secure Input is on": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key funktioniert nicht, solange die sichere Eingabe aktiviert ist"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key no funciona con la entrada segura activada"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La Hyper Key ne peut pas fonctionner lorsque la saisie sécurisée est activée"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "セキュアな入力がオンの間は、Hyper Keyを使用できません"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "보안 입력이 켜져 있으면 Hyper Key가 작동하지 않습니다"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O Hyper Key não funciona com a Entrada Segura ativada"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyper Key не работает, когда включен защищенный ввод"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“安全键盘输入”开启时，Hyper Key 无法工作"
-          }
-        }
-      }
-    },
     "The OAuth request failed. Check the connection and try again.": {
       "localizations": {
         "de": {
@@ -107885,58 +107001,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "尝试重新载入文本片段库。"
-          }
-        }
-      }
-    },
-    "Trigger Caps Lock (⇪)": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Feststelltaste (⇪) auslösen"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Activar Bloq Mayús (⇪)"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Simuler la touche Verr. maj. (⇪)"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lock（⇪）を実行"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caps Lock(⇪) 실행"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Acionar Caps Lock (⇪)"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Нажать Caps Lock (⇪)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "触发 Caps Lock（⇪）"
           }
         }
       }

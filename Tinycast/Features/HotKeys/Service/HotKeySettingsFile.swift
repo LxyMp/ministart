@@ -25,11 +25,11 @@ final class HotKeySettingsFile {
         self.hotKeys = hotKeys
     }
 
-    /// Built per read, because the keyboard layout and the Hyper chord both change at run time.
+    /// Built per read, because the keyboard layout changes at run time.
     var spelling: HotKeySpelling {
         HotKeySpelling(
             characters: ASCIIKeyboardLayout.baseCharacters(for: 0..<128),
-            hyperModifiers: KeyShortcut.displayedHyperChord().map(KeyShortcut.carbonModifiers(from:)))
+)
     }
 
     func text(for action: HotKeyAction, _ spelling: HotKeySpelling) -> String? {

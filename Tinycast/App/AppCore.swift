@@ -17,8 +17,6 @@ final class AppCore {
         syntheticEventTag: Paster.tinycastEventTag)
     let textInjector: TextInjector
     let hotKeys = HotKeyManager()
-    @ObservationIgnored private(set) lazy var hyperKey = HyperKeyManager(
-        settings: settings, hotKeys: hotKeys)
     let settings: AppSettings
     /// Mirrors settings into settings.json; nil while the Backup pane's switch is off.
     @ObservationIgnored private var settingsFile: SettingsFileRepository?
@@ -218,7 +216,6 @@ final class AppCore {
             supportReminders.onDue = { [weak self] in self?.supportCoordinator.presentIfDue() }
             supportReminders.start()
 
-            hyperKey.healthTicker = healthTicker
             hotKeys.modifierTapMonitor.healthTicker = healthTicker
             snippetListener.healthTicker = healthTicker
 
@@ -259,16 +256,10 @@ final class AppCore {
                 guard case .command(let id) = action else { return true }
                 return appIndex.isCommandEnabled(id)
             }
-            KeyShortcut.displayedHyperChord = { [settings] in
-                guard settings.hyperKey != .none else { return nil }
-                return KeyShortcut.hyperChord(includesShift: settings.hyperKeyIncludesShift)
-            }
             hotKeys.start(
                 customCommandIDs: Set(customCommands.commands.map(\.id)),
                 quicklinkIDs: Set(quicklinks.quicklinks.map(\.id)))
             // After `hotKeys.start`: Secure Input equivalents are built from the loaded bindings.
-            hyperKey.onProblem = { [weak self] in self?.showMessage($0, tone: .danger) }
-            hyperKey.start()
 
             snippetsStore.onSnapshot = { [weak self] snapshot in
                 guard let self else { return }
@@ -361,7 +352,6 @@ final class AppCore {
     func prepareForTermination() {
         settingsFile?.flush()
         // HID remaps first: they outlive the process.
-        hyperKey.prepareForTermination()
         textInjector.prepareForTermination()
         snippetListener.stop()
         snippetsStore.stop()
@@ -402,7 +392,6 @@ final class AppCore {
             }, reproject: { $0.fileSearchCoordinator.applyPolicy() })
         track({ _ = $0.snippetsEnabled }, reproject: { $0.snippetCoordinator.applySnippetsEnabled() })
         // Not a feature switch, but the same re-projection: a combo has the chord's ⇧ bit baked in.
-        track({ _ = $0.hyperKeyIncludesShift }, reproject: { $0.applyHyperChord() })
         track(
             { _ = $0.snippetsShowInLauncher },
             reproject: { $0.snippetCoordinator.applySnippetsLauncherPresence() })
@@ -481,12 +470,6 @@ final class AppCore {
                 reproject(self)
             }
         }
-    }
-
-    /// Without a Hyper key the chord means nothing, so a literal ⌃⌥⌘ combo is left as recorded.
-    private func applyHyperChord() {
-        guard settings.hyperKey != .none else { return }
-        hotKeys.retargetHyperBindings(includesShift: settings.hyperKeyIncludesShift)
     }
 
     private func applySnippetsFolder() {

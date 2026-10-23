@@ -85,7 +85,6 @@ struct GeneralSettingsView: View {
                 SettingsSectionHeader(.generalAppearance)
             }
 
-            HyperKeySettingsSection()
 
             Section {
                 Picker(selection: $settings.calcNumberStyle) {

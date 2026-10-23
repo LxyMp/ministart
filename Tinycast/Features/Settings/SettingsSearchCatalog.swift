@@ -156,18 +156,6 @@ enum SettingsSearchCatalog {
             .generalAppearance, "Drag to move the launcher",
             keywords: ["move", "position", "window"]),
         .init(
-            .generalHyperKey, "Hyper Key",
-            keywords: ["modifier", "remap", "caps lock", "capslock"]),
-        .init(
-            .generalHyperKey, "Quick Press",
-            keywords: ["tap", "escape", "single press"]),
-        .init(
-            .generalHyperKey, "Include Shift (⇧)",
-            keywords: ["modifier", "chord"]),
-        .init(
-            .generalHyperKey, "Secure Input Compatibility",
-            keywords: ["password", "secure input", "right control"]),
-        .init(
             .generalCalculator, "Number format",
             keywords: ["decimal", "comma", "separator", "locale", "region", "thousands"]),
         .init(
