@@ -23,7 +23,6 @@ Grant it in **System Settings → Privacy & Security → Accessibility**, or fro
 | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
 | [Clipboard](/docs/features/clipboard) and [emoji](/docs/features/emoji) paste | Puts the item into the app you were using              |
 | [Snippets](/docs/features/snippets)                                           | Detects the keyword you type, then inserts the text    |
-| [Quick Actions](/docs/ai/quick-actions)                                       | Reads your selected text and replaces it               |
 | [Window management](/docs/features/window-management) and layouts             | Reads and sets other apps' window frames               |
 | [Navigation](/docs/features/navigation)                                       | Lists open windows and clicks menu bar items           |
 | [Hyper key](/docs/reference/hotkeys#hyper-key)                                | Turns one physical key into a modifier chord           |

@@ -13,7 +13,7 @@ removed. Your existing history is kept, and **Clear history** still works.
 
 ## Opening it
 
-- Press <kbd>tab</kbd> from the launcher (after AI Chat, if AI is on).
+- Press <kbd>tab</kbd> from the launcher.
 - Run the **Clipboard History** command, or use its global shortcut from **Settings → Clipboard**.
 - Choose **Clipboard History** in the Tinycast menu bar menu.
 

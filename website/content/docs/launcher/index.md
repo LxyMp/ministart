@@ -4,7 +4,7 @@ description: One search across everything Tinycast knows about, and how it order
 ---
 
 The launcher is the root screen. One search covers your apps, System Settings panes, commands,
-quicklinks, snippets, system actions, window commands and layouts, custom commands, Quick Actions,
+quicklinks, snippets, system actions, window commands and layouts, custom commands,
 extension commands and upcoming meetings.
 
 <kbd>return</kbd> opens the selection. <kbd>⌘</kbd><kbd>K</kbd> shows everything else you can do
@@ -15,7 +15,7 @@ with it.
 [Favorites](/docs/launcher/favorites) come first, followed by each section in this order:
 
 Meetings → Applications → System Settings → Extensions → Quicklinks → Snippets → System Actions →
-Window Layouts → Window Management → Custom Commands → Quick Actions → Commands
+Window Layouts → Window Management → Custom Commands → Commands
 
 Each section is sorted alphabetically and keeps that order, because a list that reorders itself as
 you use it is hard to scan.
@@ -146,7 +146,7 @@ To quit every app at once, use the **Quit All Applications**
 <kbd>⇧</kbd><kbd>⌘</kbd><kbd>H</kbd> (**Hide from Search**) removes the selected entry from search
 results. The palette stays open on the same search.
 
-It works for apps, System Settings panes, commands, Quick Actions, system actions, window commands
+It works for apps, System Settings panes, commands, system actions, window commands
 and window layouts. To show an entry again, select its checkbox in the matching Settings pane.
 On a quicklink or custom command it's **Hide from Root Search**, and you turn **Show in root search**
 back on in its editor.

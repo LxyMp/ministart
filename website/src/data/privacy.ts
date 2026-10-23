@@ -1,7 +1,7 @@
 import type { IconName } from "../components/ui/feature-icons";
 
 // Every claim here is stated in the docs: Getting started, Settings → Features,
-// Permissions, Extensions, AI, Snippets, Calendar and Clipboard. Don't add one
+// Permissions, Extensions, Snippets, Calendar and Clipboard. Don't add one
 // that isn't.
 
 export const privacyStats = [
@@ -21,12 +21,6 @@ export type DefaultSwitch = {
 // Mirrors the Features table in docs/reference/settings: everything ships off
 // except Clipboard (and Emoji, which has no switch).
 export const defaultSwitches: DefaultSwitch[] = [
-  {
-    icon: "aiChat",
-    name: "AI",
-    note: "The chat command and its history file don't exist until you turn AI on.",
-    isOn: false,
-  },
   {
     icon: "extensions",
     name: "Extensions",

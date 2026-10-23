@@ -18,7 +18,7 @@ Shortcuts follow key positions, so they work the same on any keyboard layout or 
 | <kbd>↑</kbd> <kbd>↓</kbd>                           | Move the selection                                     |
 | <kbd>⌃</kbd><kbd>N</kbd> / <kbd>⌃</kbd><kbd>P</kbd> | Same as <kbd>↓</kbd> / <kbd>↑</kbd>                    |
 | <kbd>⌃</kbd><kbd>F</kbd> / <kbd>⌃</kbd><kbd>B</kbd> | Same as <kbd>→</kbd> / <kbd>←</kbd>                    |
-| <kbd>tab</kbd>                                      | Launcher → AI Chat → clipboard, or move through fields |
+| <kbd>tab</kbd>                                      | Launcher → clipboard, or move through fields |
 | <kbd>esc</kbd>                                      | Clear the search, go back a screen, then close         |
 | <kbd>⌘</kbd><kbd>esc</kbd>                          | Back to the root search from any screen                |
 | <kbd>delete</kbd>                                   | In an empty search, go back a screen                   |
@@ -41,13 +41,6 @@ Shortcuts follow key positions, so they work the same on any keyboard layout or 
 | <kbd>⌘</kbd><kbd>return</kbd>                       | Put Answer in Search Bar (calculator)   |
 | <kbd>⇧</kbd><kbd>⌘</kbd><kbd>return</kbd>           | Copy Calculation, on a calculator card  |
 
-## AI Chat
-
-| Key                      | Does                                                |
-| ------------------------ | --------------------------------------------------- |
-| <kbd>return</kbd>        | Send, or stop a reply that's streaming              |
-| <kbd>⌘</kbd><kbd>V</kbd> | Attach an image, PDF or text file                   |
-| <kbd>delete</kbd>        | In an empty message box, remove the last attachment |
 
 ## Chat History
 
@@ -57,13 +50,6 @@ Shortcuts follow key positions, so they work the same on any keyboard layout or 
 | <kbd>⌃</kbd><kbd>X</kbd>             | Delete Chat      |
 | <kbd>⌃</kbd><kbd>⇧</kbd><kbd>X</kbd> | Delete All Chats |
 
-## Quick Action panel
-
-| Key                      | Does                   |
-| ------------------------ | ---------------------- |
-| <kbd>return</kbd>        | Replace your selection |
-| <kbd>⌘</kbd><kbd>C</kbd> | Copy the result        |
-| <kbd>esc</kbd>           | Close the panel        |
 
 ## Clipboard
 

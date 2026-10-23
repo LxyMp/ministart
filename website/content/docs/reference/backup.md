@@ -55,13 +55,11 @@ not just setting a preference:
 - **Extensions**: agreeing to run third-party code
 - **Calendar**: agreeing to let Tinycast read your calendar
 - **Auto Join Meetings** and **Camera Preview**: agreeing to open links and turn on the camera
-- **Quick Actions**: agreeing to let Tinycast type into other apps
-- **AI** and **MCP servers**: agreeing to send text to a model and run server code
 - **Search text in images and PDFs**: agreeing to text recognition in the background
 - **Fallback order and checkboxes**: these could add a shell command runner to your launcher
 
 This means a backup someone sends you can't turn on keystroke listening, run third-party code, read
-your calendar or contact an AI provider. You turn those features on yourself, in the app, after
+your calendar. You turn those features on yourself, in the app, after
 reading what they do. Importing snippets doesn't turn snippets on.
 
 ## Other things that aren't included
@@ -69,8 +67,6 @@ reading what they do. Importing snippets doesn't turn snippets on.
 | Not included                                                    | Why                                                              |
 | --------------------------------------------------------------- | ---------------------------------------------------------------- |
 | Extensions: their code, data and sign-ins                       | They're third-party code, and their sign-ins are in the Keychain |
-| AI chats, API keys, and all AI and MCP settings                 | Conversations and keys stay on the Mac where they were created   |
-| Quick Actions model, prompts, language and custom actions       | An import should never change what a shortcut does to your text  |
 | Extension registries, package manager, custom search paths      | They're specific to this Mac, not part of your setup             |
 | Palette position, auto-switch input source, calendar checkboxes | They depend on this Mac's displays and hardware                  |
 | Cached data, like currency rates and update checks              | Tinycast downloads it again as needed                            |
@@ -93,7 +89,6 @@ Everything a backup includes is also a regular file in
 | [Notes](/docs/features/notes)                 | `Notes/`                                       |
 | [Quicklinks](/docs/launcher/quicklinks)       | `quicklinks.sqlite3`, with its own JSON export |
 | [Clipboard history](/docs/features/clipboard) | `clipboard.sqlite3`, with images next to it    |
-| [AI chats](/docs/ai)                          | `ai-chats.sqlite3`, never included in a backup |
 
 Snippets and notes are plain Markdown files. Copying those folders works as a backup, and you can
 read the files without Tinycast.

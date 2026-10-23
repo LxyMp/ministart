@@ -14,7 +14,7 @@ every other feature is a screen you open from it. <kbd>esc</kbd> takes you back 
 | <kbd>⌘</kbd><kbd>return</kbd> | The second action, usually Show in Finder or Copy    |
 | <kbd>⌘</kbd><kbd>K</kbd>      | Open the Actions menu for the selection              |
 | <kbd>↑</kbd> <kbd>↓</kbd>     | Move the selection                                   |
-| <kbd>tab</kbd>                | Move between the launcher, AI Chat and the clipboard |
+| <kbd>tab</kbd>                | Move between the launcher and the clipboard |
 | <kbd>esc</kbd>                | Clear the search, then go back a screen, then close  |
 | <kbd>⌘</kbd><kbd>esc</kbd>    | Go back to the root search from any screen           |
 | <kbd>delete</kbd>             | In an empty search field, go back one screen         |
@@ -51,14 +51,12 @@ Russian or another non-Latin layout, <kbd>⌘</kbd><kbd>K</kbd> is still <kbd>�
 
 ## Tab moves between three screens
 
-<kbd>tab</kbd> cycles through three screens: **launcher → AI Chat → clipboard → launcher**.
+<kbd>tab</kbd> cycles between two screens: **launcher → clipboard → launcher**.
 
-- From the launcher, <kbd>tab</kbd> sends whatever you typed to a new AI chat as a question. When
-  this will happen, the header shows an **AI Chat** hint next to a <kbd>tab</kbd> key.
 - From the clipboard, your search text carries over to the launcher.
 - <kbd>esc</kbd> goes back through the screens in reverse.
 
-AI Chat is skipped while [AI](/docs/ai) is off, and the clipboard is skipped while
+The clipboard is skipped while
 [clipboard history](/docs/features/clipboard) is off.
 
 Other screens, like Calculator History or Search Quicklinks, aren't part of the cycle. You only reach
@@ -144,8 +142,6 @@ to the launcher: **Immediately** (default), or after 5, 15, 30, 60 or 90 seconds
 
 Use a longer delay if you often close the palette and then come back to the same screen.
 
-AI Chat has its own setting for reopening a conversation. See
-[AI Chat](/docs/ai#coming-back-to-a-chat).
 
 ## The menu bar
 

@@ -54,13 +54,12 @@ reopens the palette, since passing it on would open Raycast itself.
 
 | Gap                                              | Why                                                                                       |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------------- |
-| **`AI`, `BrowserExtension`, `WindowManagement`** | These are Raycast services with no local equivalent. Using one fails with a clear message |
 | **WebSocket**                                    | Not available yet                                                                         |
 | **Canceling a `fetch` in progress**              | The caller gets its `AbortError`, but the request still finishes in the background        |
 | **Live `child_process.spawn` output**            | The command runs to completion, then all of its output arrives at once                    |
 | **Streaming HTTP**                               | Responses arrive all at once, so server-sent events and download progress don't work      |
 | **`net` and `tls`**                              | Load without errors, but fail when used                                                   |
-| **AI tools (`tools/`)**                          | Not shown                                                                                 |
+| **Tool entry points (`tools/`)**                 | Not shown                                                                                 |
 
 **If an extension needs something that's missing, it tells you when you run it** instead of failing
 silently or showing a broken screen.

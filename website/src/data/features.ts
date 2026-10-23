@@ -5,8 +5,6 @@ export type FeaturePreview =
   | "extensions"
   | "clipboard"
   | "calculator"
-  | "aiChat"
-  | "quickActions"
   | "windows"
   | "snippets";
 
@@ -50,22 +48,6 @@ export const coreFeatures: Feature[] = [
     body: "Search the text, images, files and colors you've copied, then paste them back.",
     href: "/docs/features/clipboard",
     preview: "clipboard",
-    isWide: false,
-  },
-  {
-    icon: "aiChat",
-    title: "AI Chat",
-    body: "Use Apple Intelligence, Claude, Codex, Grok, OpenCode or your own API key.",
-    href: "/docs/ai",
-    preview: "aiChat",
-    isWide: false,
-  },
-  {
-    icon: "quickActions",
-    title: "Quick Actions",
-    body: "Select text in any app and fix, rewrite, translate or summarize it.",
-    href: "/docs/ai/quick-actions",
-    preview: "quickActions",
     isWide: false,
   },
   {

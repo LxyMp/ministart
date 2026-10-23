@@ -1,6 +1,6 @@
 ---
 title: Fallbacks
-description: When search has no answer, send what you typed to AI Chat, file search, the shell or a quicklink.
+description: When search has no answer, send what you typed to file search, the shell or a quicklink.
 ---
 
 Below every search, Tinycast shows a few rows under **Use "…" with**. Each one sends what you typed
@@ -10,7 +10,6 @@ somewhere else. They always appear at the bottom, below the real results.
 
 | Fallback          | What happens to your text                                     | Shown when                                         |
 | ----------------- | ------------------------------------------------------------- | -------------------------------------------------- |
-| AI Chat           | Sent as a question in a new chat                              | [AI](/docs/ai) is on                               |
 | Search Files      | Opens [file search](/docs/features/file-search) with it typed | File Search is on                                  |
 | Run Shell Command | Runs in `zsh`, with its output in a window                    | Always, unless you turn it off                     |
 | A quicklink       | Fills in the quicklink's first `{argument}`                   | Quicklinks is on, and the link has an `{argument}` |

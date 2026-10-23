@@ -6,14 +6,14 @@ description: Give any launcher entry a short name that comes first when you type
 An alias is your own short name for a launcher entry. Type `ps` to get Photoshop, or `sh` to get the
 shell script you run every morning.
 
-Aliases work on **any** entry: apps, System Settings panes, commands, Quick Actions, quicklinks,
+Aliases work on **any** entry: apps, System Settings panes, commands, quicklinks,
 snippets, system actions, window commands and layouts, and extension commands.
 
 ## Setting one
 
 Set aliases in **Settings**, in the alias field on the item's row. Every pane that lists launcher
 items has this field, including Applications, System Settings, System Actions, Commands,
-Quicklinks, Quick Actions and each feature's own command list. For extensions, the field is next to
+Quicklinks and each feature's own command list. For extensions, the field is next to
 each command's shortcut in **Settings → Extensions**.
 
 Each entry can have one alias. The field has a button to clear it.

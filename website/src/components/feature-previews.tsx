@@ -133,53 +133,6 @@ function ClipboardPreview() {
   );
 }
 
-function AiChatPreview() {
-  return (
-    <div className="flex h-full flex-col justify-center gap-2">
-      <div className="ml-auto flex max-w-[85%] flex-col items-end gap-1">
-        <span className="inline-flex items-center gap-1 rounded-full bg-tint/8 px-2 py-0.5 text-caption text-fg-muted">
-          <Paperclip size={11} aria-hidden="true" />
-          notes.pdf
-        </span>
-        <span className="rounded-2xl rounded-br-md bg-violet px-3 py-1.5 text-caption text-white">
-          Summarize this
-        </span>
-      </div>
-      <div className="flex w-4/5 flex-col gap-1.5 rounded-2xl rounded-bl-md bg-tint/8 px-3 py-2.5">
-        <span className="h-1.5 w-full rounded-full bg-tint/15" />
-        <span className="h-1.5 w-4/5 rounded-full bg-tint/15" />
-        <span className="h-1.5 w-3/5 rounded-full bg-tint/15" />
-      </div>
-    </div>
-  );
-}
-
-function QuickActionsPreview() {
-  const actions = ["Fix Grammar", "Rewrite", "Translate", "Summarize"];
-  return (
-    <div className="flex h-full flex-col justify-center gap-3 px-1">
-      <p className="text-small text-fg">
-        <span className="rounded bg-violet/25 px-0.5">
-          their shipping it tomorow
-        </span>
-      </p>
-      <ul className="flex flex-wrap gap-1.5">
-        {actions.map((action, i) => (
-          <li
-            key={action}
-            className={cn(
-              "rounded-full px-2.5 py-1 text-caption font-medium",
-              i === 0 ? "bg-violet text-white" : "bg-tint/8 text-fg-muted",
-            )}
-          >
-            {action}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 function WindowsPreview() {
   const layouts: { name: string; slot: string }[] = [
     { name: "Left Half", slot: "col-start-1 col-end-4" },
@@ -277,8 +230,6 @@ const previews: Record<FeaturePreview, () => ReactNode> = {
   extensions: ExtensionsPreview,
   clipboard: ClipboardPreview,
   calculator: CalculatorPreview,
-  aiChat: AiChatPreview,
-  quickActions: QuickActionsPreview,
   windows: WindowsPreview,
   snippets: SnippetsPreview,
 };

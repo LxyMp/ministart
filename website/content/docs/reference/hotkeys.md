@@ -11,7 +11,7 @@ description: Recording global shortcuts, double-tap modifiers, and the Hyper key
 - Every built-in command, except Open in Browser, Run Shell Command and Quit Tinycast. See
   [Commands](/docs/launcher/commands).
 - Every app and every System Settings pane
-- Every quicklink, snippet, custom command, custom Quick Action and extension command
+- Every quicklink, snippet, custom command and extension command
 - All 31 [system actions](/docs/launcher/system-actions)
 - All 35 [window commands](/docs/features/window-management), every
   [window layout](/docs/features/window-layouts) and every [room](/docs/features/rooms)
@@ -135,11 +135,6 @@ Control** plus a shortcut's key runs that Hyper shortcut. Left Control never tri
 Tinycast Control shortcuts still work with Left Control. The Control combinations used by Hyper are
 reserved while Secure Input lasts. Other apps' Hyper shortcuts still don't work there.
 
-## Dictation key (🎤)
-
-Press 🎤 (F5) while recording any shortcut to use it in Tinycast, push-to-talk included. While a
-shortcut uses it, macOS Dictation doesn't; remove the shortcut to give it back. With standard function
-keys on, press fn+🎤. Tinycast sends it as F20, so other apps' F20 shortcuts fire too.
 
 ## Hiding versus turning off
 
@@ -149,7 +144,7 @@ keys on, press fn+🎤. Tinycast sends it as F20, so other apps' F20 shortcuts f
 **A section's switch turns off its shortcuts.** **Enable Applications**, **Enable System Settings**,
 **Enable System Actions** and **Enable Commands** each turn off every shortcut in their pane.
 
-**Turning off a feature turns off its shortcuts.** File Search, Notes, AI, Quick Actions,
+**Turning off a feature turns off its shortcuts.** File Search, Notes,
 Navigation, Calendar, window commands, quicklinks, snippets, custom commands and extensions all check
 their switch before doing anything. Turn the feature back on and its shortcuts work again.
 
@@ -158,7 +153,7 @@ shortcut, the same as in the palette.
 
 ## Keeping them
 
-Shortcuts are included in [backups](/docs/reference/backup), except for custom Quick Actions and
+Shortcuts are included in [backups](/docs/reference/backup), except for
 snippets.
 
 Shortcuts for items you deleted while Tinycast wasn't running are removed the next time it starts.
