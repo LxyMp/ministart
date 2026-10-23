@@ -104,8 +104,6 @@ enum Theme {
         static let rowIcon: CGFloat = 24
         static let resultRowIcon: CGFloat = 26
         static let colorDot: CGFloat = 8
-        static let calendarBarWidth: CGFloat = 3
-        static let calendarBarHeight: CGFloat = 18
         static let keyCap: CGFloat = 18
         static let recorderKeyCap: CGFloat = 16
         /// Fixed so the recorder can't resize as its binding changes.

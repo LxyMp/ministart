@@ -150,7 +150,7 @@ struct PaletteNavigationTests {
 
         let event = searchingLauncher()
         event.query = "Create Event"
-        event.push(mode: .eventEditor)
+        event.push(mode: .customCommandEditor)
         event.noteEditingField(true)
         expect(
             event.mode.isNativeEditor && event.query.isEmpty,
@@ -159,7 +159,7 @@ struct PaletteNavigationTests {
             event.pop(preservingSelection: true) && event.mode == .launcher
                 && event.query == "Create Event" && event.restoredSelection == 3 && !event.isEditingField,
             "leaving an event editor restores the launcher query and selected row")
-        event.prepare(mode: .eventEditor)
+        event.prepare(mode: .customCommandEditor)
         expect(!event.canGoBack, "an event editor summoned by a hotkey starts without a previous screen")
 
         let command = searchingLauncher()
@@ -190,7 +190,7 @@ struct PaletteNavigationTests {
             "closing a command editor restores its browser query and selection")
         expect(commands.pop() && commands.mode == .launcher, "the command browser returns to root search")
 
-        for mode: PaletteMode in [.snippetEditor, .quicklinkEditor, .eventEditor, .customCommandEditor] {
+        for mode: PaletteMode in [.snippetEditor, .quicklinkEditor, .customCommandEditor] {
             let switched = searchingLauncher()
             switched.push(mode: mode)
             switched.push(mode: .clipboard)

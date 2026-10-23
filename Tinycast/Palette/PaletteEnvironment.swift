@@ -37,8 +37,6 @@ extension View {
             .environment(core.quicklinks)
             .environment(core.snippetsStore)
             .environment(core.extensions)
-            .environment(core.calendarStore)
-            .environment(core.meetingClock)
             .motionScope()
     }
 }

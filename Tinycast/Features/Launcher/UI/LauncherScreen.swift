@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The root search: favorites, meetings, suggestions, then one section per kind, led by any card.
+/// The root search: favorites, suggestions, then one section per kind, led by any card.
 struct LauncherScreen: PaletteScreen {
     let appIndex: AppIndex
     let favorites: FavoritesStore
@@ -9,9 +9,6 @@ struct LauncherScreen: PaletteScreen {
     let vm: PaletteState
     /// Sampled by `openActions`, so Restart and Quit can't move while the menu is up.
     let running: Bool
-    /// The join card's meeting, resolved by the coordinator; nil unless one is due.
-    let meeting: MeetingEvent?
-    let now: Date
     let openActions: () -> Void
     let openArgumentOptions: (String) -> Void
     /// Called when an action reorders the list, so the highlight scrolls back into view.
@@ -25,9 +22,7 @@ struct LauncherScreen: PaletteScreen {
     private let pinsFavorites: Bool
     /// How many of `results` are pinned favorites; zero unless the section shows.
     private let favoriteCount: Int
-    /// How many follow the favorites as Meetings; zero unless the field is empty.
-    private let meetingCount: Int
-    /// How many follow the meetings as Suggestions; zero unless the field is empty.
+    /// How many follow the favorites as Suggestions; zero unless the field is empty.
     private let suggestionCount: Int
     private let matchCount: Int
     private let files: [FileSearchResult]
@@ -39,7 +34,6 @@ struct LauncherScreen: PaletteScreen {
     init(
         appIndex: AppIndex, favorites: FavoritesStore, visibility: VisibilityStore,
         currencyRates: CurrencyRateStore, core: AppCore, vm: PaletteState, running: Bool,
-        meeting: MeetingEvent?, now: Date,
         openActions: @escaping () -> Void, openArgumentOptions: @escaping (String) -> Void,
         scrollToFollow: @escaping () -> Void
     ) {
@@ -49,7 +43,6 @@ struct LauncherScreen: PaletteScreen {
         self.core = core
         self.vm = vm
         self.running = running
-        self.now = now
         self.openActions = openActions
         self.openArgumentOptions = openArgumentOptions
         self.scrollToFollow = scrollToFollow
@@ -82,9 +75,6 @@ struct LauncherScreen: PaletteScreen {
             results.map(Row.entry) + files.map(Row.file)
             + fallbacks.map { Row.fallback($0.fallback, $0.entry) }
         let pinsFavorites = vm.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        // At most one of them leads, so the flat index keeps a single-row offset.
-        let meeting = pinsFavorites ? meeting : nil
-        self.meeting = meeting
         self.results = results
         self.calc = calc
         self.files = files
@@ -92,15 +82,12 @@ struct LauncherScreen: PaletteScreen {
         self.color = color
         self.pinsFavorites = pinsFavorites
         self.favoriteCount = pinsFavorites ? ordered.favoriteCount : 0
-        self.meetingCount = pinsFavorites ? ordered.meetingCount : 0
         self.suggestionCount = pinsFavorites ? ordered.suggestionCount : 0
         self.matchCount = matchCount
         if let calc {
             self.rows = [.calc(calc)] + entries
         } else if let color {
             self.rows = [.color(color)] + entries
-        } else if let meeting {
-            self.rows = [.meeting(meeting)] + entries
         } else {
             self.rows = entries
         }
@@ -109,7 +96,6 @@ struct LauncherScreen: PaletteScreen {
     /// The card is a row like any other, so the flat selection indexes `rows` with no offset.
     enum Row: Equatable, Identifiable {
         case calc(CalcResult)
-        case meeting(MeetingEvent)
         case color(ColorValue)
         case entry(AppEntry)
         /// Prefixed, because an application's entry id is the same bundle path a file hit carries.
@@ -120,7 +106,6 @@ struct LauncherScreen: PaletteScreen {
         var id: String {
             switch self {
             case .calc: return "calc-card"
-            case .meeting: return "meeting-card"
             case .color: return "color-card"
             case .entry(let app): return app.id
             case .file(let result): return "file-" + result.id
@@ -139,9 +124,6 @@ struct LauncherScreen: PaletteScreen {
         switch row(at: clampedSelection) {
         case .calc: return String(localized: "Copy Answer")
         case .color: return String(localized: "Copy Color")
-        case .meeting(let meeting):
-            return meeting.link == nil
-                ? String(localized: "Open in Calendar") : String(localized: "Join Meeting")
         case .entry(let app): return app.kind.descriptor.openVerb.resolved()
         case .file(let result):
             return result.isDirectory ? String(localized: "Open Folder") : String(localized: "Open File")
@@ -219,15 +201,14 @@ struct LauncherScreen: PaletteScreen {
 
     private func isCardSelected(_ selection: Int) -> Bool {
         switch row(at: selection) {
-        case .calc, .meeting, .color: return true
+        case .calc, .color: return true
         case .entry, .file, .fallback, nil: return false
         }
     }
 
     private var leadCard: LauncherList.LeadCard? {
         if let calc { return .calc(calc) }
-        if let color { return .color(color) }
-        return meeting.map { .meeting($0, now: now) }
+        return color.map { .color($0) }
     }
 
     /// An error card is selectable but has no action: it must drive neither the pill nor ⌘K.
@@ -242,8 +223,6 @@ struct LauncherScreen: PaletteScreen {
             return result.isActionable ? CalcActionsMenu.content(result: result, core: core) : nil
         case .color(let color):
             return ColorActionsMenu.content(color: color, core: core)
-        case .meeting(let meeting):
-            return MeetingActionsMenu.content(meeting: meeting, core: core)
         case .entry(let app):
             return AppActionsMenu.content(
                 app: app, searchQuery: vm.query, core: core, running: running,
@@ -270,7 +249,6 @@ struct LauncherScreen: PaletteScreen {
         case .calc(let result): core.calculatorCoordinator.copyCalculatorResult(result)
         case .color(let color):
             core.clipboardCoordinator.copyColor(color, as: ColorFormat.primary(for: color))
-        case .meeting(let meeting): core.calendarCoordinator.activateMeeting(id: meeting.id)
         case .entry(let app):
             core.launcherCoordinator.launch(
                 app, searchQuery: vm.query, arguments: argumentValues(for: app))
@@ -281,21 +259,8 @@ struct LauncherScreen: PaletteScreen {
         }
     }
 
-    /// The card's meeting or a meeting row's; both answer the meeting menu's chords.
-    private func meeting(at selection: Int) -> MeetingEvent? {
-        switch row(at: selection) {
-        case .meeting(let meeting): return meeting
-        case .entry(let app) where app.kind == .meeting:
-            return core.calendarCoordinator.meeting(entryID: app.id)
-        default: return nil
-        }
-    }
-
-    /// ⌘↵ — a meeting copies its link, an answer becomes the query, an entry on disk is revealed.
+    /// ⌘↵ — an answer becomes the query, an entry on disk is revealed.
     func secondary(at selection: Int) -> Bool {
-        if let meeting = meeting(at: selection) {
-            return MeetingActionsMenu.secondary(meeting: meeting, core: core)
-        }
         if case .calc(let result) = row(at: selection) {
             return core.calculatorCoordinator.putAnswerInSearchBar(result)
         }
@@ -330,9 +295,6 @@ struct LauncherScreen: PaletteScreen {
         case .copyPath: return copyQuicklink(at: selection)
         case .favoriteSlot(let index): return launchFavorite(at: index)
         case .copyCalculation: return copyCalculation(at: selection)
-        case .openInApp, .showDetails:
-            guard let meeting = meeting(at: selection) else { return false }
-            return MeetingActionsMenu.perform(shortcut, meeting: meeting, core: core)
         default: return false
         }
     }
@@ -497,7 +459,6 @@ struct LauncherScreen: PaletteScreen {
             results: results,
             selectedRowID: row(at: selection)?.id,
             favoriteCount: favoriteCount,
-            meetingCount: meetingCount,
             suggestionCount: suggestionCount,
             matchCount: matchCount,
             scroll: scroll,
