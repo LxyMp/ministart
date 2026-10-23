@@ -126,8 +126,9 @@ executable names are not matched.
 Separators are space, tab, newline and `- . / ( ) [ ]`. In an ASCII name a word also starts at a capital
 after a lowercase letter (`OrbStack`), at a letter after a digit (`1Password`), and at the last capital
 of a run that a lowercase letter follows (`BBEdit`), so `stack` finds OrbStack while `code` stays
-mid-word in Xcode. A query separator with nothing to land on is skipped. An equal text is `exact`, above
-every score. The alignment keeps a running maximum, so a row costs O(text).
+mid-word in Xcode. A query separator lands on a target one when it can, but may also vanish — `my sql`
+finds MySQL Workbench at `mysql`'s score — and one with nowhere to land counts as skipped. An equal text
+is `exact`, above every score. The alignment keeps a running maximum, so a row costs O(text).
 
 ### Sensitivity
 

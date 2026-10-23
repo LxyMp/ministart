@@ -36,6 +36,7 @@ struct BackupArchiveTest {
         rejectsGarbage(in: root)
         refusesTraversal(in: root)
         refusesSymbolicLinks(in: root)
+        failedSealLeavesNothingBehind(in: root)
         categoriesAreComplete()
         staging()
 
@@ -103,6 +104,22 @@ struct BackupArchiveTest {
     }
 
     // MARK: - Clipboard
+
+    /// A seal that dies mid-write must leave neither a truncated destination nor its staged file.
+    static func failedSealLeavesNothingBehind(in root: URL) {
+        let destination = root.appendingPathComponent("failed.tinycast")
+        do {
+            try BackupArchive.seal(
+                directory: root.appendingPathComponent("no-such-directory"), into: destination)
+            check("sealing a missing directory throws", false)
+        } catch {
+            check(
+                "a failed seal leaves no destination file",
+                !FileManager.default.fileExists(atPath: destination.path))
+        }
+        let leftovers = (try? FileManager.default.contentsOfDirectory(atPath: root.path)) ?? []
+        check("a failed seal leaves no staged file", !leftovers.contains { $0.hasSuffix(".tmp") })
+    }
 
     static func clipboardLines(in root: URL) {
         let bundle = BackupBundle(root: root.appendingPathComponent("clips"))

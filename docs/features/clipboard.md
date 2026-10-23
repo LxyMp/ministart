@@ -98,8 +98,12 @@ who turns the feature off can still erase what it kept.
 ## Store
 
 `ClipboardStore` is SQLite-backed: rows plus a trigram FTS5 index in `clipboard.sqlite3`, with image
-blobs as loose PNG files, all under `~/Library/Application Support/<bundle-id>/`. The newest 1000 rows
-are mirrored in the observable `items` window; FTS search reaches older rows.
+blobs as loose PNG files, all under `~/Library/Application Support/<bundle-id>/`. The newest 1000
+unpinned rows plus every pin are mirrored in the observable `items` window; FTS search reaches older
+rows. The connection sets a 5 s `busy_timeout`, so a capture during a restore's write-locked
+transaction waits it out; an insert that still fails is no capture at all — it never shows in memory,
+and a failed image insert takes its just-written blob with it. A delete removes the blob only once
+its row is gone, so a lock-starved delete cannot strand a record pointing at a missing file.
 
 **Application Support, not Caches.** `~/Library/Caches` is excluded from Time Machine and the system
 may reclaim it at any time without telling the app, so a history kept there survives neither a restore

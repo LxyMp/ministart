@@ -324,7 +324,7 @@ final class ClipboardStore {
         if paths.count == 1, items.first?.kind == .file, items.first?.text == paths[0] { return }
         for path in paths {
             let item = ClipboardItem(filePath: path, sourceBundleID: sourceBundleID)
-            if let stmt = insertStmt { Self.bindAndInsert(stmt, item) }
+            if let stmt = insertStmt, !Self.bindAndInsert(stmt, item) { continue }
             items.insert(item, at: 0)
             trimWindow()
         }
@@ -337,7 +337,8 @@ final class ClipboardStore {
         // The blob write is multi-MB I/O; only the row insert returns to the main actor.
         Task.detached(priority: .utility) { [weak self] in
             guard (try? data.write(to: url, options: .atomic)) != nil else { return }
-            await self?.insert(item)
+            // A row that didn't land leaves the blob unreferenced; nothing else would sweep it.
+            if await self?.insert(item) != true { Self.removeBlob(atPath: url.path) }
         }
     }
 
@@ -387,9 +388,11 @@ final class ClipboardStore {
     func remove(_ item: ClipboardItem) {
         if let stmt = deleteByIDStmt {
             sqlite3_bind_text(stmt, 1, item.id.uuidString, -1, SQLITE_TRANSIENT)
-            sqlite3_step(stmt)
+            let deleted = sqlite3_step(stmt) == SQLITE_DONE && sqlite3_changes(db) > 0
             sqlite3_reset(stmt)
             sqlite3_clear_bindings(stmt)
+            // The blob goes only with its row: a delete that lost the lock must not strand a path.
+            guard deleted else { return }
         }
         items.removeAll { $0.id == item.id }
         deleteBlob(item)
@@ -618,19 +621,24 @@ final class ClipboardStore {
 
     /// Cap the in-memory window, but never drop a pinned row: those render however old they are.
     private func trimWindow() {
-        guard items.count > Self.memoryWindow, let index = items.lastIndex(where: { !$0.isPinned })
+        // Pins sit outside the window — `load` never counts them — so the cap counts unpinned rows only.
+        let unpinned = items.reduce(0) { $0 + ($1.isPinned ? 0 : 1) }
+        guard unpinned > Self.memoryWindow, let index = items.lastIndex(where: { !$0.isPinned })
         else { return }
         items.remove(at: index)
     }
 
-    private func insert(_ item: ClipboardItem) {
-        if let stmt = insertStmt { Self.bindAndInsert(stmt, item) }
+    @discardableResult
+    private func insert(_ item: ClipboardItem) -> Bool {
+        // No statement is the documented session-only degradation; a failed write is no capture at all.
+        if let stmt = insertStmt, !Self.bindAndInsert(stmt, item) { return false }
         items.insert(item, at: 0)
         trimWindow()
         prune()
+        return true
     }
 
-    nonisolated private static func bindAndInsert(_ stmt: OpaquePointer, _ item: ClipboardItem) {
+    nonisolated private static func bindAndInsert(_ stmt: OpaquePointer, _ item: ClipboardItem) -> Bool {
         sqlite3_bind_text(stmt, 1, item.id.uuidString, -1, SQLITE_TRANSIENT)
         sqlite3_bind_text(stmt, 2, item.kind.rawValue, -1, SQLITE_TRANSIENT)
         if let text = item.text {
@@ -654,9 +662,10 @@ final class ClipboardStore {
         } else {
             sqlite3_bind_null(stmt, 7)
         }
-        sqlite3_step(stmt)
+        let inserted = sqlite3_step(stmt) == SQLITE_DONE
         sqlite3_reset(stmt)
         sqlite3_clear_bindings(stmt)
+        return inserted
     }
 
     /// Whether a path is inside our images directory; only those are ours to delete.
@@ -708,7 +717,11 @@ final class ClipboardStore {
     private func openDatabase() -> Bool {
         guard
             sqlite3_open_v2(dbURL.path, &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nil)
-                == SQLITE_OK,
+                == SQLITE_OK
+        else { return false }
+        // An import transaction holds the write lock for seconds; a capture waits it out, not lost.
+        sqlite3_busy_timeout(db, 5_000)
+        guard
             sqlite3_exec(db, "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;", nil, nil, nil)
                 == SQLITE_OK,
             sqlite3_exec(db, Self.schema, nil, nil, nil) == SQLITE_OK
@@ -802,8 +815,7 @@ final class ClipboardStore {
             {
                 continue
             }
-            bindAndInsert(stmt, item)
-            inserted += 1
+            if bindAndInsert(stmt, item) { inserted += 1 }
         }
         sqlite3_exec(db, "COMMIT", nil, nil, nil)
         return inserted

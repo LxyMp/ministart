@@ -150,11 +150,20 @@ enum LauncherMatch {
                     if first < 0 { first = column }
                 }
             }
+            let landed = first >= 0
+            // A separator may also vanish, keeping the previous row where it stood: `my sql` finds MySQL.
+            if unitIsSeparator, anchor >= 0, anchor < upper {
+                for column in anchor..<min(upper, rowEnd) where previous[column] != .min {
+                    if current[column] < previous[column] { current[column] = previous[column] }
+                    if first < 0 || column < first { first = column }
+                }
+            }
             if first >= 0 {
                 anchor = first
                 matched += 1
-                rowStart = lower
+                rowStart = first
                 rowEnd = upper
+                if unitIsSeparator, !landed { skipped += 1 }
                 swap(&previous, &current)
             } else if unitIsSeparator {
                 skipped += 1

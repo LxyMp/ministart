@@ -14,7 +14,7 @@ final class CalculatorCoordinator {
     /// History records the canonical answer; only what reaches the pasteboard is localized.
 
     func copyCalculatorResult(_ result: CalcResult) {
-        guard case .value(let display, let copyText) = result.payload else { return }
+        guard case .value(_, let copyText) = result.payload else { return }
         paletteCoordinator.hidePalette(restoreFocus: false)
         Paster.copyPlainText(copyText)
     }
@@ -22,7 +22,7 @@ final class CalculatorCoordinator {
     /// `⌘↵` on the card: the answer becomes the query, so the next step chains onto it.
     @discardableResult
     func putAnswerInSearchBar(_ result: CalcResult) -> Bool {
-        guard case .value(let display, let copyText) = result.payload, result.canChain,
+        guard case .value(_, let copyText) = result.payload, result.canChain,
             !core.palette.isComposing
         else { return false }
         core.palette.rewriteQuery(copyText)
@@ -30,7 +30,7 @@ final class CalculatorCoordinator {
     }
 
     func copyCalculationWithExpression(_ result: CalcResult) {
-        guard case .value(let display, let copyText) = result.payload else { return }
+        guard case .value(_, let copyText) = result.payload else { return }
         paletteCoordinator.hidePalette(restoreFocus: false)
         Paster.copyPlainText(
             "\(result.expression) = \(copyText)")

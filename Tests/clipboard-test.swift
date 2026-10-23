@@ -1,5 +1,41 @@
 // Standalone test for the clipboard store, compiling the real source rather than a copy.
 import Foundation
+import SQLite3
+
+/// Holds the store's write lock the way a restore's import transaction does, off the main actor.
+final class LockHolder: Sendable {
+    private let lock = NSLock()
+    nonisolated(unsafe) private var db: OpaquePointer?
+
+    init(databaseAt url: URL) {
+        var handle: OpaquePointer?
+        if sqlite3_open_v2(url.path, &handle, SQLITE_OPEN_READWRITE, nil) == SQLITE_OK,
+            sqlite3_exec(handle, "BEGIN IMMEDIATE", nil, nil, nil) == SQLITE_OK
+        {
+            db = handle
+        } else {
+            sqlite3_close_v2(handle)
+            db = nil
+        }
+    }
+
+    func release() {
+        lock.lock()
+        defer { lock.unlock() }
+        if let db {
+            _ = sqlite3_exec(db, "COMMIT", nil, nil, nil)
+            sqlite3_close_v2(db)
+            self.db = nil
+        }
+    }
+
+    deinit {
+        if let db {
+            _ = sqlite3_exec(db, "COMMIT", nil, nil, nil)
+            sqlite3_close_v2(db)
+        }
+    }
+}
 
 @main
 @MainActor
@@ -7,7 +43,7 @@ struct ClipboardTests {
     static var failures = 0
     static var passes = 0
 
-    static func main() throws {
+    static func main() async throws {
         pinOrder()
         unpinRejoinsAsNewest()
         pasteLeavesPinsAlone()
@@ -32,6 +68,8 @@ struct ClipboardTests {
         orphanedCopiesAreSweptOnLoad()
         multiFileCopyMakesOneRowEach()
         fileBatchesRespectTheMemoryWindow()
+        pinsDoNotCrowdTheMemoryWindow()
+        try captureWaitsOutARestoreTransaction()
         referencedFilesOutliveTheirRows()
         filePathsAreNeverATextForm()
         fileEntriesAreFoundByNameAndFolder()
@@ -762,7 +800,9 @@ struct ClipboardTests {
             for batch in 0..<3 {
                 let paths = (0..<32).map { "/Users/me/batch-\(batch)-\($0).txt" }
                 store.addFiles(paths, sourceBundleID: nil)
-                expect(store.items.count == 1000, "each file batch keeps the window bounded")
+                expect(
+                    store.items.count == 1001,
+                    "each file batch keeps the window at its cap plus the pin")
                 expect(
                     store.items.prefix(paths.count).compactMap(\.filePath) == paths.reversed(),
                     "the entire new batch stays in recency order")
@@ -772,12 +812,57 @@ struct ClipboardTests {
             }
 
             expect(
-                store.items.last(where: { !$0.isPinned })?.text == "entry 97",
+                store.items.last(where: { !$0.isPinned })?.text == "entry 96",
                 "trimming removes the oldest unpinned rows")
             expect(
                 store.search("entry 1", filter: .text).contains { $0.text == "entry 1" },
                 "trimmed rows remain searchable on disk")
         }
+    }
+
+    /// Pins ride outside the window — `load` never counts them — so a full pin set evicts nothing.
+    static func pinsDoNotCrowdTheMemoryWindow() {
+        withStore { store, _ in
+            let pins = (0..<1000).map { index in
+                ClipboardItem(
+                    id: UUID(), kind: .text, text: "pin \(index)", imagePath: nil,
+                    createdAt: Date(timeIntervalSinceNow: TimeInterval(-index)),
+                    sourceBundleID: nil,
+                    pinnedAt: Date(timeIntervalSinceNow: TimeInterval(-index)))
+            }
+            store.importEntries(pins)
+            expect(
+                store.items.count == 1000 && store.items.allSatisfy(\.isPinned),
+                "a full pin set loads resident")
+
+            store.addText("fresh", sourceBundleID: nil)
+            expect(
+                store.items.contains { $0.text == "fresh" },
+                "a capture under a full pin set stays in the window")
+        }
+    }
+
+    /// A capture during a restore's write-locked transaction waits the lock out and survives.
+    static func captureWaitsOutARestoreTransaction() throws {
+        let dir = scratchDirectory()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let store = ClipboardStore(directory: dir)
+        store.addText("before", sourceBundleID: nil)
+
+        let holder = LockHolder(databaseAt: store.dbURL)
+        Task.detached(priority: .userInitiated) {
+            try? await Task.sleep(for: .milliseconds(300))
+            holder.release()
+        }
+        store.addText("during", sourceBundleID: nil)
+        expect(texts(store).contains("during"), "the capture outlived the write lock")
+
+        store.close()
+        store.open()
+        store.load()
+        expect(
+            texts(store).contains("during"),
+            "the capture is on disk, not just in the session's memory")
     }
 
     /// The one that matters: a file we only referenced is never ours to delete.
@@ -884,7 +969,6 @@ struct ClipboardTests {
             "an image has no plain text")
     }
 
-    /// Copy Text is an image answer: a captured blob, or an image file — never text or a PDF.
     // MARK: - Harness
 
     /// Runs `body` against a store rooted in a fresh temp directory, torn down afterwards.

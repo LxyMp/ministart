@@ -67,6 +67,14 @@ struct FuzzTest {
             outcome("vs-code", "vscode") == .scored(score: 14, skipped: 1),
             "got \(String(describing: outcome("vs-code", "vscode")))")
         check(
+            "a separator may vanish even where one would land",
+            outcome("my sql", "MySQL Workbench") == .scored(score: 13, skipped: 0),
+            "got \(String(describing: outcome("my sql", "MySQL Workbench")))")
+        check(
+            "`wi fi` finds WiFi Explorer at `wifi`'s score",
+            score("wi fi", "WiFi Explorer") == score("wifi", "WiFi Explorer"),
+            "got \(String(describing: score("wi fi", "WiFi Explorer")))")
+        check(
             "matched separators never push a row past the name",
             outcome("a--", "a---") == .scored(score: 8, skipped: 0))
         check("a camelCase hump starts a word", score("p", "TablePlus") == 3)
@@ -103,6 +111,7 @@ struct FuzzTest {
         check("…and one after an acronym", passes("edit", "BBEdit", .high))
         check("one letter must start a word", !passes("s", "Clipboard History", .medium))
         check("…and does when it does", passes("s", "Clipboard History", .low))
+        check("a vanished separator still clears High", passes("my sql", "MySQL Workbench", .high))
         check("an exact hit passes every level", SearchSensitivity.high.accepts(.exact, queryLength: 99))
         check("Low accepts any alignment", passes("sfr", "Safari", .low))
     }

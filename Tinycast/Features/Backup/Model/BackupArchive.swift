@@ -25,9 +25,13 @@ enum BackupArchive {
 
     /// LZFSE, not LZMA: the payload is dominated by PNGs that are already compressed.
     static func seal(directory: URL, into file: URL) throws {
+        // Staged beside the destination, so a failed write leaves no truncated file behind.
+        let staged = file.deletingLastPathComponent()
+            .appendingPathComponent(".\(file.lastPathComponent).\(UUID().uuidString).tmp")
+        defer { try? FileManager.default.removeItem(at: staged) }
         guard let keySet,
             let destination = ArchiveByteStream.fileStream(
-                path: FilePath(file.path), mode: .writeOnly, options: [.create, .truncate],
+                path: FilePath(staged.path), mode: .writeOnly, options: [.create, .truncate],
                 permissions: FilePermissions(rawValue: 0o600)),
             let compressor = ArchiveByteStream.compressionStream(
                 using: .lzfse, writingTo: destination)
@@ -47,6 +51,12 @@ enum BackupArchive {
         try compressor.close()
         try destination.close()
         sealed = true
+        do {
+            if FileManager.default.fileExists(atPath: file.path) {
+                try FileManager.default.removeItem(at: file)
+            }
+            try FileManager.default.moveItem(at: staged, to: file)
+        } catch { throw ArchiveError.cannotWrite }
     }
 
     static func open(file: URL, into directory: URL) throws {
