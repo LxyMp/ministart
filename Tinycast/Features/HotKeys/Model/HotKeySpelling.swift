@@ -77,7 +77,7 @@ struct HotKeySpelling: Sendable {
                 return nil
             }
         }
-        let commanding = modifiers & (cmdKey | optionKey | controlKey | kEventKeyModifierFnMask)
+        let commanding = modifiers & (cmdKey | optionKey | controlKey | shiftKey | kEventKeyModifierFnMask)
         guard commanding != 0 || KeyShortcut.isFunctionKey(keyCode) else { return nil }
         return KeyShortcut(carbonKeyCode: keyCode, carbonModifiers: modifiers)
     }

@@ -120,7 +120,9 @@ struct DoubleTapDetectorTests {
             "a layout's plus key is spelled after the separator")
 
         expect(plain.binding(from: "k") == nil, "a bare key is refused, as the recorder refuses it")
-        expect(plain.binding(from: "shift+k") == nil, "Shift alone does not command")
+        expect(
+            plain.binding(from: "shift+k") == combo(kVK_ANSI_K, shiftKey),
+            "Shift alone commands its combos too")
         expect(plain.binding(from: "cmd+") == nil, "a chord needs a key")
         expect(plain.binding(from: "cmd+nope") == nil, "an unknown key is refused")
         expect(plain.binding(from: "cmd+key-999") == nil, "a raw key code must be a real one")

@@ -12,10 +12,10 @@ struct KeyShortcut: Hashable, Sendable {
         self.carbonModifiers = carbonModifiers & Self.allModifiers
     }
 
-    /// Captures from a key-down, or nil: one of ⌘⌥⌃🌐 is required, bar function keys.
+    /// Captures from a key-down, or nil: one of ⌘⌥⌃⇧🌐 is required, bar function keys.
     init?(keyCode: Int, modifierFlags: NSEvent.ModifierFlags) {
         let flags = modifierFlags.intersection([.command, .option, .control, .shift, .function])
-        let hasCommandingModifier = !flags.isDisjoint(with: [.command, .option, .control, .function])
+        let hasCommandingModifier = !flags.isDisjoint(with: [.command, .option, .control, .shift, .function])
         guard hasCommandingModifier || Self.isFunctionKey(keyCode) else { return nil }
         self.init(carbonKeyCode: keyCode, carbonModifiers: Self.carbonModifiers(from: flags))
     }
