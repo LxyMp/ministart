@@ -14206,16 +14206,6 @@
         }
       }
     },
-    "Open %@": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开 %@"
-          }
-        }
-      }
-    },
     "Open Accessibility settings": {
       "localizations": {
         "zh-Hans": {
@@ -15501,13 +15491,13 @@
         }
       }
     },
-    "Quit %@": {
-      "comment": "Menu item; the argument is the app's display name",
+    "Quit": {
+      "extractionState": "manual",
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "退出 %@"
+            "value": "退出"
           }
         }
       }
@@ -16565,7 +16555,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "重新启动"
+            "value": "重启"
           }
         }
       }
@@ -16576,16 +16566,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "重新启动 App"
-          }
-        }
-      }
-    },
-    "Restart Ministart": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "重启 Ministart"
           }
         }
       }

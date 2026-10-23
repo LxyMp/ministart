@@ -15,7 +15,7 @@ struct TinycastApp: App {
 
     var body: some Scene {
         MenuBarExtra(isInserted: menuBarInsertion) {
-            MenuBarMenu(appName: appName)
+            MenuBarMenu()
         } label: {
             MenuBarLabel(appName: appName)
         }
