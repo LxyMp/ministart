@@ -128,13 +128,12 @@ at `HotKeyBinding`.
 supplied monotonic timestamp), so `Tests/hotkey-test.swift` drives it without an event tap. A **tap**
 is a press that starts from no modifiers held, keeps exactly one of the four held with no `fn`
 alongside, sees no key press or mouse click, and is released within `maxHold` (250 ms — the same
-window `HyperKeyTap` calls a quick press). A **double-tap** is a second tap of the same modifier
+window `DoubleTapDetector.maxHold` defines). A **double-tap** is a second tap of the same modifier
 starting within `maxGap` (300 ms) of the first one's release.
 
 Only _momentary_ keys may feed `hasOtherModifiers`. Caps Lock must not: `maskAlphaShift` tracks the
 **latch**, not a press, so testing it would disqualify every tap for as long as Caps Lock is on and
-silently kill the feature. Caps Lock is still ineligible as a _binding_ — that is what the Hyper Key
-is for.
+silently kill the feature.
 
 It **fires on the second release, not the second press**. The modifier is then already up when the
 action runs, so the palette never opens with a phantom ⌘ held and focus restoration isn't polluted —
@@ -144,9 +143,8 @@ and "double-tap and hold" is a deliberate non-event.
 while a modifier-only shortcut is bound, so users who never use the feature pay nothing. Two
 details are load-bearing:
 
-- It is `.tailAppendEventTap`, unlike the two head-inserted taps, so it observes events **after**
-  `HyperKeyTap`'s rewrite. A Hyper-remapped right-side modifier therefore arrives as the full ⌃⌥⇧⌘
-  chord and correctly reads as "not a lone modifier" — the left-side twin still double-taps.
+- It is `.tailAppendEventTap`, unlike the head-inserted taps, so it observes events after any
+  rewriting tap another tool installs.
 - Like every keyboard tap it needs the **Accessibility** grant, and it never prompts for it. The
   binding records regardless; the recorder shows an inline warning that opens System Settings, and the
   one-second health timer installs the tap the moment the grant lands.
