@@ -54,7 +54,7 @@ Full detail in [architecture.md](architecture.md); the rules a new feature has t
 
 Feature work reaches the app through a **coordinator**, called by `AppCore` and by views via
 `@Environment`. Confirmation gates live in the coordinator, never in the runner — which is what lets
-`ShellCommandRunner` and `SystemActionRunner` stay harness-compilable while the "are you sure?" step
+`ShellCommandRunner` stays harness-compilable while the "are you sure?" step
 remains unbypassable.
 
 ## Naming
@@ -265,7 +265,7 @@ the catalog (Xcode's own build does the same in the IDE). The six privacy prompt
   content, everything a Raycast extension supplies or receives — and persisted formats, identifiers,
   log text, prompts sent to a model, and what the calculator parses.
 - **Tinycast's own command names are translated and stay findable in English**: `CommandID`
-  and `SystemAction` keep their English source as `englishName`, which the launcher
+  keep their English source as `englishName`, which the launcher
   indexes as an alternate title.
 
 On a fresh installation, Tinycast selects the Mac's primary language if supported, otherwise English,

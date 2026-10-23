@@ -55,13 +55,13 @@ These are the things that quietly break the look if changed. Preserve them unles
   site checks the setting itself, and Reduce Motion keeps trimming movement where it did while
   animations are on. Activity indicators — spinners, `symbolEffect` loaders —
   keep running, because they report work rather than move between states.
-- **A dialog has three independent axes; never let one infer another.** The **icon** (`DialogRequest.symbol`, required) is always the *subject's* own glyph — a command being confirmed uses its `SystemAction.sfSymbol`, so the Restart dialog shows the same icon as the Restart row. Tone never picks an icon. The **tone** (`DialogTone`: `.neutral` / `.success` / `.danger`) tints only that glyph. The **button** takes its color from `DialogAction.Role` (`.standard` white / `.destructive` red / `.cancel` secondary), so a red-glyph security warning can still carry a plain white button — as "Import executable commands?" does.
+- **A dialog has three independent axes; never let one infer another.** The **icon** (`DialogRequest.symbol`, required) is always the *subject's* own glyph — a command being confirmed uses its own `sfSymbol`, so the Restart row's dialog shows the same icon as the row. Tone never picks an icon. The **tone** (`DialogTone`: `.neutral` / `.success` / `.danger`) tints only that glyph. The **button** takes its color from `DialogAction.Role` (`.standard` white / `.destructive` red / `.cancel` secondary), so a red-glyph security warning can still carry a plain white button — as "Import executable commands?" does.
 - **Resolve every glyph through `SymbolImage`, not `Image(systemName:)`.** Some catalog symbols are bundled assets in `Assets.xcassets` (`toggleBluetooth`), and `Image(systemName:)` silently renders nothing for those.
 - **↵ runs the primary action, Escape cancels, and Cancel always renders leading** (the left button), matching macOS convention. A button never prints its key cap; a deliberate hover reveals its outlined `KeyCapChip` in a `Tooltip`.
   Native launcher forms save with **⌘↵**; a textarea keeps Return for line breaks.
 - **In the palette, a hover label is Tinycast's `tooltip`, never `.help()`**: an AppKit tooltip never appears while the app sits inactive behind the non-activating panel. A Settings window activates the app, so `.help()` shows there and stays the label to use. The tooltip hangs above its control by default; a control in the palette header passes `edge: .bottom`, since above it is off the window, and a label may run to several lines — the chat's attachment pill lists every staged name.
   Native form controls opt into `dismissOnPress` to hide the label until the next hover.
-- **A transient readout is a HUD, not a dialog.** `VolumeHUDController`'s box is volume and mute only, since that one needs an actual level and number; every other success or info confirmation goes through `MessageHUDController`'s pill, whose leading glyph *is* its `DialogTone`. A pill has no subject to name, so the icon rule above does not apply to it — and that mapping stays file-scoped so nothing can reach for it when building a `DialogRequest`. A new HUD means a new presenter, not a second shape bolted onto an existing controller.
+- **A transient readout is a HUD, not a dialog.** Every success or info confirmation goes through `MessageHUDController`'s pill, whose leading glyph *is* its `DialogTone`. A pill has no subject to name, so the icon rule above does not apply to it — and that mapping stays file-scoped so nothing can reach for it when building a `DialogRequest`. A new HUD means a new presenter, not a second shape bolted onto an existing controller.
 - **Glass is for floating controls, with dialogs as the deliberate modal exception.** The action capsule, menu circle and `PopoverMenu` use it inside the palette; dialogs apply one system `.glassEffect(.regular)` to their root surface. Dialog buttons stay matte so their roles remain legible. Both HUDs keep the lighter `panelScrim` → `GlassEffectView()` → `clipShape` recipe.
 
 ---
@@ -438,8 +438,7 @@ sole owner rule) and is the only presenter, so every confirmation in the app loo
   role** says _what happens if you click_. None of them derives another — that separation is the
   whole point of the design, and collapsing any two of them back together is a regression.
 - **Icon.** `DialogRequest.symbol` is required and is always the subject's own glyph: a system
-  command passes its `SystemAction.sfSymbol`, so the Restart dialog shows `arrow.clockwise` and
-  Empty Trash shows `trash.slash` — the same glyph as the launcher row the user just activated.
+    Empty Trash shows `trash.slash` — the same glyph as the launcher row the user just activated.
   Custom commands use `terminal`, the backup flows `square.and.arrow.up` / `.down`. Symbols render
   through `SymbolImage` (`DesignSystem/SymbolImage.swift`), never raw `Image(systemName:)`, because some
   catalog symbols are bundled template assets rather than SF Symbols — `toggleBluetooth` ships its
@@ -453,8 +452,7 @@ sole owner rule) and is the only presenter, so every confirmation in the app loo
   which the action-derived icon now owns.
   `MessageHUDController.show(message:tone:)` (the pill; see below) takes the same `DialogTone` for its
   status dot, so the pill and the dialogs speak one tint vocabulary even though they render it
-  differently. `AppCore` derives a system action's tone from `SystemActionFeedback.isNoOp`, so
-  "Trash Emptied" reads `.success` and "Trash Is Already Empty" reads `.neutral`, rather than every
+  differently.  "Trash Emptied" reads `.success` and "Trash Is Already Empty" reads `.neutral`, rather than every
   pill defaulting to the same green dot regardless of whether anything happened.
 - **Button role.** `DialogAction.Role` colors the label: a default `.standard` action uses
   `primaryAction`, another `.standard` uses `Color.primary`, `.destructive` uses
@@ -508,24 +506,9 @@ sole owner rule) and is the only presenter, so every confirmation in the app loo
 - **`VolumeSlider`** uses SwiftUI's native `Slider`, paired with a monospaced-digit percentage in the
   same `volumeReadout 38` slot the HUD uses, so the row does not resize between `0%` and `100%`.
   Pointer interaction stays native; the arrows still walk the 5% grid through `DialogPanel`.
-- **`VolumeHUDController`'s box** is the readout for the volume/mute commands, since macOS only
-  draws its own HUD for real media keys and a CoreAudio change would otherwise be silent. It exists
-  because a level needs an actual bar and number, not a one-line message: speaker glyph
-  (`dialogIcon 32`, neutral `Color.primary` — a level isn't a success/warning statement), the bar, then
-  the level as monospaced text beside it, in a fixed `volumeReadout 38` slot so the track can't resize
-  as the number runs 0% → 100% — the same trick `VolumeSlider` uses, since the two now read as one
-  control in two places. That slot is measured, not guessed: 38 is the widest string it ever holds
-  ("Muted", 36pt in `rowTrailing`) plus a hair, because every point of slack is subtracted straight off
-  the track. Fixed `hudWidth 200 × hudHeight 100`, with **asymmetric padding** — `xxl` 20 vertical,
-  `xl` 12 horizontal — since 20pt of side padding costs a fifth of a 200pt box where the same token on
-  a 420pt dialog costs a twentieth, and the bar is the content here.
-  Muted prints `Muted`, not `0%`: the bar is already empty, so a
-  number would either contradict it or hide the level the user comes back to. Auto-dismisses after
-  `Duration.volumeHUD` (1.6s); a repeat command updates the shared `VolumeState` and calls
-  `HUDPresenter.extend()`, so the bar slides to its new value in place instead of replaying the
-  entrance.
+
 - **`MessageHUDController`'s pill** is every _other_ transient
-  confirmation: Custom Commands and Snippets confirming a run, and every system action whose effect
+  confirmation: Custom Commands and Snippets confirming a run
   is invisible (`Trash Emptied`, `Hidden Files Shown`, `Bluetooth Off`). One capsule shape, sized to
   its message (`hudMaxWidth 420` ceiling), clipped to a `Capsule()`, with a plain glyph leading the
   message: `checkmark` green for `.success`, `exclamationmark` red for `.danger`,

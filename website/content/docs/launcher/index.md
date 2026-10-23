@@ -4,8 +4,7 @@ description: One search across everything Tinycast knows about, and how it order
 ---
 
 The launcher is the root screen. One search covers your apps, System Settings panes, commands,
-quicklinks, snippets, system actions, window commands and layouts, custom commands,
-extension commands.
+quicklinks, snippets, custom commands, extension commands.
 
 <kbd>return</kbd> opens the selection. <kbd>⌘</kbd><kbd>K</kbd> shows everything else you can do
 with it.
@@ -14,7 +13,7 @@ with it.
 
 [Favorites](/docs/launcher/favorites) come first, followed by each section in this order:
 
-Applications → System Settings → Extensions → Quicklinks → Snippets → System Actions →
+Applications → System Settings → Extensions → Quicklinks → Snippets →
 Custom Commands → Commands
 
 Each section is sorted alphabetically and keeps that order, because a list that reorders itself as
@@ -135,15 +134,12 @@ Press <kbd>⌘</kbd><kbd>K</kbd> with an app selected:
 app to quit normally, so an app with unsaved work still asks you to save it. Restart waits up to five
 seconds for the app to quit, then opens it again. If the app doesn't quit, it isn't reopened.
 
-To quit every app at once, use the **Quit All Applications**
-[system action](/docs/launcher/system-actions). It leaves Finder and Tinycast running.
-
 ## Hiding a result
 
 <kbd>⇧</kbd><kbd>⌘</kbd><kbd>H</kbd> (**Hide from Search**) removes the selected entry from search
 results. The palette stays open on the same search.
 
-It works for apps, System Settings panes, commands, system actions, window commands
+It works for apps, System Settings panes, commands
 To show an entry again, select its checkbox in the matching Settings pane.
 On a quicklink or custom command it's **Hide from Root Search**, and you turn **Show in root search**
 back on in its editor.

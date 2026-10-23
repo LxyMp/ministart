@@ -85,11 +85,6 @@ export const moreFeatures: MinorFeature[] = [
     title: "Custom commands",
     href: "/docs/launcher/commands",
   },
-  {
-    icon: "bolt",
-    title: "31 system actions",
-    href: "/docs/launcher/system-actions",
-  },
   { icon: "emoji", title: "Emoji & symbols", href: "/docs/features/emoji" },
   { icon: "globe", title: "Per-app hotkeys", href: "/docs/reference/hotkeys" },
   { icon: "hyper", title: "Hyper key", href: "/docs/reference/hotkeys" },

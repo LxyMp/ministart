@@ -159,7 +159,6 @@ launchers. We accept that to keep the app simple.
 - **Quit apps on their own, or "quit all except".** Everything stays manual. **Instead:** a custom
   command with AppleScript can quit apps. ([#1031](https://github.com/abue-ammar/tinycast/issues/1031), [#579](https://github.com/abue-ammar/tinycast/issues/579), [#698](https://github.com/abue-ammar/tinycast/issues/698))
 - **A timer, focus sessions, a flight tracker or confetti.** ([#1179](https://github.com/abue-ammar/tinycast/issues/1179), [#1025](https://github.com/abue-ammar/tinycast/issues/1025), [#1007](https://github.com/abue-ammar/tinycast/issues/1007), [#992](https://github.com/abue-ammar/tinycast/issues/992))
-- **Brightness and volume for external monitors.** ([#1193](https://github.com/abue-ammar/tinycast/issues/1193))
 - **Fix accidental capitals as you type.** ([#1387](https://github.com/abue-ammar/tinycast/issues/1387))
 - **Type into Translate with auto direction.** ([#1032](https://github.com/abue-ammar/tinycast/issues/1032))
 - **The camera inside the palette.** It stays in its own window. ([#1578](https://github.com/abue-ammar/tinycast/issues/1578))

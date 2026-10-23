@@ -12,7 +12,6 @@ description: Recording global shortcuts, double-tap modifiers, and the Hyper key
   [Commands](/docs/launcher/commands).
 - Every app and every System Settings pane
 - Every quicklink, snippet, custom command and extension command
-- All 31 [system actions](/docs/launcher/system-actions)
 
 You record each shortcut on the item's row in its Settings pane, and it appears as keycaps on the
 item's launcher row.

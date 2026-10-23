@@ -270,7 +270,7 @@ by the title's own score, then by name. The subtitle does not name the entry, so
 
 A query that *equals* a category's name lists that whole category under its section header, in the
 order the section shows when the field is empty. The section title and singular label,
-`Snippets`/`Snippet` or `System Actions`/`System Action`, come straight from `KindDescriptor`.
+`Snippets`/`Snippet` or `Quicklinks`/`Quicklink`, come straight from `KindDescriptor`.
 An entry whose display name equals the query joins the listing: `System Settings` still shows the
 installed application above its panes.
 
@@ -490,84 +490,6 @@ A suggested entry leaves its kind section below, so no row appears twice. `AppIn
 off (`launcherShowsSuggestions`, carried by a settings backup). `HotKeyManager.revision` is part of
 `AppIndex`'s results key, because binding a shortcut takes an entry out of the section.
 
-## System actions
-
-`SystemActionCatalog` is a Foundation-only inventory of the macOS actions Tinycast exposes. Its
-stable entry IDs, labels, symbols and confirmation policy are covered by
-`Tests/system-action-test.swift`; platform side effects live separately in `SystemActionRunner`.
-`SystemActionCoordinator.runSystemAction(id:)` remains the one execution funnel — shared by palette activation and a
-global hotkey — hiding the floating palette before any confirmation or value dialog and surfacing
-permission-aware failures. With the palette closed it targets the frontmost app, so Hide Others and
-Quit All act on the same window a palette launch would have.
-
-System actions occupy their own launcher section and their own Settings pane. The empty-query publication
-order is applications, System Settings, quicklinks, snippets, system actions, custom
-commands, then built-in commands; the sectioned view filters in that same order so the visible rows remain
-identical to the flat selection index.
-Search, favorites, visibility and learned ranking work through the normal `AppEntry` path, and every
-action is bindable to a global shortcut from Settings › System Actions
-(see [hotkeys.md](hotkeys.md)).
-
-Public AppKit, CoreAudio and workspace APIs are preferred. Actions without a stable public macOS API
-use fixed system tools, Apple Events, Accessibility, or dynamically resolved Bluetooth power and
-screen-lock APIs. Those routes run only on explicit activation. **Lock Screen never synthesizes
-⌃⌘Q**: a global hotkey fires on key-down, so its still-held modifiers would merge into the chord.
-Automation, Accessibility or Bluetooth permission is requested at first use, and denial produces an
-alert linking to the relevant System Settings pane.
-Toggle System Appearance changes macOS; Tinycast follows it only while its own Appearance is System.
-
-Restart and Shut Down follow macOS's "Reopen windows when logging back in" preference through
-System Events' `with state saving preference`; omitting it always saves window state.
-
-Restart, Shut Down, Log Out, Empty Trash and Quit All Applications confirm before execution: ↵ runs
-the action, Escape cancels. **Empty Trash follows Finder's own "Show warning before emptying the
-Trash"** (Finder ▸ Settings ▸ Advanced) rather than overriding it: with the box off it runs without a
-dialog. `SystemActionRunner.finderWarnsBeforeEmptyingTrash` reads `com.apple.finder`'s
-`WarnOnEmptyTrash` at call time, and an absent key counts as on, because Finder writes it only once
-the box is changed. Every dialog is Tinycast's own: confirmations, failure reports and the Set
-Volume slider all render through `DialogController` rather than an `NSAlert`
-(see [ui.md](../ui.md#dialogs--hud)). Each confirmation carries the action's own icon — Restart shows
-`arrow.clockwise`, Empty Trash `trash.slash` — so the dialog is recognizably about the row that
-opened it. Output volume and mute actions also show Tinycast's transient volume HUD, since macOS only draws
-its own for real media keys. Volume Up/Down walk a 5% grid (`VolumeLevel.stepped`, covered by
-`Tests/volume-test.swift`): each press moves one line from the level's nearest line, so from 37% up
-lands on 40% and down on 30%, and repeated presses stay on round numbers. Stepping from the nearest
-line matters for devices that store a level slightly off the one set (45.1% for 45%): stepping from
-the read-back level alone would aim at the same line again and never move.
-
-An action whose effect is invisible reports back through a pill (`MessageHUDController`, the same one
-Custom Commands and Snippets confirm through) rather than finishing silently:
-`SystemActionRunner.run` returns a `SystemActionFeedback` naming the state it landed in
-(`Trash Emptied`, `Hidden Files Shown`, `Dark Appearance`, `Bluetooth Off`, `3 Disks Ejected`), and
-`AppCore` shows it with a `DialogTone` derived from the feedback's `isNoOp` flag: `.success` when
-something actually changed, `.neutral` when there was nothing to do, shown as the glyph trailing the
-message rather than a per-action icon, since the message already names the state. Actions that are
-their own confirmation, such as Show Desktop, Hide Others,
-Quit All and the power actions, return nothing. Output volume and mute stay on the
-palette's own box HUD, since that one has an actual level and number to show, not just a message.
-
-**Toggle Microphone Mute** reads the current default macOS input device on each activation and
-toggles its native CoreAudio input mute control without changing input gain or output audio.
-It is available in Settings › System Actions with the same global hotkey recorder as output mute.
-CoreAudio work runs off-main, and the message pill reports `Microphone Muted` or
-`Microphone Unmuted` only once the device confirms the requested state. Repeated activations are
-ignored while a change is pending. An absent input device, unavailable or externally controlled mute,
-or an unconfirmed write reports a failure rather than claiming the microphone was muted.
-
-**Nothing-to-do is an outcome, not a failure.** Empty Trash asks Finder for `count items of trash`
-first and reports `Trash Is Already Empty`, because Finder raises an error when told to empty an empty
-Trash. The count deliberately goes through Finder instead of reading `~/.Trash` directly: that folder
-is TCC-protected, so an unprivileged read fails in a way indistinguishable from "empty", which would
-silently skip a real empty. Eject All Disks, Dismiss Notifications and Unhide All Apps report the same
-way when there is nothing to act on. Volume and mute fall back to the output's preferred stereo channels when the device exposes
-no master element (common on HDMI), and Toggle Mute parks the level at zero when there is no mute
-control at all. Multi-disk ejection takes every external or ejectable volume — a dock's fixed-media
-HDD reports as neither ejectable nor removable, so external alone qualifies — while excluding
-internal, network and root volumes, treats a sibling volume that the same physical eject already
-unmounted as done, counts a volume whose eject errored but whose mount is gone as ejected, and
-reports remaining failures together.
-Preference-backed toggles refuse to write when the current value can't be read, and notification
-dismissal matches Accessibility subroles rather than English labels.
 
 ## Quicklinks
 
@@ -715,7 +637,7 @@ favorite, alias and learned ranking survive the round trip, and its shortcut kee
 
 The row is offered only where Settings can undo it, and `KindDescriptor.canHideFromSearch` is that
 rule — per kind, and a new `Kind` case has to answer it to compile. Applications, System Settings,
-Commands, System Actions and extension commands each
+Commands and extension commands each
 draw a per-row checkbox in their pane, so they carry it. Snippets do not: their pane lists a record
 with its own switches, not a launcher checkbox — a hide nothing in Settings can visibly undo is a
 trap, not a shortcut. Quicklinks and custom commands differ: each editor has its own **Show in root
@@ -788,11 +710,6 @@ reading the list there left the dot on until some later launch or quit:
   user leaves standing, relaunches nothing and leaves that app running. The palette dismisses the
   moment the quit is asked for and never restores focus — either the relaunch takes it, or the app
   that refused the quit is the one asking for it.
-- **Quit All Applications** a system action. `AppLauncher.quitAllTargets()` is the
-  policy (every `.regular` app except Finder — `terminate()` only relaunches it — and Tinycast,
-  excluded by PID because About/Settings temporarily flips it to `.regular`). `SystemActionCoordinator.quitAllApps()`
-  resolves that list **once**, confirms it with an `NSAlert`, then terminates exactly what was
-  confirmed. The palette hides before the alert — it is a floating panel and would sit above it.
 
 Every quit but Force Quit is a graceful `NSRunningApplication.terminate()`, so an app with unsaved
 work still puts up its own save sheet.

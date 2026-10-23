@@ -123,7 +123,7 @@ the selected text", or names the Accessibility permission when Tinycast lacks it
 `openQuicklink(id:forcingDefaultApp:values:)` and `openQuicklinkFromHotKey(id:)` share one private
 funnel, which captures the expansion context on **every** call rather than holding one across a
 session, so `{clipboard}`, `{selection}` and `{date}` are read at the moment the link opens. Reached from a global shortcut with the palette closed
-too: the frontmost app is recorded first, the way `runSystemAction` does, so the selection comes from
+too: the frontmost app is recorded first, so the selection comes from
 the window the user was actually in.
 
 ↵ with the chips filled opens straight away, wherever the row was reached from — root search carries

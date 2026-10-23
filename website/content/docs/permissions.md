@@ -53,10 +53,8 @@ time you use them. The camera isn't used before then, and it turns off as soon a
 
 A few actions show their own macOS prompt the first time you run them:
 
-- **Show Info in Finder** in the [uninstaller](/docs/launcher/uninstall), and some
-  [system actions](/docs/launcher/system-actions), control other apps through Apple Events, which
-  shows the standard Automation prompt.
-- **Toggle Bluetooth** shows the Bluetooth prompt.
+- **Show Info in Finder** in the [uninstaller](/docs/launcher/uninstall) controls other apps through
+  Apple Events, which shows the standard Automation prompt.
 
 If you decline, Tinycast tells you and links to the right System Settings pane, so the action never
 fails silently.

@@ -46,7 +46,7 @@ in `Features/Settings/` (`Model/`, `Service/`, `SettingsFileSchema.swift`), the 
 | `HotKeys/Model/HotKeySpelling.swift` | A binding as typed text |
 | `HotKeys/Service/HotKeySettingsFile.swift` | Applies chords through `HotKeyManager`, conflicts reported |
 | `Launcher/Model/LauncherFileFormat.swift` | A launcher item's shortcut, alias and visibility as JSON |
-| `Launcher/Service/LauncherSettingsFile.swift` | Apps, panes, system actions and built-in commands |
+| `Launcher/Service/LauncherSettingsFile.swift` | Apps, panes and built-in commands |
 
 ## Location
 
@@ -135,7 +135,7 @@ where it was. A chord another action still holds is reported, and the old bindin
 ## Launcher items
 
 Each pane that lists items writes the ones with something set, as records keyed by ID:
-`applications.apps` and `systemSettings.panes` by bundle ID, `systemActions.actions` by action ID, and
+`applications.apps` and `systemSettings.panes` by bundle ID, and
 built-in commands under the pane that lists them — `clipboard.commands`, `emoji.commands`, and the rest
 in `commands.builtIn` — by their ID after `command:`. App Launcher is
 `general.launcherShortcut`.
@@ -151,7 +151,7 @@ in `commands.builtIn` — by their ID after `command:`. App Launcher is
   applies after the scan that finds it.
 - Partial edits to a waiting record keep its other fields. An applied record stays in the mirror
   after its last shortcut is cleared, even outside the search scopes.
-- `applications.enabled`, `systemSettings.enabled`, `systemActions.enabled` and
+- `applications.enabled`, `systemSettings.enabled` and
   `commands.builtInEnabled` are each pane's category switch; `commands.enabled` stays custom commands'.
 
 ## Adding a setting

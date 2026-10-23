@@ -142,9 +142,7 @@ If a change touches anything in the right column, the harness on the left is man
 | `fallback-test` | `Launcher/Model/Fallback.swift`, plus the `CommandID` and `Quicklink` ids it is built from |
 | `dictionary-test` | `Dictionary/Model/DictionaryEntry.swift`, `DictionaryMarkup.swift` — a real XHTML record and the plain-text fallback, read into page blocks |
 | `callout-test` | `DesignSystem/Theme.swift`, `HotKeys/UI/CalloutPlacement.swift` |
-| `system-action-test` | `SystemActions/Model/SystemAction.swift` |
 | `microphone-mute-test` | Native input mute, delayed confirmation, device switches and failures; injected CoreAudio calls only |
-| `volume-test` | `SystemActions/Model/VolumeLevel.swift` |
 | `custom-command-test` | Command storage and execution, editor drafts, argument identities and dynamic keyboard focus |
 | `custom-command-list-test` | Browser result snapshots, observation, row actions and empty-library messages |
 | `uninstall-test` | all five pure files in `Uninstall/Model/` |
@@ -410,7 +408,7 @@ caches, TCC grants and login item, so this cannot disturb an installed copy.
   answers `3`, and ↵ pastes `3,8`; General ▸ Calculator ▸ Number format `English` restores `2.3 + 1.5`
   and re-renders past Calculator History in the chosen format
 - Section headers appear in order: Favorites, Applications, System Settings, Quicklinks, Snippets,
-  System Actions, Custom Commands, Commands
+  Custom Commands, Commands
 - With a non-ASCII input source active, ⌘K opens Actions; ↑/↓ move it, ↵ activates, Escape closes it
 - In either ⌘K Actions panel, typing filters immediately in the bottom search band without changing
   the palette query; sections survive filtering, **No Results** is centred, and no dissolve covers the
@@ -718,21 +716,6 @@ caches, TCC grants and login item, so this cannot disturb an installed copy.
 - With Open Camera up, changing a video effect in Control Center leaves the preview live; the next
   click outside both the panel and system UI then closes it, and Esc does once the panel is clicked
 
-### System actions
-
-- A confirmation-gated action (Restart, Quit All) confirms, showing the subject's own glyph
-- Restart and Shut Down follow "Reopen windows when logging back in": after logging back in,
-  apps and windows reopen with it on and stay closed with it off. Check both actions and settings
-  from the launcher and a global hotkey
-- Empty Trash confirms while Finder's "Show warning before emptying the Trash" is on, and runs
-  without a dialog once it is off
-- Volume actions show the volume HUD; everything else shows the message pill
-- Toggle Microphone Mute works from the launcher and a global hotkey with the palette closed;
-  its pill reports Microphone Muted / Microphone Unmuted, input audio follows that state, and input
-  gain and output audio stay unchanged. Switch the default input and repeat; an unavailable or
-  externally controlled mute reports failure. Rapid repeats while a change is pending are ignored
-- Holding a bound hotkey does **not** stack dialogs
-- Lock Screen locks from a global hotkey with the palette closed, including a Hyper-key binding
 
 ### Extensions
 

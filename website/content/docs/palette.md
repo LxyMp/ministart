@@ -123,8 +123,6 @@ the original look.
 type. <kbd>↓</kbd> expands it and selects the first row. With **Show favorites in compact mode** on,
 your favorite apps appear at the right of the bar. See [Favorites](/docs/launcher/favorites).
 
-The [Toggle System Appearance](/docs/launcher/system-actions) action changes the appearance of
-_macOS itself_. Tinycast follows it only while its own theme is set to System.
 
 ## Input source
 

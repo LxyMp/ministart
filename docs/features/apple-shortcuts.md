@@ -28,7 +28,6 @@ There is no public API that enumerates shortcuts, so `AppleShortcutRunner` runs 
 `/usr/bin/shortcuts` through `ToolRunner`. It needs no TCC grant and no Apple-event entitlement.
 
 ```text
-shortcuts list --show-identifiers   →   Set Volume to 50% (97A1DDFA-76F3-4872-A672-25D5F35B7882)
 ```
 
 `AppleShortcut.parseList` anchors on the **trailing** `(UUID)`, so a name carrying parentheses of its

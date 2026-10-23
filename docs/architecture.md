@@ -17,8 +17,7 @@ Independently of the folder tree, every mature subsystem has converged on the sa
 │ SearchRelevance · LauncherMatch · EntryNaming · ScriptRomanization ·       │
 │ LauncherOrder · LauncherSuggestions · LauncherRankingStore · SearchScopes · │
 │ FileSearch{Query,Result,Scope} ·                                           │
-│ Calculator/* · EmojiCatalog · EmojiGridGeometry · SystemAction ·            │
-│ VolumeLevel · PaletteRowIndex ·                                            │
+│ Calculator/* · EmojiCatalog · EmojiGridGeometry · PaletteRowIndex ·         │
 │ Uninstall{Target,SearchRoot,Rules,Protection,Plan} ·                       │
 │ Quicklink{,Destination,Store,Archive} · AppleShortcut · Notes/Model/* ·    │
 │ Snippets/Model/* ·                                                         │
@@ -32,7 +31,7 @@ Independently of the folder tree, every mature subsystem has converged on the sa
 │ All platform I/O, one folder per feature.                                  │
 │ AppIndex · FileIndexer · SettingsPaneScanner ·                             │
 │ IconCache · UninstallScanner · UninstallRunner ·                           │
-│ SystemActionRunner · QuicklinkLauncher · TextInjector ·             │
+│ QuicklinkLauncher · TextInjector ·                                  │
 │ SnippetKeywordListener · NotesRepository · CurrencyRateStore · Paster ·    │
 │ HotKeyCenter · HyperKeyTap · KeyboardRemapper · ModifierTapMonitor ·       │
 │ SecureInputMonitor · RunningAppsMonitor · CameraSession ·                  │
@@ -69,7 +68,7 @@ the signal that a decision leaked into the effect layer, or an effect into the d
 The boundary keeps effects out of decisions: `CalcEngine.evaluate` is handed a finished
 `CurrencyRates?` rather than reaching for one, which is what keeps it Foundation-only and testable.
 Confirmation gates live in the coordinator, never in the runner — which is why `ShellCommandRunner`
-and `SystemActionRunner` stay harness-compilable while the "are you sure?" step still cannot be bypassed.
+stays harness-compilable while the "are you sure?" step still cannot be bypassed.
 
 Two things sit deliberately outside a feature folder: `Features/PaletteRowIndex.swift`, because the
 palette rather than any one feature owns the flat selection index, and `DesignSystem/` + `Platform/`,
@@ -98,7 +97,7 @@ hotkey to a coordinator. Views inject `AppCore` through `@Environment` and use i
 those coordinators — `core.quicklinkCoordinator.deleteQuicklink(…)` is the shape, and the alternative
 is injecting every coordinator separately for no gain. Reading a store off `AppCore` to render it is
 fine too; deciding something with one is what the rule forbids. `showNotice`, `confirm`,
-`reportFailure`, `showMessage` and `pickVolume` are forwarders on `AppCore` itself, so
+`reportFailure` and `showMessage` are forwarders on `AppCore` itself, so
 `DialogController` and `MessageHUDController` stay single-owned.
 
 New long-lived state belongs on `AppCore`, wired in `start()`. Do not create a competing singleton: this is a singleton, not a container.
@@ -150,8 +149,7 @@ driven imperatively from AppKit. Extension menu extras are dynamic `NSStatusItem
 - **The camera surface** — a borderless, non-activating `CameraPanel` at `.floating` over one
   `CameraSession`: `CameraCoordinator`, owned by `AppCore`, is the
   standalone `Open Camera` command. See [features/camera.md](features/camera.md).
-- **HUDs** are separate, because a dialog asks and a HUD reports: `MessageHUDController` (the pill) and
-  `VolumeHUDController` (the level box), both over a shared `HUDPresenter` that owns the
+- **HUDs** are separate, because a dialog asks and a HUD reports: `MessageHUDController` (the pill), over a shared `HUDPresenter` that owns the
   one-at-a-time, auto-dismiss and fade policy. See [ui.md](ui.md#dialogs--hud).
 
 `NSAlert` is never used, and that is load-bearing. Appearance is a setting: `AppCore.applyAppearance()`
@@ -221,7 +219,7 @@ Tinycast/
   Features/
     PaletteRowIndex.swift   the flat selection index — palette-owned, so it sits at the top
     Launcher/ Clipboard/ Calculator/ Emoji/ FileSearch/ Notes/
-    Quicklinks/ Snippets/ Uninstall/ SystemActions/ CustomCommands/ HotKeys/ Backup/
+    Quicklinks/ Snippets/ Uninstall/ CustomCommands/ HotKeys/ Backup/
     Onboarding/ Updates/ Support/ Settings/
     Extensions/
         Model/      pure — the harness inputs
@@ -242,7 +240,7 @@ shell rather than the feature.
 Every `SettingsTab` maps to one `…SettingsView`, and each is a stock `Form` with
 `.formStyle(.grouped)` — see [ui.md](ui.md#settings). A pane lives with its feature; only a pane no
 feature owns (General, Permissions) lives in `Settings/Panes/`. The four launcher-category panes —
-Applications, System Settings, System Actions, Commands — are thin wrappers over the shared
+Applications, System Settings, Commands — are thin wrappers over the shared
 `LauncherItemsSection`; Apple Shortcuts pairs its feature switch with the same `LauncherItemsList`.
 
 `SettingsTab` and `SettingsSection` both identify by the case itself, never by an index. A selectable
