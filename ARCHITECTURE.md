@@ -9,7 +9,7 @@
 ## 1. 项目是什么
 
 原生 macOS 菜单栏启动器：模糊应用启动、全局与每应用热键、文本/图片剪贴板历史、内联计算器、
-悬浮笔记、片段、Quicklinks、窗口管理、emoji 选择器，并能在 JavaScriptCore 中原生运行
+悬浮笔记、片段、Quicklinks、emoji 选择器，并能在 JavaScriptCore 中原生运行
 Raycast 扩展。
 
 | 约束 | 内容 |
@@ -19,7 +19,7 @@ Raycast 扩展。
 | UI | SwiftUI + AppKit，`LSUIElement` 配件应用（无 Dock 图标） |
 | 依赖 | 零第三方依赖；Carbon 仅用于系统级组合键注册（刻意的能力缺口） |
 | 工程 | XcodeGen 生成工程（改 `project.yml` 后必须 `xcodegen generate`） |
-| 规模参考 | `Tinycast/` 下约 660 个 Swift 文件、26 个功能模块（2026-10 统计） |
+| 规模参考 | `Tinycast/` 下约 540 个 Swift 文件、22 个功能模块（2026-10 统计） |
 
 ## 2. 顶层目录地图
 
@@ -52,9 +52,9 @@ Raycast 扩展。
 ## 4. 组合根与所有权
 
 - **`AppCore`（`App/AppCore.swift`）是唯一所有者。** `@MainActor` 单例，拥有全部 stores、managers、
-  monitors、共享状态、21 个 feature coordinator 和窗口控制器。新的长生命周期状态必须加在
+  monitors、共享状态、各 feature coordinator 和窗口控制器。新的长生命周期状态必须加在
   `AppCore` 上并在 `start()` 接线，**不允许出现第二个单例**。
-- 启动链：`TinycastLaunch`（钉界面语言）→ `TinycastApp`（仅两个 `MenuBarExtra` scene）→
+- 启动链：`TinycastLaunch`（钉界面语言）→ `TinycastApp`（单一 `MenuBarExtra` scene）→
   `AppDelegate.applicationDidFinishLaunching` → `AppCore.shared.start(launchedByUser:)`。
   `start()` 一屏读尽整个启动顺序。
 - 视图通过 `@Environment` 拿 `AppCore` 作 **locator**：动作调该功能 coordinator
@@ -72,7 +72,7 @@ Raycast 扩展。
 | Notes | 常驻非激活 `NotesPanel` | `NotesWindowController` |
 | 对话框 | `DialogPanel` | `DialogController`（唯一 presenter，async 呈现，一次一个） |
 | HUD | `MessageHUDController`、`VolumeHUDController` | `HUDPresenter`（独占一次性自动消退策略） |
-| Camera | 非激活浮动 `CameraPanel`，两形态共一 `CameraSession` | `CalendarCoordinator`（join 门禁）/ `CameraCoordinator`（独立命令） |
+| Camera | 非激活浮动 `CameraPanel`（独立 `Open Camera` 命令） | `CameraCoordinator` |
 | Support | 有标题 `AppWindowController` | `SupportCoordinator`，所有入口汇于 `showSupport()` |
 
 **铁律：禁用 `NSAlert` 与系统 popover**——提问走 `DialogController`，报告走 `HUDPresenter`。
@@ -87,12 +87,10 @@ Raycast 扩展。
 | `Launcher/` | 启动器核心：`AppIndex` 扫描、模糊匹配、排序/建议、别名、收藏、可见性 | | [launcher.md](docs/features/launcher.md) |
 | `Clipboard/` | 剪贴板历史（文本/图片，SQLite）；OCR 与缩略图走外部 helper 进程 | | [clipboard.md](docs/features/clipboard.md) |
 | `Calculator/` | 内联计算器：Foundation-only `CalcEngine` + 历史 + 汇率换算 | | [calculator.md](docs/features/calculator.md) |
-| `Calendar/` | 日历与会议加入：join card、菜单栏日历、自动加入策略 | | [calendar.md](docs/features/calendar.md) |
 | `Emoji/` | emoji 选择器（palette 子屏） | | [emoji.md](docs/features/emoji.md) |
 | `Extensions/` | Raycast 扩展运行时（JavaScriptCore 跑预构建 CommonJS） | 隔离铁律见下 | [extensions.md](docs/features/extensions.md) |
 | `FileSearch/` | Search Files 面板屏：搜自建文件索引 | 含 `Helper/` | [file-search.md](docs/features/file-search.md) |
 | `HotKeys/` | 全局/每应用热键、Hyper Key、双击修饰键（Carbon 自研） | 无 `Settings/`（Shortcuts 面板属设置外壳） | [hotkeys.md](docs/features/hotkeys.md) |
-| `MenuSearch/` | 前台应用菜单栏项搜索（AX） | 无 `Settings/` | [menu-search.md](docs/features/menu-search.md) |
 | `Notes/` | 悬浮常驻 Markdown 笔记（TextKit 2） | | [notes.md](docs/features/notes.md) |
 | `Quicklinks/` | URL/搜索/文件/deeplink 变一等命令 | | [quicklinks.md](docs/features/quicklinks.md) |
 | `Snippets/` | 文本片段模板与关键词展开 | | [snippets.md](docs/features/snippets.md) |
@@ -100,15 +98,13 @@ Raycast 扩展。
 | `SystemActions/` | 系统操作（音量、睡眠、锁定等） | Model/`SystemAction` 为纯模型 | |
 | `TextInjection/` | 文本注入（`TextInjector`/`Paster`） | 仅 `Service/` | |
 | `Uninstall/` | 卸载应用并清理残留文件 | 无 `Settings/` | [uninstall.md](docs/features/uninstall.md) |
-| `WindowManagement/` | Rectangle 式窗口操作 + 窗口布局 + Rooms | | [window-management.md](docs/features/window-management.md)、[window-layouts.md](docs/features/window-layouts.md)、[window-rooms.md](docs/features/window-rooms.md) |
-| `WindowSwitcher/` | 窗口切换器 | 无 `Settings/` | |
 | `Dictionary/` | Define Word 词典查询 | | [dictionary.md](docs/features/dictionary.md) |
 | `AppleShortcuts/` | Apple Shortcuts 作为 launcher 独立分区 | | [apple-shortcuts.md](docs/features/apple-shortcuts.md) |
 | `Backup/` | `.tinycast` 备份导出/导入 | 无 `UI/` | [backup.md](docs/features/backup.md) |
 | `Settings/` | **设置外壳**：`SettingsCoordinator`、`AppSettings`、settings.json 镜像、`Panes/`（General、Permissions） | 本体即外壳，无 UI/ 子目录 | [settings-file.md](docs/features/settings-file.md) |
 | `Updates/` | 每日检查 GitHub Releases 更新 | | [updates.md](docs/features/updates.md) |
-| `Onboarding/` | 首启引导（扁平 4 文件） | 扁平 | [navigation.md](docs/features/navigation.md) |
-| `Camera/` | 摄像头预览（一个 session，两个 surface） | 无 `Model/`、`Settings/` | [camera.md](docs/features/camera.md) |
+| `Onboarding/` | 首启引导（扁平 4 文件） | 扁平 | |
+| `Camera/` | 摄像头预览（`Open Camera` 独立命令） | 无 `Model/`、`Settings/` | [camera.md](docs/features/camera.md) |
 | `Support/` | Support 窗口与 30 天提醒 | 无 `Settings/` | [support.md](docs/features/support.md) |
 
 两点特殊位置：
@@ -153,7 +149,6 @@ Raycast 扩展。
 | 加 launcher 命令/分区 | `AppEntry.Kind` 加 case（唯一分类来源），再看 `Features/Launcher/` |
 | 改面板（palette）外观/交互 | `Palette/` + `DesignSystem/Theme` |
 | 改热键行为 | `Features/HotKeys/` |
-| 改窗口管理/布局/Rooms | `Features/WindowManagement/` |
 | 改 Raycast 扩展运行 | `Features/Extensions/`；runtime 改动走 `Scripts/raycast-runtime/build.mjs` 重新生成 |
 | 改对话框/HUD | `Windows/Dialog/`、`Windows/HUD/`，经 `DialogController`/`HUDPresenter`，禁 `NSAlert` |
 | 加长生命周期状态 | `App/AppCore.swift` + `start()` 接线，禁新单例 |

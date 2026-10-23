@@ -1,10 +1,10 @@
 # Settings file
 
-An opt-in mirror of Tinycast's preferences, the launcher's items and all of window management in
+An opt-in mirror of Tinycast's preferences and the launcher's items in
 `~/.config/tinycast/settings.json`, switched on in **Settings → Backup → Settings File**. `UserDefaults`
 stays the store; the file follows it, and an edit made to the file applies at once. The machinery lives
 in `Features/Settings/` (`Model/`, `Service/`, `SettingsFileSchema.swift`), the launcher's part in
-`Features/Launcher/`, and window management's in `Features/WindowManagement/`.
+`Features/Launcher/`.
 
 ## Invariants
 
@@ -13,8 +13,8 @@ in `Features/Settings/` (`Model/`, `Service/`, `SettingsFileSchema.swift`), the 
   deleting it, or updating the app never loses a setting, so there is nothing to migrate.
 - **Off by default, and only the pane turns it on.** `settingsFileEnabled` has no key in the file and is
   excluded from backups: a file or an import must never switch on something that reads a file.
-- **A capability grant never has a key.** Snippets, Extensions, Calendar access, Auto Join, Camera
-  Preview and clipboard text recognition are switched on only in the app, which asks first.
+- **A capability grant never has a key.** Snippets, Extensions and clipboard text recognition are
+  switched on only in the app, which asks first.
   `settings-file-test` checks those paths stay absent.
 - **`SettingsFileSchema`'s switch is exhaustive.** A new `SettingsFileKey` case fails to build until it
   is bound to a property.
@@ -27,8 +27,7 @@ in `Features/Settings/` (`Model/`, `Service/`, `SettingsFileSchema.swift`), the 
 - **Content and machine state never enter it.** Notes, snippets, custom commands and quicklinks
   stay where they are — the file can say which folder notes and snippets
   live in, never what is in them — as do the palette's position, the extension toolchain,
-  the shortcuts and aliases of content, extensions and Apple Shortcuts, and what a room learns by
-  being entered.
+  and the shortcuts and aliases of content, extensions and Apple Shortcuts.
 
 ## Layout
 
@@ -48,8 +47,6 @@ in `Features/Settings/` (`Model/`, `Service/`, `SettingsFileSchema.swift`), the 
 | `HotKeys/Service/HotKeySettingsFile.swift` | Applies chords through `HotKeyManager`, conflicts reported |
 | `Launcher/Model/LauncherFileFormat.swift` | A launcher item's shortcut, alias and visibility as JSON |
 | `Launcher/Service/LauncherSettingsFile.swift` | Apps, panes, system actions and built-in commands |
-| `WindowManagement/Model/WindowManagementFileFormat.swift` | Command shortcuts and aliases, custom sizes, layouts and rooms as JSON |
-| `WindowManagement/Service/WindowManagementSettingsFile.swift` | Their five bindings, shortcuts and aliases included |
 
 ## Location
 
@@ -115,12 +112,6 @@ Where a number has a special case, the case is a word:
 | --- | --- |
 | `general.language` | `"en"`, `"de"`, `"es"`, `"fr"`, `"ja"`, `"ko"`, `"pt"`, `"ru"`, `"zh-Hans"` |
 | `clipboard.retentionDays` | 1, 7, 30, 90, 180, 365, `"forever"` |
-| `calendar.launcherLimit` | 1, 3, 5, `"all"` |
-| `calendar.span` | `"today"`, `"todayAndTomorrow"`, `"nextSevenDays"` |
-| `calendar.menuBar` | `"disabled"`, `"meetingIcon"`, `"meetingTitle"` |
-| `calendar.menuBarUpcomingEvents` | `"today"`, or 2, 5, 10, 30 minutes before |
-| `calendar.hideCurrentEventAfterMinutes` | `"never"`, 0 (as it starts), 5, 10, 30 |
-| `windowManagement.gap` | 0 to 64 |
 | `snippets.folder`, `notes.folder` | an absolute or `~/` path, or `null` for Application Support |
 
 On first launch, `general.language` is set to the primary system language if supported, otherwise
@@ -162,18 +153,6 @@ in `commands.builtIn` — by their ID after `command:`. App Launcher is
   after its last shortcut is cleared, even outside the search scopes.
 - `applications.enabled`, `systemSettings.enabled`, `systemActions.enabled` and
   `commands.builtInEnabled` are each pane's category switch; `commands.enabled` stays custom commands'.
-
-## Window management
-
-- **`shortcuts`** lists all 35 commands by ID, `null` when unbound; one left out is unbound too.
-- **`aliases`** lists only the commands that have one.
-- **`customSizes`, `layouts` and `rooms`** each carry their record's `shortcut` and `alias`. A record
-  keeps its `id`, because favorites, aliases, ranking and visibility key on it; one written without an
-  `id` gets a stable one derived from its name.
-- A custom size's `width` and `height` are `"60%"` or `"900pt"`, a bare number read as points. A layout
-  app's `width` and `height` are fractions of its display, in full precision.
-- A room's window numbers and when it was last entered stay out of the file, and survive an edit to
-  the room: `Room.keepingRuntime(of:)` returns a number only to a window of the same app.
 
 ## Adding a setting
 

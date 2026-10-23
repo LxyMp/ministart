@@ -31,9 +31,8 @@ in (see Currency below).
   Countries are the one exception: Foundation carries no country for a zone, so
   `CountryZoneData.generated.swift` comes from `node Scripts/gen-countries.js` and is never hand-edited.
 - **A workday is 8 hours, and nothing consults a calendar.** Weekends and public holidays would make
-  the same query answer differently on two Macs, and the only supported source for them is EventKit,
-  whose Full Calendar Access grant a calculator must never provoke mid-keystroke. `workdays` is
-  therefore an ordinary time unit, and `calendarEnabled` stays the Calendar feature's own consent.
+  the same query answer differently on two Macs. `workdays` is
+  therefore an ordinary time unit.
 - **`CurrencyData.generated.swift` is emitted by `node Scripts/gen-currencies.js`** and never hand-edited.
   Four currency tables are hand-maintained, all in `CalcCurrency`: `contested`, the nouns several
   currencies share (`dollars`, `pounds`); `isoNames`, the standard's own names where CLDR substitutes
@@ -428,8 +427,7 @@ As a **duration in date arithmetic** it counts days and skips weekends: `today +
 days, then walks only the remainder. Work stays bounded even at the 10,000-day limit, in either
 direction; `saturday + 1 business day` still lands on Monday.
 
-Public holidays are deliberately not modelled in either. The only supported source is EventKit, and a
-calculator must never provoke its Full Calendar Access grant mid-keystroke — see the invariant above.
+Public holidays are deliberately not modelled in either — see the invariant above.
 
 ## Implicit multiplication
 

@@ -8,8 +8,7 @@ Copies sharing a bundle ID keep app-wide aliases, visibility, ranking, favorites
 Favorites and Suggestions show the representative, while the other copies remain in ordinary results.
 Version subtitles distinguish copies; equal or missing versions also show the containing folder.
 Return opens the selected path with running-application substitution disabled, so a different running
-version cannot replace it. Restart also reopens the selected path. Bundle-ID-based operations such as
-Window Layouts retain macOS's default running-application substitution. Uninstall is unavailable while
+version cannot replace it. Restart also reopens the selected path. Uninstall is unavailable while
 indexed copies share the bundle ID, because their support files and preferences may be shared.
 
 `./Scripts/run-tests.sh app-installation-test` covers the shipped index and app-wide preferences.
@@ -102,7 +101,7 @@ refreshes collapse into a single trailing scan.
 | title | the display name | the query read into Latin | yes |
 | alternate titles | the bundle's names in the user's other languages and English, a renamed bundle's file name, `CFBundleAlternateNames`, a snippet's keyword | the query as typed | yes |
 | subtitle | an extension's title, or a row's own subtitle in its place | the query read into Latin | yes |
-| keywords | the declared Info.plist name, an extension command's `keywords`, a meeting's calendar, and the title and subtitle joined both ways | the query read into Latin | no — they only make an entry appear |
+| keywords | the declared Info.plist name, an extension command's `keywords`, and the title and subtitle joined both ways | the query read into Latin | no — they only make an entry appear |
 
 An entry appears when the user's alias is an exact or prefix hit, or when any field passes the
 sensitivity — an alias that is neither counts as one more alternate title. Bundle identifiers and
@@ -175,7 +174,7 @@ the Zed app: rule 3 only protects an exact title past three characters.
 ### Kind priority and boosts
 
 - **Apps win the ties.** `KindDescriptor.rankPriority` puts applications (4) above command-like kinds
-  (3), quicklinks (2), and System Settings panes and meetings (1), so a first-party app is never
+  (3), quicklinks (2), and System Settings panes (1), so a first-party app is never
   shadowed by the Tinycast command named after it: Calculator over Calculator History.
 - **Two entries with the same alias** fall through to the next rule.
 
@@ -271,28 +270,28 @@ by the title's own score, then by name. The subtitle does not name the entry, so
 
 A query that *equals* a category's name lists that whole category under its section header, in the
 order the section shows when the field is empty. The section title and singular label,
-`Snippets`/`Snippet` or `Window Management`/`Window Command`, come straight from `KindDescriptor`.
+`Snippets`/`Snippet` or `System Actions`/`System Action`, come straight from `KindDescriptor`.
 An entry whose display name equals the query joins the listing: `System Settings` still shows the
 installed application above its panes.
 
 At three characters or more, a prefix at the start of either name or one of its words also includes
-the category. `win` and `window` include Window Management and Window Layouts; `window man` and
-`management` include Window Management alone. Exact names select their own category first.
+the category. `quick` includes Quicklinks; `custom` includes Custom Commands. Exact names select
+their own category first.
 `LauncherOrder.CategoryQuery` uses the shared fold and collapses whitespace, so case, accents,
 full-width text and pasted whitespace behave alike. Mid-word substrings and fuzzy subsequences
 never expand a category; short queries retain ordinary search ranking.
 
 A partial category query never reorders the ordinary search. Its ranked matches, including apps and
 aliases, lead under Results in relevance order, so the best match keeps the row Return opens. The
-category's remaining entries follow under their section headers in usage order, and meetings retain
-agenda order. Those sections follow publication order, so visible rows and flat selection stay aligned;
+category's remaining entries follow under their section headers in usage order. Those sections follow
+publication order, so visible rows and flat selection stay aligned;
 `AppIndex.Results.matchCount` tells the view where the ranked rows end. Visibility still applies
 downstream. The result limit bounds ordinary matches, while whole categories remain uncapped, as they
 are for an empty query.
 
 Category queries show headers without pinning favorites or handing out their ⌘-digit slots. Opening
 a row records its visit; the query is learned only when it did not match that row's category, so
-category browsing cannot teach every window command the same search term.
+category browsing cannot teach every command in the category the same search term.
 
 ### Contextual commands
 
@@ -399,7 +398,7 @@ list filters by **membership only**, keeping the index's name order — re-ranki
 would move the row being edited out from under its own field editor. A pane with a hand-written row
 hands `AliasField` the key itself: Settings ▸ Quicklinks passes `Quicklink.entryID`, Settings ▸
 Commands passes `CustomCommand.entryID`, Settings ▸ Extensions passes `extension:<name>/<command>`,
-Settings ▸ Window Management passes each command, custom size, layout and room's `AppEntry`, and each
+and each
 dims the field when the entry is hidden from launcher search, whose entry the ranker never sees.
 
 Aliases ride along in a settings backup (`launcherAliases`), and deleting what an alias points at —
@@ -466,29 +465,27 @@ per-item reset in its Actions menu, and users can clear all learned ranking in G
 
 ## The empty list
 
-Favorites, then Meetings, then Suggestions, then one section per kind. Meetings sit above
-Suggestions because a meeting is worth opening only until it ends. They keep the agenda's start
-order, including in the `Meetings` category listing, regardless of title or past usage. Each remaining
-kind section is sorted by the tiebreak, so what the user opens comes first and never-used entries still
+Favorites, then Suggestions, then one section per kind. Each kind section is sorted by the tiebreak,
+so what the user opens comes first and never-used entries still
 read alphabetically below it. The sort runs within each contiguous kind run of the publication order,
 so the sectioned view stays 1:1 with the flat selection.
 
 ### Suggestions
 
-`LauncherSuggestions.select` chooses at most five from every visible entry that is not a favorite, a
-meeting or Tinycast itself:
+`LauncherSuggestions.select` chooses at most five from every visible entry that is not a favorite or
+Tinycast itself:
 
 1. up to two apps or extensions installed in the last five minutes and never opened —
    `AppEntry.installedAt` is the bundle's added-to-directory date;
 2. entries with a score above 1 and no bound shortcut, in empty-list order — a shortcut is already the
    faster way in;
 3. while fewer than five, built-in commands with no alias or shortcut, by
-   `CommandID.suggestionPriority`: Clipboard History, Search Files, My Schedule, Search Emoji &
+   `CommandID.suggestionPriority`: Clipboard History, Search Files, Search Emoji &
    Symbols, then Create Quicklink and Create Snippet. A command whose feature is off is absent from the
    index, so it is never offered.
 
 A suggested entry leaves its kind section below, so no row appears twice. `AppIndex.Results` carries
-`favoriteCount`, `meetingCount`, `suggestionCount` and, for a typed query, `matchCount`, which
+`favoriteCount`, `suggestionCount` and, for a typed query, `matchCount`, which
 `LauncherScreen` hands to `LauncherList` for its leading headers. **Show suggestions** in Settings › General › Search turns the section
 off (`launcherShowsSuggestions`, carried by a settings backup). `HotKeyManager.revision` is part of
 `AppIndex`'s results key, because binding a shortcut takes an entry out of the section.
@@ -504,7 +501,7 @@ permission-aware failures. With the palette closed it targets the frontmost app,
 Quit All act on the same window a palette launch would have.
 
 System actions occupy their own launcher section and their own Settings pane. The empty-query publication
-order is applications, System Settings, quicklinks, snippets, system actions, window commands, custom
+order is applications, System Settings, quicklinks, snippets, system actions, custom
 commands, then built-in commands; the sectioned view filters in that same order so the visible rows remain
 identical to the flat selection index.
 Search, favorites, visibility and learned ranking work through the normal `AppEntry` path, and every
@@ -572,33 +569,6 @@ reports remaining failures together.
 Preference-backed toggles refuse to write when the current value can't be read, and notification
 dismissal matches Accessibility subroles rather than English labels.
 
-## Window commands
-
-`WindowCommandCatalog` supplies the 32 window actions as a static slice, published as a whole by
-`AppIndex.setWindowCommandsVisible(_:)` and shown under a "Window Management" section. Like system
-actions they carry dedicated global hotkeys (`AppEntry.hotKeyAction` returns `.windowCommand(id:)`),
-so launcher rows render keycaps for them. Their per-command shortcut and visibility controls live in
-Settings › Window Management rather than a launcher-category pane of their own — the same call already
-made for snippets. The feature ships off. User-defined custom sizes join the same section as their
-own slice, `AppIndex.setCustomWindowSizes(_:)`, published right after the catalog. See
-[window-management.md](window-management.md#custom-sizes).
-
-## Window layouts
-
-`WindowLayoutStore` supplies its slice the way custom commands do, sorted by name, published
-immediately **before** the window commands so the two read as one family. Their per-layout shortcut
-and launcher checkbox live in Settings › Window Management beside the commands', and
-`windowLayoutsShowInLauncher` takes the section and its two commands out together. See
-[window-layouts.md](window-layouts.md).
-
-## Rooms
-
-`RoomStore` supplies the `.windowRoom` slice the same way, sorted by name and published between the
-window layouts and the window commands; `LauncherList.rows` mirrors that position. ↵ on a room
-enters it through `RoomCoordinator.enterRoom(id:)`, which hides the palette itself. The section and
-the two room commands leave together with `windowRoomsShowInLauncher`. See
-[window-rooms.md](window-rooms.md).
-
 ## Quicklinks
 
 `QuicklinkStore` supplies its slice the same way custom commands do, sorted pinned-first then
@@ -647,23 +617,14 @@ and three places read it: `FeatureCommandsSection` draws the pane's rows from it
 category gate for it in both `isVisible` and `allowsHotKey`. Stamping the entry rather than sniffing its
 id is what keeps "which pane owns this" out of the entry-ID namespace.
 
-Nine panes own commands today — File Search, Notes, Snippets, Navigation,
-Window Management, Clipboard, Emoji, Calendar and Quicklinks. What is left in Settings › Commands is
+Six panes own commands today — File Search, Notes, Snippets, Clipboard, Emoji and Quicklinks. What is
+left in Settings › Commands is
 the set no feature switch governs: Calculator History, Open Camera, the three backup commands, Check
 for Updates, Tinycast Settings, About, Support and Quit.
 
 A pane's list is also its display order, so `CommandID`'s declaration order is grouped by owner.
 Nothing keys on that order — `CommandCatalog.all` sorts by name and every preference keys on the raw
 value — so a command may be moved between owners without migrating anything.
-
-## Navigation commands
-
-`CommandID.switchWindows` opens every running app's windows as a palette screen,
-`CommandID.switchWindowsBackwards` opens the same screen and steps it the other way, and
-`CommandID.searchMenuItems` does the same for the front app's menu bar. All three are plain command
-entries — no new `AppEntry.Kind` and no `VisibilityStore` category — owned by Settings › Navigation
-through `SettingsTab.ownedCommands`, so `navigationEnabled` is their switch. Their invariants and
-internals live in [navigation.md](navigation.md) and [menu-search.md](menu-search.md).
 
 > **Invariant:** `Tests/fuzz-test.swift` compiles the real `Launcher/Model/LauncherMatch.swift` and
 > `LauncherOrder.swift`, so both must stay Foundation-only and pure. There is no copy of the ranking
@@ -754,7 +715,7 @@ favorite, alias and learned ranking survive the round trip, and its shortcut kee
 
 The row is offered only where Settings can undo it, and `KindDescriptor.canHideFromSearch` is that
 rule — per kind, and a new `Kind` case has to answer it to compile. Applications, System Settings,
-Commands, System Actions, Window Commands, Window Layouts, Rooms and extension commands each
+Commands, System Actions and extension commands each
 draw a per-row checkbox in their pane, so they carry it. Snippets do not: their pane lists a record
 with its own switches, not a launcher checkbox — a hide nothing in Settings can visibly undo is a
 trap, not a shortcut. Quicklinks and custom commands differ: each editor has its own **Show in root
