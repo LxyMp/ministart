@@ -159,7 +159,7 @@ control: the active recorder is `HotKeyManager.recordingAction` state, and keys 
 NSEvent monitors while both engines are paused. It records combos and single or double modifier taps,
 including their reported side, by feeding its `.flagsChanged` / `.keyDown` monitors into the same pure detectors
 as the global monitor, so recording needs no event tap and no permission. Its `.keyUp` monitor only
-tracks the Hyper key's F18 release; see [Secure Input](#secure-input).
+tracks modifier releases; the section it referenced covered the removed Hyper Key.
 
 Setting `recordingAction` is what starts and stops the capture, so there is exactly **one**
 `ShortcutCaptureSession` (`HotKeys/Service/`) for the app rather than one per row — which is what lets the
