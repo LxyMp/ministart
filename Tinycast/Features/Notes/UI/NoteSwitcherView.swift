@@ -72,8 +72,14 @@ struct NoteSwitcherView: View {
                     size: Theme.Size.noteGlyph
                 )
                 .foregroundStyle(Theme.Colors.textSecondary)
-                Text(notes.isSearching ? "Searching notes…" : "No notes found")
-                    .foregroundStyle(Theme.Colors.textSecondary)
+                Group {
+                    if notes.isSearching {
+                        Text("Searching notes…")
+                    } else {
+                        Text("No notes found")
+                    }
+                }
+                .foregroundStyle(Theme.Colors.textSecondary)
             }
             .frame(maxWidth: .infinity)
             .frame(height: Theme.Size.noteSwitcherEmptyHeight)

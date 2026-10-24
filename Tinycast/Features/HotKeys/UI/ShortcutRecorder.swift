@@ -54,10 +54,16 @@ struct ShortcutRecorder: View {
         if let binding = hotKeys.binding(for: action) {
             boundLabel(binding)
         } else {
-            Text(isRecording ? "Waiting for a shortcut…" : "Record Hotkey")
-                .font(Theme.Typography.keyCap)
-                .foregroundStyle(unsetInk)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            Group {
+                if isRecording {
+                    Text("Waiting for a shortcut…")
+                } else {
+                    Text("Record Hotkey")
+                }
+            }
+            .font(Theme.Typography.keyCap)
+            .foregroundStyle(unsetInk)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

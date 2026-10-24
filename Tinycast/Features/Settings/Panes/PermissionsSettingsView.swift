@@ -22,7 +22,7 @@ struct PermissionsSettingsView: View {
                         Button(accessibilityTrusted ? "Open…" : "Grant Access…") {
                             Permissions.openAccessibilitySettings()
                         }
-                        .help("Opens Privacy & Security › Accessibility.")
+                        .help(Text("Opens Privacy & Security › Accessibility."))
                     }
                 } label: {
                     HStack(spacing: Theme.Spacing.lg) {
@@ -53,7 +53,7 @@ struct PermissionsSettingsView: View {
                         Button(fullDiskAccess ? "Open…" : "Grant Access…") {
                             Permissions.openFullDiskAccessSettings()
                         }
-                        .help("Opens Privacy & Security › Full Disk Access.")
+                        .help(Text("Opens Privacy & Security › Full Disk Access."))
                     }
                 } label: {
                     HStack(spacing: Theme.Spacing.lg) {

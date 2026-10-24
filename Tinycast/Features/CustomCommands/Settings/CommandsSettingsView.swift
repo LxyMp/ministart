@@ -83,7 +83,7 @@ private struct CustomCommandSettingsRow: View {
             if !command.showsInRootSearch {
                 Image(systemName: "eye.slash")
                     .foregroundStyle(.secondary)
-                    .help("Hidden from root search")
+                    .help(Text("Hidden from root search"))
             }
 
             // An alias only reaches the ranker through the launcher slice, so it dims with it.
@@ -98,7 +98,7 @@ private struct CustomCommandSettingsRow: View {
                 Image(systemName: "pencil")
             }
             .buttonStyle(.plain)
-            .help("Edit Custom Command")
+            .help(Text("Edit Custom Command"))
             .accessibilityLabel("Edit \(command.name)")
 
             Button(action: onDelete) {
@@ -106,13 +106,13 @@ private struct CustomCommandSettingsRow: View {
                     .foregroundStyle(.red)
             }
             .buttonStyle(.plain)
-            .help("Delete Custom Command")
+            .help(Text("Delete Custom Command"))
             .accessibilityLabel("Delete \(command.name)")
 
             Toggle("", isOn: $isEnabled)
                 .labelsHidden()
                 .toggleStyle(.checkbox)
-                .help("Enabled")
+                .help(Text("Enabled"))
                 .accessibilityLabel("Enable \(command.name)")
         }
     }

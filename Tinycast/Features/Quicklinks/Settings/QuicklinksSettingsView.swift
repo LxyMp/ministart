@@ -143,12 +143,12 @@ private struct QuicklinkSettingsRow: View {
             if quicklink.isPinned {
                 Image(systemName: "pin.fill")
                     .foregroundStyle(.secondary)
-                    .help("Pinned to the top")
+                    .help(Text("Pinned to the top"))
             }
             if !quicklink.showsInRootSearch {
                 Image(systemName: "eye.slash")
                     .foregroundStyle(.secondary)
-                    .help("Hidden from root search")
+                    .help(Text("Hidden from root search"))
             }
 
             // An alias only reaches the ranker through the root-search slice, so it dims with it.
@@ -163,7 +163,7 @@ private struct QuicklinkSettingsRow: View {
                 Image(systemName: "pencil")
             }
             .buttonStyle(.plain)
-            .help("Edit Quicklink")
+            .help(Text("Edit Quicklink"))
             .accessibilityLabel("Edit \(quicklink.name)")
 
             Button(action: onDelete) {
@@ -171,13 +171,13 @@ private struct QuicklinkSettingsRow: View {
                     .foregroundStyle(.red)
             }
             .buttonStyle(.plain)
-            .help("Delete Quicklink")
+            .help(Text("Delete Quicklink"))
             .accessibilityLabel("Delete \(quicklink.name)")
 
             Toggle("", isOn: $isEnabled)
                 .labelsHidden()
                 .toggleStyle(.checkbox)
-                .help("Enabled")
+                .help(Text("Enabled"))
                 .accessibilityLabel("Enable \(quicklink.name)")
         }
     }

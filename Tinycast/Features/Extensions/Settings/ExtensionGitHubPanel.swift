@@ -41,9 +41,15 @@ struct ExtensionGitHubPanel: View {
             status
 
             HStack(spacing: Theme.Spacing.md) {
-                Button(installedTitle == nil ? "Cancel" : "Done", action: onClose)
-                    .buttonStyle(ExtensionSettingsEditorButtonStyle(role: .cancel))
-                    .keyboardShortcut(.cancelAction)
+                Group {
+                    if installedTitle == nil {
+                        Button("Cancel", action: onClose)
+                    } else {
+                        Button("Done", action: onClose)
+                    }
+                }
+                .buttonStyle(ExtensionSettingsEditorButtonStyle(role: .cancel))
+                .keyboardShortcut(.cancelAction)
                 Button("Install", action: install)
                     .buttonStyle(ExtensionSettingsEditorButtonStyle(role: .primary))
                     .keyboardShortcut(.defaultAction)
@@ -69,7 +75,7 @@ struct ExtensionGitHubPanel: View {
                 .pointerStyle(.horizontalText)
                 .disabled(isInstalling)
             if let source {
-                Text("Builds \(source.summary).")
+                Text(String(localized: "Builds \(source.summary)."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else if !repository.trimmingCharacters(in: .whitespaces).isEmpty {

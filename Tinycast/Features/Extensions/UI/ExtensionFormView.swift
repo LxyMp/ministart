@@ -367,7 +367,7 @@ private struct ExtensionCheckbox: View {
         )
         // A toggle announces what it is and what it holds, not just that it can be pressed.
         .accessibilityAddTraits(isOn ? [.isToggle, .isSelected] : .isToggle)
-        .accessibilityValue(Text(isOn ? "On" : "Off"))
+        .accessibilityValue(isOn ? Text("On") : Text("Off"))
         .extensionFieldHint(node.string("info"), error: node.string("error"))
         .accessibilityAction { toggle() }
         .modifier(ExtensionFormKeys(field: .checkbox, onActivate: toggle, onSubmit: onSubmit))

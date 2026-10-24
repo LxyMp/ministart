@@ -132,7 +132,7 @@ struct SettingsScopeRow: View {
                 if isMissing {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.orange)
-                        .help("This location no longer exists.")
+                        .help(Text("This location no longer exists."))
                 }
                 Button(action: onRemove) {
                     Image(systemName: "xmark.circle.fill")

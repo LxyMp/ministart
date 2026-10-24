@@ -56,8 +56,14 @@ struct ExtensionStorePanel: View {
         } else if searching && results.isEmpty {
             VStack(spacing: Theme.Spacing.md) {
                 ProgressView()
-                Text(storeInstall == nil ? "Searching…" : "Looking up extension…")
-                    .font(.callout).foregroundStyle(.secondary)
+                Group {
+                    if storeInstall == nil {
+                        Text("Searching…")
+                    } else {
+                        Text("Looking up extension…")
+                    }
+                }
+                .font(.callout).foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let searchFailure {
@@ -263,7 +269,7 @@ private struct StoreRow: View {
                 text: String(localized: "\(listing.commandCount) commands"))
             if let downloads = listing.downloadCount, downloads > 0 {
                 StoreFact(symbol: "arrow.down.circle", text: ExtensionListing.abbreviate(downloads))
-                    .help("\(downloads.formatted()) installs")
+                    .help(String(localized: "\(downloads.formatted()) installs"))
             }
         }
         .font(.caption)
@@ -289,7 +295,7 @@ private struct StoreRow: View {
         case .alreadyInstalled:
             Button("Reinstall", action: onInstall)
                 .buttonStyle(ExtensionSettingsEditorButtonStyle(role: .standard, fillsWidth: false))
-                .help("Already installed. Reinstalling replaces it with the store's copy.")
+                .help(Text("Already installed. Reinstalling replaces it with the store's copy."))
         case .failed:
             Button("Retry", action: onInstall)
                 .buttonStyle(ExtensionSettingsEditorButtonStyle(role: .standard, fillsWidth: false))

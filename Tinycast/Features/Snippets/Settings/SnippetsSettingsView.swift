@@ -169,7 +169,7 @@ private struct SnippetSettingsRow: View {
                 Image(systemName: "pencil")
             }
             .buttonStyle(.plain)
-            .help("Edit Snippet")
+            .help(Text("Edit Snippet"))
             .accessibilityLabel("Edit \(record.snippet.name)")
 
             Button(action: onDelete) {
@@ -177,7 +177,7 @@ private struct SnippetSettingsRow: View {
                     .foregroundStyle(.red)
             }
             .buttonStyle(.plain)
-            .help("Delete Snippet")
+            .help(Text("Delete Snippet"))
             .accessibilityLabel("Delete \(record.snippet.name)")
         }
     }

@@ -22,7 +22,7 @@ struct SearchScopesSection: View {
 
             HStack(spacing: Theme.Spacing.lg) {
                 Button("Add…", action: addScopes)
-                    .help("Add a folder or application to search.")
+                    .help(Text("Add a folder or application to search."))
                 if !isDefault {
                     Button("Restore Defaults") { settings.searchScopes = SearchScopes.defaults }
                 }

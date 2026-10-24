@@ -122,7 +122,7 @@ struct ExtensionAppearancePicker: View {
                 Spacer()
                 Button("Use Original Icon", action: onReset)
                     .disabled(!isCustom)
-                    .help("Go back to the icon the extension ships.")
+                    .help(Text("Go back to the icon the extension ships."))
             }
         }
         .padding(Metrics.inset)

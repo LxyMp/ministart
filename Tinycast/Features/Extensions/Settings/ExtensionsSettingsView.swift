@@ -428,7 +428,7 @@ private struct ExtensionDisclosure: View {
                     .foregroundStyle(Theme.Colors.destructive)
             }
             .buttonStyle(.plain)
-            .help("Uninstall")
+            .help(Text("Uninstall"))
             .accessibilityLabel("Uninstall \(installed.title)")
             Image(systemName: "chevron.down")
                 .rotationEffect(.degrees(isExpanded ? 180 : 0))
@@ -586,7 +586,7 @@ private struct CommandRows: View {
                 )
                 .labelsHidden()
                 .toggleStyle(.checkbox)
-                .help("Show in launcher")
+                .help(Text("Show in launcher"))
                 .accessibilityLabel("Show \(command.title) in launcher")
             }
         }

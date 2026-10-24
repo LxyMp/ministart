@@ -89,7 +89,7 @@ private struct RatesFreshness: View {
                 .symbolEffect(.rotate, options: .repeat(.continuous), isActive: currencyRates.isRefreshing)
                 .foregroundStyle(hovered ? .secondary : .tertiary)
                 .onHover { hovered = $0 }
-                .help("Refresh Exchange Rates")
+                .help(Text("Refresh Exchange Rates"))
             }
             .font(metrics.typography.compactKeyCap)
             .foregroundStyle(.tertiary)

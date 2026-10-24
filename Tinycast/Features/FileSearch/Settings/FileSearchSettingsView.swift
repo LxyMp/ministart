@@ -44,19 +44,29 @@ private struct FileSearchAccessSection: View {
                     HStack(spacing: Theme.Spacing.xs) {
                         Image(systemName: granted ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
                             .accessibilityHidden(true)
-                        Text(granted ? "Granted" : "Required")
+                        if granted {
+                            Text("Granted")
+                        } else {
+                            Text("Required")
+                        }
                     }
                     .foregroundStyle(granted ? Color.green : Color.orange)
                     Button(granted ? "Open…" : "Open Privacy Settings…") {
                         Permissions.openFullDiskAccessSettings()
                     }
-                    .help("Opens Privacy & Security › Full Disk Access.")
+                    .help(Text("Opens Privacy & Security › Full Disk Access."))
                 }
             } label: {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     SettingsRowTitle(.fileSearchFullDiskAccess, "Full Disk Access")
-                    Text(granted ? "Ministart can index every folder." : "File Search can’t index without it.")
-                        .foregroundStyle(.secondary)
+                    Group {
+                        if granted {
+                            Text("Ministart can index every folder.")
+                        } else {
+                            Text("File Search can’t index without it.")
+                        }
+                    }
+                    .foregroundStyle(.secondary)
                 }
             }
         } header: {
@@ -97,7 +107,7 @@ private struct FileSearchIndexSection: View {
             LabeledContent {
                 Button("Rebuild Index") { core.fileSearchCoordinator.rebuildIndex() }
                     .disabled(!canRebuild)
-                    .help("Crawls every scope again from scratch.")
+                    .help(Text("Crawls every scope again from scratch."))
             } label: {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     SettingsRowTitle(.fileSearchIndex, "Indexed Items")
@@ -171,7 +181,7 @@ private struct FileSearchScopesSection: View {
 
             HStack(spacing: Theme.Spacing.lg) {
                 Button("Add…", action: addScopes)
-                    .help("Add a folder to index and search.")
+                    .help(Text("Add a folder to index and search."))
                 if !isDefault {
                     Button("Restore Defaults") {
                         settings.fileSearchScopes = FileSearchScope.defaultScopes
@@ -239,7 +249,7 @@ private struct FileSearchIgnoreSection: View {
                 Button("Add") { add(draft) }
                     .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
                 Button("Add Folder…", action: addFolders)
-                    .help("Skip a folder and everything in it.")
+                    .help(Text("Skip a folder and everything in it."))
                 if patterns != FileSearchIgnoreList.defaults {
                     Button("Restore Defaults", action: restoreDefaults)
                 }

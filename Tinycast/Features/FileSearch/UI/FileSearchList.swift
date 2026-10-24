@@ -110,9 +110,15 @@ struct FileSearchRow: View {
             }
             Spacer(minLength: 0)
             if showsLocation {
-                Text(result.isDirectory ? "Folder" : "File")
-                    .font(metrics.typography.rowTrailing)
-                    .foregroundStyle(.secondary)
+                Group {
+                    if result.isDirectory {
+                        Text("Folder")
+                    } else {
+                        Text("File")
+                    }
+                }
+                .font(metrics.typography.rowTrailing)
+                .foregroundStyle(.secondary)
             }
         }
         .padding(.horizontal, metrics.spacing.md)
