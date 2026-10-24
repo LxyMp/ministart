@@ -1,6 +1,8 @@
 # App launcher & root search
 
 `AppIndex.scan()` runs off-main and keeps each distinct application path in launcher results.
+A bundle ID under the app's own prefix (`com.ministart.`, every channel) never enters the index
+at all — Ministart does not list itself, in results or in Suggestions.
 Settings and app pickers retain one representative per bundle ID: the earliest scope wins;
 within one folder, the newest `CFBundleShortVersionString` does.
 

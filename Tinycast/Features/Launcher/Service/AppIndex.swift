@@ -468,6 +468,8 @@ final class AppIndex {
                 guard paths.insert(path).inserted else { continue }
                 let bundle = Bundle(url: url)
                 let bundleID = bundle?.bundleIdentifier
+                // Never list ourselves, whatever channel build sits beside the release copy.
+                if bundleID?.hasPrefix(Self.ownBundlePrefix) == true { continue }
                 let fileName = EntryNaming.strippingAppExtension(url.lastPathComponent)
                 // Finder's rule: LaunchServices ignores a display name the file name contradicts.
                 let names = cache.names(
@@ -667,7 +669,7 @@ final class AppIndex {
         }
     }
 
-    private static let ownBundlePrefix = "com.tinycast."
+    nonisolated private static let ownBundlePrefix = "com.ministart."
 
     private func signals(
         for entry: AppEntry, usage: LauncherRankingStore.Snapshot
