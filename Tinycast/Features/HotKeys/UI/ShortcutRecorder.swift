@@ -73,7 +73,9 @@ struct ShortcutRecorder: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Open Accessibility settings")
-                .help("Modifier-only hotkeys need Accessibility access. Click to grant it.")
+                .help(
+                    "Modifier-only hotkeys need Accessibility access. If the shortcut doesn't work, remove Ministart from the Accessibility list and add it again."
+                )
             }
             HStack(spacing: Theme.Spacing.xs) {
                 ForEach(Array(binding.recorderKeycaps.enumerated()), id: \.offset) { _, cap in

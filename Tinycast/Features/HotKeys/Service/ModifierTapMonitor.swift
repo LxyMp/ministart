@@ -9,8 +9,12 @@ private func modifierTapEventTapCallback(
     guard let userInfo else { return Unmanaged.passUnretained(event) }
     let monitor = Unmanaged<ModifierTapMonitor>.fromOpaque(userInfo).takeUnretainedValue()
 
-    if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
-        MainActor.assumeIsolated { monitor.tapWasDisabled() }
+    if type == .tapDisabledByTimeout {
+        MainActor.assumeIsolated { monitor.tapTimedOut() }
+        return Unmanaged.passUnretained(event)
+    }
+    if type == .tapDisabledByUserInput {
+        MainActor.assumeIsolated { monitor.tapWasRevoked() }
         return Unmanaged.passUnretained(event)
     }
 
@@ -34,6 +38,8 @@ private func modifierTapEventTapCallback(
 @Observable
 final class ModifierTapMonitor: HealthCheckable {
     /// True while something is bound and the tap can't be created; the recorder surfaces it.
+    /// Flipped only by authoritative events — a failed install, a system revocation — never a poll,
+    /// so the recorder's warning holds steady while TCC's cached answer flaps.
     private(set) var needsAccessibility = false
 
     /// Fired on the tap's final release, so the key is up by the time the action runs.
@@ -58,8 +64,6 @@ final class ModifierTapMonitor: HealthCheckable {
     @ObservationIgnored private var sessionTokens: [NotificationToken] = []
     private var sessionActive = true
     private var loggedTapFailure = false
-    /// TCC's cached trust answer flaps while it revalidates a re-signed binary; misses must repeat.
-    @ObservationIgnored private var untrustedTicks = 0
 
     @ObservationIgnored weak var healthTicker: HealthTicker?
 
@@ -245,7 +249,6 @@ final class ModifierTapMonitor: HealthCheckable {
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
         CGEvent.tapEnable(tap: port, enable: true)
         needsAccessibility = false
-        untrustedTicks = 0
     }
 
     private func tearDownTap() {
@@ -261,10 +264,17 @@ final class ModifierTapMonitor: HealthCheckable {
         }
     }
 
-    /// Called when the system disables the tap; any half-tracked press is stale by then.
-    fileprivate func tapWasDisabled() {
+    /// A slow callback disabled the tap; re-arm it and carry on.
+    fileprivate func tapTimedOut() {
         resetDetectors()
         if let tapPort { CGEvent.tapEnable(tap: tapPort, enable: true) }
+    }
+
+    /// Revoked mid-run: the tap will not re-arm, so say so and let the watchdog retry the install.
+    fileprivate func tapWasRevoked() {
+        resetDetectors()
+        tearDownTap()
+        needsAccessibility = true
     }
 
     /// One-second watchdog while something is bound. See docs/features/hotkeys.md#lifecycle.
@@ -272,18 +282,9 @@ final class ModifierTapMonitor: HealthCheckable {
         guard !bound.isEmpty, sessionActive else { return }
         if tapPort == nil {
             installTapIfNeeded()
-        } else if !Permissions.isAccessibilityTrusted() {
-            // A live tap beats one flaky poll: come down only after consecutive misses.
-            untrustedTicks += 1
-            guard untrustedTicks >= 3 else { return }
-            tearDownTap()
-            needsAccessibility = true
-        } else {
-            untrustedTicks = 0
-            if let tapPort, !CGEvent.tapIsEnabled(tap: tapPort) {
-                resetDetectors()
-                CGEvent.tapEnable(tap: tapPort, enable: true)
-            }
+        } else if let tapPort, !CGEvent.tapIsEnabled(tap: tapPort) {
+            resetDetectors()
+            CGEvent.tapEnable(tap: tapPort, enable: true)
         }
     }
 }
