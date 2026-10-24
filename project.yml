@@ -15,7 +15,7 @@ settings:
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Manual
     # A stable self-signed identity keeps the Accessibility grant across rebuilds. docs/signing.md
-    CODE_SIGN_IDENTITY: "Tinycast Self-Signed"
+    CODE_SIGN_IDENTITY: "Ministart Self-Signed"
     SWIFT_STRICT_CONCURRENCY: complete
     TINYCAST_BUNDLE_IDENTIFIER: com.ministart.app
     PRODUCT_NAME: Ministart

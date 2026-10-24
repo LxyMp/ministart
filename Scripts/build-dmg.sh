@@ -7,8 +7,8 @@ cd "$(dirname "$0")/.." || exit 1
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
 DERIVED="build/DerivedData"
 
-if security find-identity -p codesigning | grep -q "Tinycast Self-Signed"; then
-    IDENTITY="Tinycast Self-Signed"
+if security find-identity -p codesigning | grep -q "Ministart Self-Signed"; then
+    IDENTITY="Ministart Self-Signed"
     SIGNING=(CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$IDENTITY" OTHER_CODE_SIGN_FLAGS="--timestamp=none")
 else
     echo "▸ No self-signed identity — packaging ad-hoc"

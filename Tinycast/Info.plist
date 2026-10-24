@@ -65,12 +65,6 @@
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>Tinycast uses automation to perform system actions you explicitly run.</string>
-	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Tinycast accesses your events to show your schedule and let you join meetings.</string>
-	<key>NSRemindersFullAccessUsageDescription</key>
-	<string>Tinycast lets extensions you run read and edit your reminders.</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Tinycast uses Bluetooth access only when you run the Toggle Bluetooth action.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Tinycast</string>
 </dict>

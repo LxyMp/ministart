@@ -1,6 +1,6 @@
 # Signing
 
-Tinycast is signed with a **stable self-signed identity** called `Tinycast Self-Signed`. Keeping the
+Tinycast is signed with a **stable self-signed identity** called `Ministart Self-Signed`. Keeping the
 _same_ identity on every build is what makes macOS remember the Accessibility permission across
 rebuilds and updates — ad-hoc signing changes every build and macOS forgets the grant.
 
@@ -12,7 +12,7 @@ You create this identity **once**. The same identity is used for:
 - **local dev builds** — so Accessibility persists while you develop (the Xcode project signs with it), and
 - **CI releases** — exported into two GitHub secrets the release workflow imports.
 
-## 1. Create the `Tinycast Self-Signed` identity (once)
+## 1. Create the `Ministart Self-Signed` identity (once)
 
 Run these in a terminal. They generate a self-signed code-signing certificate and import it into your
 login keychain:
@@ -21,14 +21,16 @@ login keychain:
 # Generate a self-signed code-signing cert (10-year, codeSigning use).
 openssl req -x509 -newkey rsa:2048 -nodes -days 3650 \
   -keyout /tmp/tc-key.pem -out /tmp/tc-cert.pem \
-  -subj "/CN=Tinycast Self-Signed" \
+  -subj "/CN=Ministart Self-Signed" \
   -addext "basicConstraints=critical,CA:false" \
   -addext "keyUsage=critical,digitalSignature" \
   -addext "extendedKeyUsage=critical,codeSigning"
 
 # Bundle it as a .p12 (the non-empty password keeps `security import` happy).
+# -macalg/-keypbe/-certpbe: macOS 钥匙串读不懂 openssl 3 的默认加密，须指定传统算法
 openssl pkcs12 -export -inkey /tmp/tc-key.pem -in /tmp/tc-cert.pem \
-  -name "Tinycast Self-Signed" -out /tmp/tc.p12 -passout pass:tinycast
+  -name "Ministart Self-Signed" -out /tmp/tc.p12 -passout pass:tinycast \
+  -macalg sha1 -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES
 
 # Import into the login keychain so codesign can use it without prompting.
 security import /tmp/tc.p12 -k ~/Library/Keychains/login.keychain-db \
@@ -40,7 +42,7 @@ rm -f /tmp/tc-key.pem /tmp/tc-cert.pem /tmp/tc.p12
 Verify it's there:
 
 ```sh
-security find-identity -p codesigning | grep "Tinycast Self-Signed"
+security find-identity -p codesigning | grep "Ministart Self-Signed"
 ```
 
 Now local builds (Xcode, VS Code F5, `xcodebuild`) sign with it, and you grant Accessibility once.
@@ -71,7 +73,7 @@ gh secret set SIGNING_P12_PASSWORD --repo abue-ammar/tinycast --body "$P12_PASSW
 rm -f /tmp/signing.p12.base64   # holds your private key — delete it
 ```
 
-If you ever lose the secrets, just re-run this section — as long as the `Tinycast Self-Signed`
+If you ever lose the secrets, just re-run this section — as long as the `Ministart Self-Signed`
 identity is still in your keychain, the exported identity is the same, so users are unaffected. If you
 lose the identity entirely, recreate it (step 1) and re-do this; existing users will re-grant
 Accessibility once on their next update, then it's stable again.
@@ -116,7 +118,7 @@ missing its entitlement ships a permission that can never be granted.
 ## The Developer ID migration
 
 `BundleSignature` already accepts a bundle signed by the Tinycast team under Apple's Developer ID
-chain, even though releases are still signed with `Tinycast Self-Signed`. That is deliberate and
+chain, even though releases are still signed with `Ministart Self-Signed`. That is deliberate and
 staged: the updater compares signatures before it installs, so the code that trusts the new identity
 has to reach users *before* the first build carrying it. Until the switch it also accepts the running
 app's own leaf, which is the only thing a copy installed earlier knows how to check.
@@ -128,10 +130,10 @@ Mac would refuse a bundle the chain already proves is ours.
 
 **The Developer ID identity stays a CI-only fact.** When the switch happens it is named on the
 release workflow's `xcodebuild` line and nowhere else: `project.yml` keeps signing with
-`Tinycast Self-Signed`, so a contributor keeps building with the one they created in §1 — same name,
+`Ministart Self-Signed`, so a contributor keeps building with the one they created in §1 — same name,
 their own key, never shared. Nothing about local development changes.
 
-**Keep `Tinycast Self-Signed` in the login keychain after the switch.** It is the only way to ship a
+**Keep `Ministart Self-Signed` in the login keychain after the switch.** It is the only way to ship a
 build that a copy predating the migration could still install.
 
 ## Quarantine (separate from signing)
