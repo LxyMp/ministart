@@ -6,8 +6,10 @@ the signing identity itself is in [signing.md](signing.md).
 ## Packaging a DMG locally
 
 ```sh
-./Scripts/build-dmg.sh            # -> build/Tinycast-<version>.dmg (version from project.yml)
-./Scripts/build-dmg.sh 0.5.7      # -> build/Tinycast-0.5.7.dmg
+./Scripts/build-dmg.sh            # -> build/Ministart-<version>.dmg (version from project.yml)
+./Scripts/build-dmg.sh 0.5.7      # -> build/Ministart-0.5.7.dmg
+# 没有 Tinycast Self-Signed 证书时自动退回 ad-hoc 签名；产物只有 DMG，
+# .app 是 build/DerivedData 里的中间产物，自动测试（run-tests.sh）不依赖它们。
 ```
 
 It builds a Release `Tinycast.app` signed with `Tinycast Self-Signed` and packs it with an

@@ -1,21 +1,24 @@
 #!/bin/bash
-# Build a signed Ministart.app into build/Ministart-<version>.dmg. Usage: build-dmg.sh [version]
+# Package Ministart as build/Ministart-<version>.dmg — the .app stays an intermediate.
+# Usage: build-dmg.sh [version]. Falls back to ad-hoc signing without the self-signed identity.
 set -euo pipefail
 
 cd "$(dirname "$0")/.." || exit 1
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
-IDENTITY="Tinycast Self-Signed"
 DERIVED="build/DerivedData"
 
-if ! security find-identity -p codesigning | grep -q "$IDENTITY"; then
-    echo "✗ '$IDENTITY' code-signing identity not found — create it once (docs/signing.md)." >&2
-    exit 1
+if security find-identity -p codesigning | grep -q "Tinycast Self-Signed"; then
+    IDENTITY="Tinycast Self-Signed"
+    SIGNING=(CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$IDENTITY" OTHER_CODE_SIGN_FLAGS="--timestamp=none")
+else
+    echo "▸ No self-signed identity — packaging ad-hoc"
+    SIGNING=(CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="-" DEVELOPMENT_TEAM="")
 fi
 
-echo "▸ Building signed Ministart.app (Release)…"
+echo "▸ Building Ministart.app (Release)…"
 xcodebuild -project Tinycast.xcodeproj -scheme Tinycast -configuration Release \
     -derivedDataPath "$DERIVED" \
-    CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$IDENTITY" OTHER_CODE_SIGN_FLAGS="--timestamp=none" \
+    "${SIGNING[@]}" \
     ${1:+MARKETING_VERSION="$1"} \
     build
 
@@ -28,7 +31,7 @@ STAGE="$(mktemp -d)"
 cp -R "$APP" "$STAGE/"
 ln -s /Applications "$STAGE/Applications"
 rm -f "$DMG"
-diskutil image create from "$STAGE" --format UDZO --volumeName "Tinycast" "$DMG" >/dev/null
+diskutil image create from "$STAGE" --format UDZO --volumeName "Ministart" "$DMG" >/dev/null
 rm -rf "$STAGE"
 
 echo "✓ $DMG"
