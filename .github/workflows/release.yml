@@ -18,8 +18,6 @@ on:
 
 permissions:
   contents: write
-  # Dispatches the Website workflow, whose version and changelog are read at build time.
-  actions: write
 
 jobs:
   build:
@@ -201,13 +199,6 @@ jobs:
             git commit -m "${CASK} ${VERSION}"
             git push
           fi
-
-      # A dispatch is the one event GITHUB_TOKEN may start another workflow with.
-      - name: Rebuild the website
-        if: github.event.inputs.channel == 'stable'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run website.yml --repo "$GITHUB_REPOSITORY" --ref main
 
       - name: Announce on Discord
         if: success()
