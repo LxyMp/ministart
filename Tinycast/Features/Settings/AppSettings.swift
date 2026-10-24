@@ -76,13 +76,6 @@ final class AppSettings {
         didSet { defaults.set(showInMenuBar, forKey: Key.showInMenuBar.rawValue) }
     }
 
-    var automaticallyCheckForUpdates: Bool {
-        didSet {
-            defaults.set(
-                automaticallyCheckForUpdates, forKey: Key.automaticallyCheckForUpdates.rawValue)
-        }
-    }
-
     /// Preferred skin tone applied to modifier-capable emoji at render and copy time.
     var emojiSkinTone: EmojiSkinTone {
         didSet { defaults.set(emojiSkinTone.rawValue, forKey: Key.emojiSkinTone.rawValue) }
@@ -369,9 +362,6 @@ final class AppSettings {
         showInMenuBar =
             defaults.object(forKey: Key.showInMenuBar.rawValue) == nil
             || defaults.bool(forKey: Key.showInMenuBar.rawValue)
-        automaticallyCheckForUpdates =
-            defaults.object(forKey: Key.automaticallyCheckForUpdates.rawValue) == nil
-            || defaults.bool(forKey: Key.automaticallyCheckForUpdates.rawValue)
         emojiSkinTone =
             defaults.string(forKey: Key.emojiSkinTone.rawValue).flatMap(EmojiSkinTone.init) ?? .none
         emojiGridColumns =

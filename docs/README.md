@@ -26,7 +26,6 @@ open with an `## Invariants` section; read it before changing anything in that a
 [launcher](features/launcher.md) ·
 [clipboard](features/clipboard.md) ·
 [calculator](features/calculator.md) ·
-[camera](features/camera.md) ·
 [emoji](features/emoji.md) ·
 [dictionary](features/dictionary.md) ·
 [file search](features/file-search.md) ·
@@ -40,7 +39,6 @@ open with an `## Invariants` section; read it before changing anything in that a
 [backup](features/backup.md) ·
 [settings file](features/settings-file.md) ·
 [Raycast extensions](features/extensions.md) ·
-[updates](features/updates.md) ·
 [support](features/support.md)
 
 ## Contributing

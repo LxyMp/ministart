@@ -101,9 +101,7 @@ Raycast 扩展。
 | `AppleShortcuts/` | Apple Shortcuts 作为 launcher 独立分区 | | [apple-shortcuts.md](docs/features/apple-shortcuts.md) |
 | `Backup/` | `.tinycast` 备份导出/导入 | 无 `UI/` | [backup.md](docs/features/backup.md) |
 | `Settings/` | **设置外壳**：`SettingsCoordinator`、`AppSettings`、settings.json 镜像、`Panes/`（General、Permissions） | 本体即外壳，无 UI/ 子目录 | [settings-file.md](docs/features/settings-file.md) |
-| `Updates/` | 每日检查 GitHub Releases 更新 | | [updates.md](docs/features/updates.md) |
 | `Onboarding/` | 首启引导（扁平 4 文件） | 扁平 | |
-| `Camera/` | 摄像头预览（`Open Camera` 独立命令） | 无 `Model/`、`Settings/` | [camera.md](docs/features/camera.md) |
 | `Support/` | Support 窗口与 30 天提醒 | 无 `Settings/` | [support.md](docs/features/support.md) |
 
 两点特殊位置：

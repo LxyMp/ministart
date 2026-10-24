@@ -148,8 +148,7 @@ struct SettingsHistoryTests {
     static func catalogFindsKnownRows() {
         let cases: [(String, SettingsTab)] = [
             ("launch at login", .general),
-            ("automatically check for updates", .general),
-            ("popup", .general),
+            ("show in menu bar", .general),
             ("paste history", .clipboard),
             ("skin tone", .emoji)
         ]

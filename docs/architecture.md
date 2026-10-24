@@ -146,9 +146,6 @@ driven imperatively from AppKit. Extension menu extras are dynamic `NSStatusItem
   height its content measured. Every route into it — the palette's menu circle, Settings → About, the
   menu bar, the launcher, and the 30-day reminder — lands on `showSupport()`, which is what moves the
   reminder's anchor. See [features/support.md](features/support.md).
-- **The camera surface** — a borderless, non-activating `CameraPanel` at `.floating` over one
-  `CameraSession`: `CameraCoordinator`, owned by `AppCore`, is the
-  standalone `Open Camera` command. See [features/camera.md](features/camera.md).
 - **HUDs** are separate, because a dialog asks and a HUD reports: `MessageHUDController` (the pill), over a shared `HUDPresenter` that owns the
   one-at-a-time, auto-dismiss and fade policy. See [ui.md](ui.md#dialogs--hud).
 
@@ -220,7 +217,7 @@ Tinycast/
     PaletteRowIndex.swift   the flat selection index — palette-owned, so it sits at the top
     Launcher/ Clipboard/ Calculator/ Emoji/ FileSearch/ Notes/
     Quicklinks/ Snippets/ Uninstall/ CustomCommands/ HotKeys/ Backup/
-    Onboarding/ Updates/ Support/ Settings/
+    Onboarding/ Support/ Settings/
     Extensions/
         Model/      pure — the harness inputs
         Service/    effects — stores, monitors, runners, AppKit glue

@@ -29,7 +29,6 @@ final class AppCore {
     let aliases = AliasStore()
     let fallbacks = FallbackStore()
     let currencyRates = CurrencyRateStore()
-    let updateChecker = UpdateCheckStore()
     let supportReminders: SupportReminderStore
     let emojiIndex = EmojiIndex()
     let frequentEmoji = FrequentEmojiStore()
@@ -124,8 +123,6 @@ final class AppCore {
         windowController: windowController, core: self)
     @ObservationIgnored private(set) lazy var dictionaryCoordinator = DictionaryCoordinator(
         paletteCoordinator: paletteCoordinator)
-    @ObservationIgnored private(set) lazy var updateCoordinator = UpdateCoordinator(
-        store: updateChecker, core: self)
     @ObservationIgnored private(set) lazy var supportCoordinator = SupportCoordinator(
         store: supportReminders, core: self)
     @ObservationIgnored private lazy var windowController = PaletteWindowController(core: self)
@@ -204,14 +201,9 @@ final class AppCore {
                 default: break
                 }
             }
-            updateCoordinator.applyEnabled()
             Task { await appIndex.refresh() }
             Task { await emojiIndex.load(languages: SystemLanguages.preferred) }
             currencyRates.start()
-            updateChecker.onUpdateAvailable = { [weak self] release in
-                self?.updateCoordinator.presentIfAvailable(release) ?? true
-            }
-            updateCoordinator.applyAutomaticChecking()
             supportReminders.onDue = { [weak self] in self?.supportCoordinator.presentIfDue() }
             supportReminders.start()
 
@@ -283,16 +275,12 @@ final class AppCore {
             } else if launchedByUser {
                 paletteCoordinator.showPalette(mode: .launcher)
             }
-            if let version = updateChecker.takeInstalledVersion() {
-                showMessage(String(localized: "Updated to Ministart \(version.description)"))
-            }
         }
     }
 
     func handleReopen() {
         if settingsCoordinator.focusExisting() { return }
         if onboardingCoordinator.focusExisting() { return }
-        if updateCoordinator.focusExisting() { return }
         if supportCoordinator.focusExisting() { return }
         if customCommandCoordinator.focusOutputWindow() { return }
         paletteCoordinator.showPalette(mode: .launcher, restoreAnyMode: true)
@@ -360,9 +348,6 @@ final class AppCore {
     // MARK: - Feature switches
 
     private func observeFeatureSwitches() {
-        track(
-            { _ = $0.automaticallyCheckForUpdates },
-            reproject: { $0.updateCoordinator.applyAutomaticChecking() })
         track(
             {
                 _ = $0.customCommandsEnabled
@@ -526,17 +511,16 @@ final class AppCore {
 
     // MARK: - Interruption
 
-    var currentActivity: UpdateActivity {
-        UpdateActivity(
-            isExpandingSnippet: textInjector.isDelivering,
-            isRunningExtension: extensions.running != nil,
-            isUninstalling: uninstall.isTrashing,
-            isRecordingHotKey: hotKeys.recordingAction != nil,
-            isShowingDialog: isShowingDialog,
-            isPaletteVisible: paletteCoordinator.isVisible)
+    /// Ordered by consequence: work in flight outranks an open panel. See docs/features/support.md.
+    var canInterruptUser: Bool {
+        if textInjector.isDelivering { return false }
+        if extensions.running != nil { return false }
+        if uninstall.isTrashing { return false }
+        if hotKeys.recordingAction != nil { return false }
+        if isShowingDialog { return false }
+        if paletteCoordinator.isVisible { return false }
+        return true
     }
-
-    var canInterruptUser: Bool { UpdateReadiness.evaluate(currentActivity) == nil }
 
     // MARK: - Dialogs, routed here so `dialogs` stays the single owner
 

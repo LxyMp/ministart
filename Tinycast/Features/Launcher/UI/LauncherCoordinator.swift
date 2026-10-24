@@ -153,9 +153,6 @@ final class LauncherCoordinator {
             Task { await BackupActions.runImportCommand(core: core) }
             dismissPalette()
             settingsCoordinator.showBackupSettings()
-        case .checkForUpdates:
-            dismissPalette()
-            core.updateCoordinator.checkForUpdates()
         case .settings:
             dismissPalette()
             settingsCoordinator.showSettings()

@@ -92,8 +92,8 @@ struct LanguageTests {
             }
         }
 
-        let windows: [String: (String, String)] = [
-            "zh-Hans": ("1 个窗口", "2 个窗口")
+        let clips: [String: (String, String)] = [
+            "zh-Hans": ("1 条剪贴内容", "2 条剪贴内容")
         ]
         let contextualLabels: [(key: String, source: String, overrides: [String: String])] = [
             ("emoji-skin-tone-light", "Light", ["zh-Hans": "浅色"]),
@@ -103,7 +103,7 @@ struct LanguageTests {
         // en is the source language: its strings are the keys, so only zh-Hans gets an lproj.
         for code in ["zh-Hans"] {
             guard let bundle = Bundle(url: root.appendingPathComponent("\(code).lproj")),
-                let expected = windows[code]
+                let expected = clips[code]
             else {
                 check("\(code) resources exist", false)
                 continue
@@ -113,10 +113,10 @@ struct LanguageTests {
             let two = 2
             check(
                 "\(code) singular is selected at runtime",
-                String(localized: "\(one) windows", bundle: bundle, locale: locale) == expected.0)
+                String(localized: "\(one) clips", bundle: bundle, locale: locale) == expected.0)
             check(
                 "\(code) plural is selected at runtime",
-                String(localized: "\(two) windows", bundle: bundle, locale: locale) == expected.1)
+                String(localized: "\(two) clips", bundle: bundle, locale: locale) == expected.1)
             let size = "5 MB"
             let reordered = String(
                 localized: "Reclaims \(size) from \(two) items.", bundle: bundle, locale: locale)
