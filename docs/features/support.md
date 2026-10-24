@@ -8,9 +8,9 @@ hero shares the checkout page's brief offer copy from `website/src/data/support.
 ## Invariants
 
 - **Showing the window is what moves the anchor.** `SupportCoordinator.showSupport()` calls
-  `markAsked()` on every route into the window — the palette's app menu, Settings → About, the menu
-  bar, the launcher command and the reminder itself. Someone who has just read the pitch is not asked
-  again next week, however they came to it, and one call site is what keeps that true.
+  `markAsked()` on every route into the window — the palette's menu circle and the reminder itself.
+  Someone who has just read the pitch is not asked again next week, however they came to it, and one
+  call site is what keeps that true.
 - **The reminder never takes focus from something the user started.** `presentIfDue()` returns without
   presenting unless `AppCore.canInterruptUser`, a gate ordered by consequence: a snippet mid-expansion,
   a running extension command, an uninstall, a shortcut recording, an open dialog, then the open
@@ -69,7 +69,6 @@ The window rides the shared `AppWindowController` with its content-measured heig
 
 ## Where it is reachable from
 
-The palette's bottom-left menu circle (between About and Settings), Settings → About, the menu bar
-menu, and the launcher as `CommandID.support`. All four land on `showSupport()`. The launcher arm
-hides the palette first, the way `.about` does; the menu-circle row does not, because the panel
-dismisses itself on `windowDidResignKey`.
+The palette's bottom-left menu circle, and the 30-day reminder. Both land on `showSupport()`;
+the menu-circle row needs no palette dismissal of its own, because the panel dismisses itself on
+`windowDidResignKey`.

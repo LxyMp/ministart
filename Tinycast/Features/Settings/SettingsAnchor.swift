@@ -84,7 +84,6 @@ extension SettingsAnchor {
     static let backupImport = Self(tab: .backup, title: "Import")
     static let backupSettingsFile = Self(tab: .backup, title: "Settings File")
 
-    static let aboutAbout = Self(tab: .about, title: "About")
 }
 
 enum SettingsTarget: Hashable, Sendable {

@@ -27,7 +27,7 @@ Raycast 扩展。
 | --- | --- |
 | `Tinycast/App/` | 组合根：`TinycastLaunch`（@main）、`TinycastApp`、`AppDelegate`、`AppCore` |
 | `Tinycast/Palette/` | 面板外壳：`PalettePanel`、`PaletteWindowController`、`RootPaletteView`、`PaletteScreen` 协议、`PaletteCoordinator`、`PaletteState` |
-| `Tinycast/Windows/` | 非面板 AppKit 表面：`AppWindowController`、`Dialog/`、`HUD/`、`About/` |
+| `Tinycast/Windows/` | 非面板 AppKit 表面：`AppWindowController`、`Dialog/`、`HUD/` |
 | `Tinycast/Features/` | 每个功能一个目录（见第 6 节地图） |
 | `Tinycast/DesignSystem/` | 共享视觉原语；`Theme.swift` 是唯一设计 token 源 |
 | `Tinycast/Platform/` | 系统垫片：`Permissions`、`NotificationToken`、`AppPaths`、`HealthTicker` 等 |

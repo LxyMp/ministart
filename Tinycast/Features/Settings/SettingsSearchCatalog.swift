@@ -109,7 +109,7 @@ enum SettingsSearchCatalog {
         general + applications + systemSettings + commands + quicklinks
         + appleShortcuts + fallbacks + clipboard + snippets + fileSearch
         + notes + emoji + extensions + permissions
-        + backup + about
+        + backup
 
     private static let general: [SettingsSearchEntry] = [
         .init(pane: .general, keywords: ["preferences", "settings"]),
@@ -400,9 +400,4 @@ enum SettingsSearchCatalog {
             keywords: ["settings.json", "config", "json", "dotfiles", ".config", "edit"])
     ]
 
-    private static let about: [SettingsSearchEntry] = [
-        .init(
-            pane: .about,
-            keywords: ["version", "licence", "license", "credits"]),
-    ]
 }

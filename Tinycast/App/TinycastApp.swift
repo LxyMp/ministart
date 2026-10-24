@@ -38,7 +38,6 @@ struct TinycastApp: App {
     @CommandsBuilder
     private var menuBarCommands: some Commands {
         CommandGroup(replacing: .appInfo) {
-            Button("About \(appName)") { AppCore.shared.settingsCoordinator.showAbout() }
         }
         CommandGroup(replacing: .appSettings) {
             Button("Settings…") { AppCore.shared.settingsCoordinator.showSettings() }

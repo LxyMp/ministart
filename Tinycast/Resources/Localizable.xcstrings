@@ -1433,46 +1433,6 @@
         }
       }
     },
-    "A tiny, native macOS launcher.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "小巧的原生 macOS 启动器。"
-          }
-        }
-      }
-    },
-    "About": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "关于"
-          }
-        }
-      }
-    },
-    "About %@": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "关于 %@"
-          }
-        }
-      }
-    },
-    "About Ministart": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "关于 Ministart"
-          }
-        }
-      }
-    },
     "About once a month. Turn this off and %@ won't ask again.": {
       "localizations": {
         "zh-Hans": {
@@ -11771,23 +11731,6 @@
         }
       }
     },
-    "Version %@ (%@)": {
-      "comment": "App version and build number",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Version %1$@ (%2$@)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "版本 %@（%@）"
-          }
-        }
-      }
-    },
     "Videos": {
       "localizations": {
         "zh-Hans": {
@@ -12526,16 +12469,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "未知设置“%@”"
-          }
-        }
-      }
-    },
-    "© 2026 DX · Released under AGPL-3.0": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "© 2026 DX · 基于 AGPL-3.0 发布"
           }
         }
       }

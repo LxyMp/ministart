@@ -41,10 +41,6 @@ final class SettingsCoordinator {
         editorPresenter.attach(to: hosting.view.window)
     }
 
-    func showAbout() {
-        showSettings(tab: .about)
-    }
-
     func showBackupSettings() {
         showSettings(tab: .backup)
     }
