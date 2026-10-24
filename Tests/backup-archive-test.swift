@@ -2,7 +2,7 @@ import AppleArchive
 import Foundation
 import System
 
-/// Compiles the shipped bundle and archive layer, so a `.tinycast` can't quietly change shape.
+/// Compiles the shipped bundle and archive layer, so a `.ministart` can't quietly change shape.
 @main
 @MainActor
 struct BackupArchiveTest {
@@ -63,7 +63,7 @@ struct BackupArchiveTest {
             counts: ["clipboard": 1, "notes": 1])
         try? bundle.writeManifest(manifest)
 
-        let archive = root.appendingPathComponent("out.tinycast")
+        let archive = root.appendingPathComponent("out.ministart")
         let opened = root.appendingPathComponent("open")
         do {
             try BackupArchive.seal(directory: source, into: archive)
@@ -107,7 +107,7 @@ struct BackupArchiveTest {
 
     /// A seal that dies mid-write must leave neither a truncated destination nor its staged file.
     static func failedSealLeavesNothingBehind(in root: URL) {
-        let destination = root.appendingPathComponent("failed.tinycast")
+        let destination = root.appendingPathComponent("failed.ministart")
         do {
             try BackupArchive.seal(
                 directory: root.appendingPathComponent("no-such-directory"), into: destination)
@@ -188,7 +188,7 @@ struct BackupArchiveTest {
     }
 
     static func rejectsGarbage(in root: URL) {
-        let file = root.appendingPathComponent("garbage.tinycast")
+        let file = root.appendingPathComponent("garbage.ministart")
         try? Data("not an archive".utf8).write(to: file)
         let into = root.appendingPathComponent("garbage-out")
         do {
@@ -211,7 +211,7 @@ struct BackupArchiveTest {
     /// A hostile archive must not write outside the directory the caller chose.
     static func refusesTraversal(in root: URL) {
         // Header-by-header: `writeDirectoryContents` refuses to emit the `..` path we need here.
-        let archive = root.appendingPathComponent("evil.tinycast")
+        let archive = root.appendingPathComponent("evil.ministart")
         let payload = Data("escaped".utf8)
         guard
             let destination = ArchiveByteStream.fileStream(
@@ -257,7 +257,7 @@ struct BackupArchiveTest {
 
     /// A link entry names no `..` at all, and reading through it would leave the extract.
     static func refusesSymbolicLinks(in root: URL) {
-        let archive = root.appendingPathComponent("linked.tinycast")
+        let archive = root.appendingPathComponent("linked.ministart")
         guard
             let destination = ArchiveByteStream.fileStream(
                 path: FilePath(archive.path), mode: .writeOnly, options: [.create, .truncate],

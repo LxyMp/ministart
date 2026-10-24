@@ -96,10 +96,10 @@ struct ExtensionTests {
     static func runtimeURL() -> URL {
         let candidates = [
             URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-                .appendingPathComponent("Tinycast/Resources/RaycastRuntime.generated.js"),
+                .appendingPathComponent("Ministart/Resources/RaycastRuntime.generated.js"),
             URL(fileURLWithPath: #filePath)
                 .deletingLastPathComponent().deletingLastPathComponent()
-                .appendingPathComponent("Tinycast/Resources/RaycastRuntime.generated.js")
+                .appendingPathComponent("Ministart/Resources/RaycastRuntime.generated.js")
         ]
         return candidates.first { FileManager.default.fileExists(atPath: $0.path) } ?? candidates[0]
     }
@@ -174,6 +174,7 @@ struct ExtensionTests {
             passes += 1
         } else {
             failures += 1
+            FileHandle.standardError.write(Data("CRYPTO_ACTUAL=[\(detail)]\n".utf8))
             print("FAIL  \(label)\(detail.isEmpty ? "" : "\n      \(detail)")")
         }
     }
@@ -889,8 +890,8 @@ struct ExtensionTests {
             String(describing: canonical?.extensionCandidates))
 
         let tiny = ExtensionDeepLink.parse(
-            url: URL(string: "tinycast://extensions/linear/linear/create-issue")!)
-        check("deeplink mirrors raycast:// as tinycast://", tiny == canonical)
+            url: URL(string: "ministart://extensions/linear/linear/create-issue")!)
+        check("deeplink mirrors raycast:// as ministart://", tiny == canonical)
 
         let bare = ExtensionDeepLink.parse(url: URL(string: "raycast://extensions/demo/search")!)
         check(
@@ -905,9 +906,9 @@ struct ExtensionTests {
             ExtensionDeepLink.route(url: installURL) == install)
         check("store Install is never parsed as a command", ExtensionDeepLink.parse(url: installURL) == nil)
         check(
-            "store Install accepts the Tinycast scheme",
+            "store Install accepts the Ministart scheme",
             ExtensionDeepLink.route(
-                url: URL(string: "tinycast://extensions/linear/linear?source=webstore")!) == install)
+                url: URL(string: "ministart://extensions/linear/linear?source=webstore")!) == install)
         check(
             "store Install accepts the path-based scheme",
             ExtensionDeepLink.route(
@@ -1161,7 +1162,7 @@ struct ExtensionTests {
                 try { callback(); return "none"; } catch (error) { return error.code; }
               };
               const filePaths = [
-                fileURLToPath("file:///Applications/Tinycast%20Beta.app"),
+                fileURLToPath("file:///Applications/Ministart%20Beta.app"),
                 fileURLToPath(pathToFileURL("/tmp/a#b.png")),
                 pathToFileURL("/tmp/My Image.png").href,
                 errorCode(() => fileURLToPath("file:///tmp/a%2Fb")),
@@ -1179,7 +1180,7 @@ struct ExtensionTests {
               ].join(",");
               // Bitwarden derives its session hash and caches the vault through exactly these calls.
               const encrypter = crypto.createCipheriv("aes-256-cbc", "k".repeat(32), "i".repeat(16));
-              const encrypted = Buffer.concat([encrypter.update("hello tinycast"), encrypter.final()]);
+              const encrypted = Buffer.concat([encrypter.update("hello ministart"), encrypter.final()]);
               const decrypter = crypto.createDecipheriv("aes-256-cbc", "k".repeat(32), Buffer.from("i".repeat(16)));
               const ecb = crypto.createCipheriv("aes-128-ecb", Buffer.alloc(16, 1), null).setAutoPadding(false);
               const cipherShim = [
@@ -1262,7 +1263,7 @@ struct ExtensionTests {
             "fileURLToPath decodes a path and rejects an unusable URL",
             ExtensionAccessoriesView_labelForTest(
                 screen.items.first?.node.array("accessories").dropFirst(2).first)
-                == "/Applications/Tinycast Beta.app\n/tmp/a#b.png\n"
+                == "/Applications/Ministart Beta.app\n/tmp/a#b.png\n"
                 + "file:///tmp/My%20Image.png\n"
                 + "ERR_INVALID_FILE_URL_PATH\nERR_INVALID_FILE_URL_HOST\n"
                 + "ERR_INVALID_URL_SCHEME",
@@ -1272,8 +1273,8 @@ struct ExtensionTests {
             ExtensionAccessoriesView_labelForTest(
                 screen.items.first?.node.array("accessories").dropFirst(4).first)
                 == "afe6c5530785b6cc6b1c6453384731bd,f7ce0b653d2d72a4,5d11c49af18b4b3e482508362bd2c857,"
-                + "eb7b227687302ff167fef6a04d9f99f3,"
-                + "hello tinycast,17d614f379a9359077e95577fd31c20a,ERR_OSSL_BAD_DECRYPT,"
+                + "6b1c9031d92bf7b112b3461385e209fb,"
+                + "hello ministart,17d614f379a9359077e95577fd31c20a,ERR_OSSL_BAD_DECRYPT,"
                 + "ERR_CRYPTO_INVALID_KEYLEN,ERR_CRYPTO_INVALID_DIGEST,6cba6dd1d44f53a3",
             String(describing: screen.items.first?.node.array("accessories").dropFirst(4).first))
         check(
@@ -1511,7 +1512,7 @@ struct ExtensionTests {
     @MainActor
     static func nodeContractChecks() async {
         let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("tinycast-archive-\(UUID().uuidString)")
+            .appendingPathComponent("ministart-archive-\(UUID().uuidString)")
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: directory) }
         let (runtime, host, recorder) = makeRuntime()
@@ -1799,7 +1800,7 @@ struct ExtensionTests {
     @MainActor
     static func swiftHelperChecks() async {
         let helper = FileManager.default.temporaryDirectory
-            .appendingPathComponent("tinycast-helper-\(UUID().uuidString)")
+            .appendingPathComponent("ministart-helper-\(UUID().uuidString)")
         try? Data("#!/bin/sh\necho '{\"hex\":\"#FF0000\"}'\n".utf8).write(to: helper)
         defer { try? FileManager.default.removeItem(at: helper) }
 
@@ -1845,7 +1846,7 @@ struct ExtensionTests {
     @MainActor
     static func processKillChecks() async {
         let marker = FileManager.default.temporaryDirectory
-            .appendingPathComponent("tinycast-rang-\(UUID().uuidString)")
+            .appendingPathComponent("ministart-rang-\(UUID().uuidString)")
         defer { try? FileManager.default.removeItem(at: marker) }
 
         let (runtime, _, recorder) = makeRuntime()
@@ -1880,7 +1881,7 @@ struct ExtensionTests {
             "a killed exec child never runs the rest of its script",
             !FileManager.default.fileExists(atPath: marker.path))
         check(
-            "exec returns a live pid and process.kill guards Tinycast itself",
+            "exec returns a live pid and process.kill guards Ministart itself",
             recorder.trees.last?.activeRoot?.string("markdown")
                 == "true,failed,false,EPERM,ESRCH,ERR_UNKNOWN_SIGNAL",
             recorder.trees.last?.activeRoot?.string("markdown") ?? "no tree")
@@ -1889,7 +1890,7 @@ struct ExtensionTests {
 
     /// `zlib` is the one node shim with no JS-side implementation to lean on.
     static func zlibChecks() {
-        let payload = Data(String(repeating: "tinycast extensions ", count: 64).utf8)
+        let payload = Data(String(repeating: "ministart extensions ", count: 64).utf8)
         do {
             check("gzip round-trips", try Zlib.gunzip(Zlib.gzip(payload)) == payload)
             check("zlib round-trips", try Zlib.inflate(Zlib.deflate(payload)) == payload)

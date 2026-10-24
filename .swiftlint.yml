@@ -1,12 +1,12 @@
 included:
-  - Tinycast
+  - Ministart
   - Tests
 
 excluded:
-  - Tinycast/DesignSystem/Scrolling/EdgeDissolve.swift
-  - Tinycast/DesignSystem/Scrolling/ThinScrollbar.swift
-  - Tinycast/Features/Emoji/Model/EmojiData.generated.swift
-  - Tinycast/Features/Calculator/Model/CurrencyData.generated.swift
+  - Ministart/DesignSystem/Scrolling/EdgeDissolve.swift
+  - Ministart/DesignSystem/Scrolling/ThinScrollbar.swift
+  - Ministart/Features/Emoji/Model/EmojiData.generated.swift
+  - Ministart/Features/Calculator/Model/CurrencyData.generated.swift
 
 disabled_rules:
   - todo                                      # tracked in issues, not by the linter

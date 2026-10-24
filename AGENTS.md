@@ -1,4 +1,4 @@
-# Tinycast
+# Ministart
 
 A native macOS menu-bar launcher: fuzzy app launcher, global and per-app hotkeys, a text/image
 clipboard history, an inline calculator, a floating note, snippets, quicklinks
@@ -8,7 +8,7 @@ dependencies.
 
 ## Posture: modern-first, always
 
-**Tinycast supports macOS 26 and later, with macOS 27 strongly preferred.** Swift 6+ with complete
+**Ministart supports macOS 26 and later, with macOS 27 strongly preferred.** Swift 6+ with complete
 strict concurrency is required. Prefer the latest Swift patterns and modern Apple APIs.
 
 Prefer current APIs and language features:
@@ -37,12 +37,12 @@ system-wide chord, and HIToolbox's TIS APIs remain the public input-source mecha
 
 | Folder                   | Holds                                                                                   |
 | ------------------------ | --------------------------------------------------------------------------------------- |
-| `Tinycast/App/`          | `@main`, `AppDelegate`, `AppCore` — the composition root                                |
-| `Tinycast/DesignSystem/` | shared visual primitives; `Theme.swift` is the only design-token source                 |
-| `Tinycast/Platform/`     | system shims: `Permissions`, `AppPaths`, `Signposts`, `NotificationToken`, …            |
-| `Tinycast/Palette/`      | the palette shell: panel, window controller, `RootPaletteView`, `PaletteScreen`         |
-| `Tinycast/Windows/`      | the non-palette AppKit surfaces: `Dialog/`, `HUD/`, `About/`, `AppWindowController`     |
-| `Tinycast/Features/`     | one folder per feature; larger ones split `Model/` `Service/` `UI/` `Settings/`         |
+| `Ministart/App/`          | `@main`, `AppDelegate`, `AppCore` — the composition root                                |
+| `Ministart/DesignSystem/` | shared visual primitives; `Theme.swift` is the only design-token source                 |
+| `Ministart/Platform/`     | system shims: `Permissions`, `AppPaths`, `Signposts`, `NotificationToken`, …            |
+| `Ministart/Palette/`      | the palette shell: panel, window controller, `RootPaletteView`, `PaletteScreen`         |
+| `Ministart/Windows/`      | the non-palette AppKit surfaces: `Dialog/`, `HUD/`, `About/`, `AppWindowController`     |
+| `Ministart/Features/`     | one folder per feature; larger ones split `Model/` `Service/` `UI/` `Settings/`         |
 | `Tests/`                 | the standalone harnesses — one Swift file each, no XCTest target                        |
 | `Scripts/`               | every executable script: test runner, data generators, packaging, linting, editor setup |
 
@@ -80,7 +80,7 @@ feature's doc, under its own `## Invariants`.
   the forced-dark build shipped, restated rather than re-derived. Retune a light branch freely — change
   a dark one only when the task is to change Dark. `AppAppearance` drives `NSApp.appearance`, and
   `.system` maps to `nil` so AppKit follows macOS on its own.
-- **Tinycast presents its own dialogs — never `NSAlert` or a system popover.** A question
+- **Ministart presents its own dialogs — never `NSAlert` or a system popover.** A question
   goes through `DialogController`, a report through a HUD via `HUDPresenter`.
 - **A networked feature fetches on a private `.ephemeral`, `urlCache = nil` session**, never
   `URLSession.shared`, so its own cache file stays the only copy on disk. `CurrencyRateStore` is the
@@ -130,10 +130,10 @@ feature's doc, under its own `## Invariants`.
   constant or type instead. Cap 100 characters, delete rather than update, and never comment a change
   you just made. Nothing lints this; get it right the first time.
   Full rules: [standards.md#comments](docs/standards.md#comments).
-- **Debug builds are their own channel** — `Tinycast Dev.app` / `com.tinycast.app.dev` — so a local run
+- **Debug builds are their own channel** — `Ministart Dev.app` / `com.ministart.app.dev` — so a local run
   never shares prefs, caches, TCC grants or the login item with an installed copy. Anything newly
   persisted must stay keyed by `Bundle.main.bundleIdentifier`.
-- **XcodeGen owns the project.** `Tinycast.xcodeproj` is committed but generated from `project.yml`;
+- **XcodeGen owns the project.** `Ministart.xcodeproj` is committed but generated from `project.yml`;
   after editing it, run `xcodegen generate` and commit both. No SwiftPM, and never `Bundle.module`.
 
 ## Before you finish
@@ -143,5 +143,5 @@ Each item is explained in [testing.md](docs/testing.md#definition-of-done).
 - `./Scripts/run-tests.sh` passes.
 - The Debug build compiles with **no new warnings**.
 - `./Scripts/lint.sh` is clean.
-- `grep -rln 'import AppKit\|import SwiftUI\|import Cocoa' Tinycast/Features/*/Model/` returns nothing.
+- `grep -rln 'import AppKit\|import SwiftUI\|import Cocoa' Ministart/Features/*/Model/` returns nothing.
 - Any doc your change made wrong is fixed in the same commit.

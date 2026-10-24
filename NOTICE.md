@@ -1,6 +1,6 @@
 # Third-party notices
 
-Tinycast is licensed under the GNU Affero General Public License v3 — see [LICENSE](LICENSE). It
+Ministart is licensed under the GNU Affero General Public License v3 — see [LICENSE](LICENSE). It
 also redistributes the third-party material recorded below, under the terms stated for each.
 
 
@@ -13,13 +13,13 @@ licence. The room model, the layout and grid engines, arrangement reading, windo
 parking and its ledger, the pass that walks into a room, and the animated layout preview all
 follow that project. Every adapted file says so on its first line, with a link to the licence:
 
-- `Tinycast/Features/WindowManagement/Model/`: `Room.swift`, `RoomWindow.swift`,
+- `Ministart/Features/WindowManagement/Model/`: `Room.swift`, `RoomWindow.swift`,
   `RoomLayoutKind.swift`, `RoomLayoutEngine.swift`, `RoomGrid.swift`, `RoomArrangement.swift`,
   `RoomWindowMatcher.swift`, `RoomParking.swift`, `RoomParkingLedger.swift`, `RoomPlan.swift` and
   `RoomMinimumSizeStore.swift`
-- `Tinycast/Features/WindowManagement/Service/`: `RoomRunner.swift`, `RoomWindowSweep.swift`, and
+- `Ministart/Features/WindowManagement/Service/`: `RoomRunner.swift`, `RoomWindowSweep.swift`, and
   the window-number lookup in `AXWindowAccess.swift`
-- `Tinycast/Features/WindowManagement/UI/`: `RoomCoordinator.swift`, `RoomsScreen.swift`,
+- `Ministart/Features/WindowManagement/UI/`: `RoomCoordinator.swift`, `RoomsScreen.swift`,
   `RoomPickerScreen.swift`, `RoomPreviewController.swift` and `RoomPreviewView.swift`
 - `Tests/window-room-test.swift`, whose cases follow Rooms' own tests
 
@@ -58,9 +58,9 @@ block-ordered index with interned names, folder-only fields and parents taken fr
 live updates from FSEvents as a dead-entry bitset plus an overlay, and building the index out of
 process so its memory is returned. The files that follow it:
 
-- `Tinycast/Features/FileSearch/Service/`: `FileIndexCrawler.swift`, `FileIndexSnapshot.swift`,
+- `Ministart/Features/FileSearch/Service/`: `FileIndexCrawler.swift`, `FileIndexSnapshot.swift`,
   `FileIndex.swift`, `FileSystemWatcher.swift` and `FileIndexer.swift`
-- `Tinycast/Features/FileSearch/Helper/FileIndexHelper.swift`
+- `Ministart/Features/FileSearch/Helper/FileIndexHelper.swift`
 
 Its licence notice:
 

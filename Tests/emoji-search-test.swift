@@ -65,7 +65,7 @@ struct EmojiSearchTests {
         }
 
         // The Mac's language pack joins English, which keeps its ranking for every user.
-        let resources = Bundle(path: "Tinycast/Resources")!
+        let resources = Bundle(path: "Ministart/Resources")!
         let localized = EmojiIndex()
         await localized.load(languages: ["zh-Hans-CN", "en-US"], bundle: resources)
         for (query, glyph) in [("猫", "🐱"), ("汉堡", "🍔"), ("寿司", "🍣")] {

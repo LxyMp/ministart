@@ -1,4 +1,4 @@
-# Tinycast 项目架构导航（中文）
+# Ministart 项目架构导航（中文）
 
 **用途：修改任何代码之前，先在本文件定位目标模块，再进入对应目录与功能文档。**
 
@@ -19,19 +19,19 @@ Raycast 扩展。
 | UI | SwiftUI + AppKit，`LSUIElement` 配件应用（无 Dock 图标） |
 | 依赖 | 零第三方依赖；Carbon 仅用于系统级组合键注册（刻意的能力缺口） |
 | 工程 | XcodeGen 生成工程（改 `project.yml` 后必须 `xcodegen generate`） |
-| 规模参考 | `Tinycast/` 下约 540 个 Swift 文件、22 个功能模块（2026-10 统计） |
+| 规模参考 | `Ministart/` 下约 540 个 Swift 文件、22 个功能模块（2026-10 统计） |
 
 ## 2. 顶层目录地图
 
 | 目录 | 内容 |
 | --- | --- |
-| `Tinycast/App/` | 组合根：`TinycastLaunch`（@main）、`TinycastApp`、`AppDelegate`、`AppCore` |
-| `Tinycast/Palette/` | 面板外壳：`PalettePanel`、`PaletteWindowController`、`RootPaletteView`、`PaletteScreen` 协议、`PaletteCoordinator`、`PaletteState` |
-| `Tinycast/Windows/` | 非面板 AppKit 表面：`AppWindowController`、`Dialog/`、`HUD/` |
-| `Tinycast/Features/` | 每个功能一个目录（见第 6 节地图） |
-| `Tinycast/DesignSystem/` | 共享视觉原语；`Theme.swift` 是唯一设计 token 源 |
-| `Tinycast/Platform/` | 系统垫片：`Permissions`、`NotificationToken`、`AppPaths`、`HealthTicker` 等 |
-| `Tinycast/Resources/` | 生成资源：`RaycastRuntime.generated.js`、`EmojiKeywords/`、听写音效 |
+| `Ministart/App/` | 组合根：`MinistartLaunch`（@main）、`MinistartApp`、`AppDelegate`、`AppCore` |
+| `Ministart/Palette/` | 面板外壳：`PalettePanel`、`PaletteWindowController`、`RootPaletteView`、`PaletteScreen` 协议、`PaletteCoordinator`、`PaletteState` |
+| `Ministart/Windows/` | 非面板 AppKit 表面：`AppWindowController`、`Dialog/`、`HUD/` |
+| `Ministart/Features/` | 每个功能一个目录（见第 6 节地图） |
+| `Ministart/DesignSystem/` | 共享视觉原语；`Theme.swift` 是唯一设计 token 源 |
+| `Ministart/Platform/` | 系统垫片：`Permissions`、`NotificationToken`、`AppPaths`、`HealthTicker` 等 |
+| `Ministart/Resources/` | 生成资源：`RaycastRuntime.generated.js`、`EmojiKeywords/`、听写音效 |
 | `Tests/` | 独立测试 harness，一文件一个，无 XCTest target，直接编译交付源码 |
 | `Scripts/` | 全部可执行脚本：测试、lint、格式化、数据生成、打包 |
 | `docs/` | 英文工程文档（规则与不变量的权威来源） |
@@ -47,14 +47,14 @@ Raycast 扩展。
 | OBSERVABLE STATE | Store/Session 类型 | `@MainActor @Observable`（禁 `ObservableObject`/`@Published`），归 Service 或 UI 侧所有 |
 | VIEW（渲染） | `Features/*/UI/`、`Settings/` | SwiftUI 视图 + 该功能的 coordinator，声明式、薄、无策略 |
 
-模型纯度自查：`grep -rln 'import AppKit\|import SwiftUI\|import Cocoa' Tinycast/Features/*/Model/` 必须为空。
+模型纯度自查：`grep -rln 'import AppKit\|import SwiftUI\|import Cocoa' Ministart/Features/*/Model/` 必须为空。
 
 ## 4. 组合根与所有权
 
 - **`AppCore`（`App/AppCore.swift`）是唯一所有者。** `@MainActor` 单例，拥有全部 stores、managers、
   monitors、共享状态、各 feature coordinator 和窗口控制器。新的长生命周期状态必须加在
   `AppCore` 上并在 `start()` 接线，**不允许出现第二个单例**。
-- 启动链：`TinycastLaunch`（钉界面语言）→ `TinycastApp`（单一 `MenuBarExtra` scene）→
+- 启动链：`MinistartLaunch`（钉界面语言）→ `MinistartApp`（单一 `MenuBarExtra` scene）→
   `AppDelegate.applicationDidFinishLaunching` → `AppCore.shared.start(launchedByUser:)`。
   `start()` 一屏读尽整个启动顺序。
 - 视图通过 `@Environment` 拿 `AppCore` 作 **locator**：动作调该功能 coordinator
@@ -97,7 +97,7 @@ Raycast 扩展。
 | `Uninstall/` | 卸载应用并清理残留文件 | 无 `Settings/` | [uninstall.md](docs/features/uninstall.md) |
 | `Dictionary/` | Define Word 词典查询 | | [dictionary.md](docs/features/dictionary.md) |
 | `AppleShortcuts/` | Apple Shortcuts 作为 launcher 独立分区 | | [apple-shortcuts.md](docs/features/apple-shortcuts.md) |
-| `Backup/` | `.tinycast` 备份导出/导入 | 无 `UI/` | [backup.md](docs/features/backup.md) |
+| `Backup/` | `.ministart` 备份导出/导入 | 无 `UI/` | [backup.md](docs/features/backup.md) |
 | `Settings/` | **设置外壳**：`SettingsCoordinator`、`AppSettings`、settings.json 镜像、`Panes/`（General、Permissions） | 本体即外壳，无 UI/ 子目录 | [settings-file.md](docs/features/settings-file.md) |
 | `Onboarding/` | 首启引导（扁平 4 文件） | 扁平 | |
 
@@ -129,7 +129,7 @@ Raycast 扩展。
 
 ## 8. 测试与脚本
 
-- `Tests/` 一文件一 harness，**直接编译 `Tinycast/` 交付源码**——这是 `Model/` 纯度的强制机制。
+- `Tests/` 一文件一 harness，**直接编译 `Ministart/` 交付源码**——这是 `Model/` 纯度的强制机制。
   跑法：`./Scripts/run-tests.sh`。
 - 常用脚本：`lint.sh`（lint）、`format.sh`（格式化）、`sync-strings.sh`（本地化同步，改文案后必须跑，
   八种语言同次翻译）、`build-dmg.sh`、`verify-signature.sh`、`gen-*.js`（数据生成）。

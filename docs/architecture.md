@@ -1,6 +1,6 @@
 # Architecture
 
-How Tinycast is wired together. Per-feature internals live in [features/](README.md#features);
+How Ministart is wired together. Per-feature internals live in [features/](README.md#features);
 conventions for writing new code live in [standards.md](standards.md).
 
 ## The layering
@@ -111,8 +111,8 @@ clipboard's downscaled image copies, so a full-size decode stays out of the app 
 
 ## Entry points and windows
 
-`TinycastLaunch` (`@main`) pins the interface language, then runs `TinycastApp`, which declares
-a single `MenuBarExtra` scene — Tinycast's own item, inserted by one
+`MinistartLaunch` (`@main`) pins the interface language, then runs `MinistartApp`, which declares
+a single `MenuBarExtra` scene — Ministart's own item, inserted by one
 preference; everything else visible is
 driven imperatively from AppKit. Extension menu extras are dynamic `NSStatusItem`s owned entirely by
 `Features/Extensions/`, through `ExtensionManager`, with no scene or lifecycle wiring in the core.
@@ -135,7 +135,7 @@ driven imperatively from AppKit. Extension menu extras are dynamic `NSStatusItem
   Markdown over the literal source, switches among local Markdown files and stays visible on focus
   loss. The displayed string is the canonical file source; there is no source/display mapping.
   See [features/notes.md](features/notes.md).
-- **The main menu** — shaped by `TinycastApp`'s `.commands`, which rebinds ⌘Q to Close Window for
+- **The main menu** — shaped by `MinistartApp`'s `.commands`, which rebinds ⌘Q to Close Window for
   Settings. It is only ever on screen while a titled window is open, so it is those windows' menu bar.
   It must stay declarative.
 - **Dialogs** — borderless `DialogPanel`s driven by `DialogController`, the app's only presenter for
@@ -196,7 +196,7 @@ The folder layout is the layering above, made navigable — one folder per featu
 everything that feature owns.
 
 ```
-Tinycast/
+Ministart/
   App/              @main, AppDelegate, AppCore — the composition root
   DesignSystem/     Theme (the token source), KeyCapChip, Tooltip, SymbolImage,
                     GlassEffectView, PopoverMenu, SettingsComponents, Scrolling/, Interaction/

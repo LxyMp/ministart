@@ -1,6 +1,6 @@
-name: Tinycast
+name: Ministart
 options:
-  bundleIdPrefix: com.tinycast
+  bundleIdPrefix: com.ministart
   deploymentTarget:
     macOS: "26.0"
   createIntermediateGroups: true
@@ -17,11 +17,11 @@ settings:
     # A stable self-signed identity keeps the Accessibility grant across rebuilds. docs/signing.md
     CODE_SIGN_IDENTITY: "Ministart Self-Signed"
     SWIFT_STRICT_CONCURRENCY: complete
-    TINYCAST_BUNDLE_IDENTIFIER: com.ministart.app
+    MINISTART_BUNDLE_IDENTIFIER: com.ministart.app
     PRODUCT_NAME: Ministart
   configs:
     Debug:
-      TINYCAST_BUNDLE_IDENTIFIER: com.ministart.app.dev
+      MINISTART_BUNDLE_IDENTIFIER: com.ministart.app.dev
       PRODUCT_NAME: Ministart Dev
     Release:
       # Release-only: library validation refuses Debug's `.debug.dylib`, whose team never matches.
@@ -33,18 +33,18 @@ settings:
       DEAD_CODE_STRIPPING: YES
 
 targets:
-  Tinycast:
+  Ministart:
     type: application
     platform: macOS
     sources:
-      - path: Tinycast
+      - path: Ministart
         # Helper-only sources: compiling them in would link ImageIO's full decode into the app.
         excludes:
           - Features/Clipboard/Service/ClipboardTextHelper.swift
           - Features/FileSearch/Helper
           - Resources/EmojiKeywords
       # A folder reference keeps the packs in their own directory, which `EmojiIndex` lists.
-      - path: Tinycast/Resources/EmojiKeywords
+      - path: Ministart/Resources/EmojiKeywords
         type: folder
       # The MIT mark's licence asks the notice to travel with the binary, not just the repo.
       - path: NOTICE.md
@@ -67,10 +67,10 @@ targets:
           subpath: Contents/Helpers
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: "$(TINYCAST_BUNDLE_IDENTIFIER)"
-        INFOPLIST_FILE: Tinycast/Info.plist
-        CODE_SIGN_ENTITLEMENTS: Tinycast/Tinycast.entitlements
-        ASSETCATALOG_COMPILER_APPICON_NAME: tinycast
+        PRODUCT_BUNDLE_IDENTIFIER: "$(MINISTART_BUNDLE_IDENTIFIER)"
+        INFOPLIST_FILE: Ministart/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Ministart/Ministart.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: ministart
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
         SWIFT_EMIT_LOC_STRINGS: YES
         COMBINE_HIDPI_IMAGES: YES
@@ -80,13 +80,13 @@ targets:
       configs:
         # Debug is its own channel, so a local build never corrupts the installed app's state.
         Debug:
-          PRODUCT_NAME: Tinycast Dev
+          PRODUCT_NAME: Ministart Dev
 
   ClipboardTextHelper:
     type: tool
     platform: macOS
     sources:
-      - Tinycast/Features/Clipboard/Service/ClipboardTextHelper.swift
+      - Ministart/Features/Clipboard/Service/ClipboardTextHelper.swift
     settings:
       base:
         # Pinned, or release.yml's PRODUCT_NAME renames the binary `ClipboardTextWorker` looks for.
@@ -98,13 +98,13 @@ targets:
     type: tool
     platform: macOS
     sources:
-      - Tinycast/Features/FileSearch/Helper/FileIndexHelper.swift
-      - Tinycast/Features/FileSearch/Model/FileSearchIgnoreList.swift
-      - Tinycast/Features/FileSearch/Model/FileSearchPolicy.swift
-      - Tinycast/Features/FileSearch/Model/FileSearchQuery.swift
-      - Tinycast/Features/FileSearch/Model/FileSearchScope.swift
-      - Tinycast/Features/FileSearch/Service/FileIndexCrawler.swift
-      - Tinycast/Features/FileSearch/Service/FileIndexSnapshot.swift
+      - Ministart/Features/FileSearch/Helper/FileIndexHelper.swift
+      - Ministart/Features/FileSearch/Model/FileSearchIgnoreList.swift
+      - Ministart/Features/FileSearch/Model/FileSearchPolicy.swift
+      - Ministart/Features/FileSearch/Model/FileSearchQuery.swift
+      - Ministart/Features/FileSearch/Model/FileSearchScope.swift
+      - Ministart/Features/FileSearch/Service/FileIndexCrawler.swift
+      - Ministart/Features/FileSearch/Service/FileIndexSnapshot.swift
     settings:
       base:
         # Pinned like ClipboardTextHelper's: release.yml's PRODUCT_NAME would otherwise rename it.

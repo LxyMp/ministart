@@ -8,23 +8,23 @@ the signing identity itself is in [signing.md](signing.md).
 ```sh
 ./Scripts/build-dmg.sh            # -> build/Ministart-<version>.dmg (version from project.yml)
 ./Scripts/build-dmg.sh 0.5.7      # -> build/Ministart-0.5.7.dmg
-# 没有 Tinycast Self-Signed 证书时自动退回 ad-hoc 签名；产物只有 DMG，
+# 没有 Ministart Self-Signed 证书时自动退回 ad-hoc 签名；产物只有 DMG，
 # .app 是 build/DerivedData 里的中间产物，自动测试（run-tests.sh）不依赖它们。
 ```
 
-It builds a Release `Tinycast.app` signed with `Tinycast Self-Signed` and packs it with an
+It builds a Release `Ministart.app` signed with `Ministart Self-Signed` and packs it with an
 `/Applications` symlink. Official per-channel releases are built by CI, below.
 
 ## Signing & Gatekeeper
 
-Both local builds and CI releases sign with the same stable `Tinycast Self-Signed` identity, not an
+Both local builds and CI releases sign with the same stable `Ministart Self-Signed` identity, not an
 Apple Developer ID — so macOS quarantines a directly-downloaded DMG. The Homebrew cask strips that
-automatically; direct downloaders run `xattr -dr com.apple.quarantine "…/Tinycast.app"` once. Full
+automatically; direct downloaders run `xattr -dr com.apple.quarantine "…/Ministart.app"` once. Full
 details in [signing.md](signing.md).
 
 ## Release assets
 
-Every release publishes `Tinycast-<version>.dmg`, which people download by hand and which the cask
+Every release publishes `Ministart-<version>.dmg`, which people download by hand and which the cask
 installs. There is no in-app updater: installing a new version means downloading it and replacing the
 app, so a cask must not declare `auto_updates`.
 
@@ -40,8 +40,8 @@ gate — it neither runs the harnesses nor builds the app, so the whole bar in
 `.github/workflows/release.yml` builds and publishes a DMG from GitHub Actions, no local machine
 needed. Run it from the **Actions** tab (`Release` → **Run workflow**) and pick:
 
-- **channel** — `beta` or `stable`. Each builds a distinct app (`Tinycast Beta.app` / `Tinycast.app`)
-  with its own bundle id, alongside the local `Tinycast Dev.app`. Beta gets an auto-incrementing
+- **channel** — `beta` or `stable`. Each builds a distinct app (`Ministart Beta.app` / `Ministart.app`)
+  with its own bundle id, alongside the local `Ministart Dev.app`. Beta gets an auto-incrementing
   `-beta.N` suffix (`N` = the Actions run number) so re-running never collides; stable ships the
   version as-is.
 - **version** — base semver, e.g. `0.2.0`.
@@ -53,15 +53,15 @@ dispatches the Website workflow, because the site reads the latest version and t
 [changelog](https://tinycast.dev/changelog/) from GitHub at build time.
 
 A stable run then fans out to a second job, `universal`, which rebuilds the same commit with
-`ARCHS="arm64 x86_64"` and attaches `Tinycast-Universal-<version>.dmg` / `.zip` to the release the
-first job created, then bumps `tinycast-universal`. macOS 26 is the last release that boots on Intel,
+`ARCHS="arm64 x86_64"` and attaches `Ministart-Universal-<version>.dmg` / `.zip` to the release the
+first job created, then bumps `ministart-universal`. macOS 26 is the last release that boots on Intel,
 and those Macs need both slices. Both jobs pin `ARCHS` explicitly and assert the slices on *every*
 shipping binary — the app and `ClipboardTextHelper`: trusting `ARCHS_STANDARD` is what
 shipped a thin arm64 build to Intel users once already, and it also keeps the Apple silicon download
 from silently gaining a slice it never needs. A thin helper inside a universal app is the quiet form
 of the same bug: the app boots on Intel and only clipboard OCR stops working.
 
-Channel builds override `TINYCAST_BUNDLE_IDENTIFIER`, not the target-wide `PRODUCT_BUNDLE_IDENTIFIER`.
+Channel builds override `MINISTART_BUNDLE_IDENTIFIER`, not the target-wide `PRODUCT_BUNDLE_IDENTIFIER`.
 
 ### Release notes
 
@@ -82,7 +82,7 @@ Two details the script exists for:
 - **The previous tag is picked per channel.** Beta and stable tags interleave on `main` — the same
   commit can carry both — so "the previous release" is only ever right within one channel. A stable
   release therefore spans every beta since the last stable.
-- **The body is split by `<!-- tinycast:install -->`.** Everything above it is the changelog;
+- **The body is split by `<!-- ministart:install -->`.** Everything above it is the changelog;
   everything below is the Homebrew and quarantine text, which only a download page needs. Full PR
   URLs are shortened to `#304`, which still autolinks on the web.
 
@@ -91,13 +91,13 @@ pings `@everyone`.
 
 ### Homebrew tap automation
 
-Each job's final step rewrites the `version` + `sha256` of its cask (`tinycast`, `tinycast@beta` or
+Each job's final step rewrites the `version` + `sha256` of its cask (`ministart`, `ministart@beta` or
 `tinycast-universal`) in the [`homebrew-tinycast`](https://github.com/abue-ammar/homebrew-tinycast) tap
 and pushes. It needs a `HOMEBREW_TAP_TOKEN` repo secret — a fine-grained PAT with **Contents:
 read/write** on the tap repo. Without the secret the step logs a warning and skips; the release still
 publishes. The `sed` is anchored to `^  version` / `^  sha256`, so a cask's two-space indent on those
 lines is load-bearing.
 
-Both stable casks install `Tinycast.app` under `com.tinycast.app`, so they `conflicts_with` one
-another and Homebrew routes each Mac by `depends_on`: `tinycast` requires `arch: :arm64`, and
-`tinycast-universal` takes the Intel Macs.
+Both stable casks install `Ministart.app` under `com.ministart.app`, so they `conflicts_with` one
+another and Homebrew routes each Mac by `depends_on`: `ministart` requires `arch: :arm64`, and
+`ministart-universal` takes the Intel Macs.

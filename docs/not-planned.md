@@ -1,4 +1,4 @@
-# What Tinycast Won't Do
+# What Ministart Won't Do
 
 Some requests get a "no" on purpose. This page lists those choices, so you know what to expect
 before you ask.
@@ -8,7 +8,7 @@ discussion.
 
 ## Why we say no
 
-**Tinycast is not a copy of Raycast.** We don't add a feature only because Raycast has it. If
+**Ministart is not a copy of Raycast.** We don't add a feature only because Raycast has it. If
 Raycast already does what you need, it may be the better app for you, and that's fine.
 
 **Simple, light and fast comes first.** Each new option makes the app heavier and harder to keep
@@ -23,12 +23,12 @@ launchers. We accept that to keep the app simple.
 
 ## Mac, languages and updates
 
-- **Older macOS (Sonoma, Sequoia).** Tinycast needs macOS 26 or later. Support for old versions made
+- **Older macOS (Sonoma, Sequoia).** Ministart needs macOS 26 or later. Support for old versions made
   the app slower on new Macs. Old builds stay in past releases. The last Sequoia build is 0.9.7.
   ([#1611](https://github.com/abue-ammar/tinycast/issues/1611), [#517](https://github.com/abue-ammar/tinycast/issues/517))
-- **Windows or Linux.** Tinycast is Mac only. It uses Apple tools that don't run on other systems.
+- **Windows or Linux.** Ministart is Mac only. It uses Apple tools that don't run on other systems.
   ([#637](https://github.com/abue-ammar/tinycast/issues/637), [#720](https://github.com/abue-ammar/tinycast/issues/720))
-- **More app languages.** Tinycast comes in English plus Simplified Chinese. That list is final for now. We may add more
+- **More app languages.** Ministart comes in English plus Simplified Chinese. That list is final for now. We may add more
   language later, but not soon.
   ([#148](https://github.com/abue-ammar/tinycast/issues/148))
 - **A beta switch in the regular app.** Stable and beta stay separate until at least version 1.0.
@@ -47,10 +47,10 @@ launchers. We accept that to keep the app simple.
   of the keyword behind. New input-method reports are closed as not planned.
   **Instead:** the community fork [tinycast-cn](https://github.com/conversun/tinycast-cn).
   ([#990](https://github.com/abue-ammar/tinycast/issues/990), [#851](https://github.com/abue-ammar/tinycast/issues/851), [#1203](https://github.com/abue-ammar/tinycast/issues/1203), [#1580](https://github.com/abue-ammar/tinycast/issues/1580), [#1555](https://github.com/abue-ammar/tinycast/issues/1555))
-- **More cases for Chinese app names.** Tinycast finds an app by its Chinese name, and matches
+- **More cases for Chinese app names.** Ministart finds an app by its Chinese name, and matches
   pinyin too. It works when your Mac uses Simplified or Traditional Chinese with any region, for
   example Simplified Chinese with the US or Hong Kong region. If an app has no name in your
-  language, Tinycast uses its English name. **That is every case we support, and we won't add
+  language, Ministart uses its English name. **That is every case we support, and we won't add
   more.** New reports about Chinese app names are closed as not planned.
   **⚠️ If these cases keep breaking, we may remove translated app names and show English names
   only.** **Instead:** add the Chinese name as an alias in Settings → Applications.
@@ -132,9 +132,9 @@ launchers. We accept that to keep the app simple.
 
 ## Raycast extensions
 
-- **Full Raycast compatibility.** Tinycast runs about 80% of what Raycast extensions use, and **that
-  work has stopped.** Some extensions won't work, or will look a bit different. Tinycast's own
-  shortcuts (like Tab) win over an extension's. Our future is native Tinycast extensions.
+- **Full Raycast compatibility.** Ministart runs about 80% of what Raycast extensions use, and **that
+  work has stopped.** Some extensions won't work, or will look a bit different. Ministart's own
+  shortcuts (like Tab) win over an extension's. Our future is native Ministart extensions.
   ([#1592](https://github.com/abue-ammar/tinycast/issues/1592), [#1585](https://github.com/abue-ammar/tinycast/issues/1585), [#1557](https://github.com/abue-ammar/tinycast/issues/1557), [#1561](https://github.com/abue-ammar/tinycast/issues/1561), [#1541](https://github.com/abue-ammar/tinycast/issues/1541), [#1520](https://github.com/abue-ammar/tinycast/issues/1520), [#1495](https://github.com/abue-ammar/tinycast/issues/1495), [#1452](https://github.com/abue-ammar/tinycast/issues/1452), [#1341](https://github.com/abue-ammar/tinycast/issues/1341), [#1129](https://github.com/abue-ammar/tinycast/issues/1129), [#976](https://github.com/abue-ammar/tinycast/issues/976), [#672](https://github.com/abue-ammar/tinycast/issues/672), [#664](https://github.com/abue-ammar/tinycast/issues/664), [#660](https://github.com/abue-ammar/tinycast/issues/660),
   [#1121](https://github.com/abue-ammar/tinycast/issues/1121), [#1200](https://github.com/abue-ammar/tinycast/issues/1200), [#1397](https://github.com/abue-ammar/tinycast/issues/1397))
 - **⚠️ Locking extensions down.** An extension can do anything you can do on your Mac. **Install only
@@ -194,8 +194,8 @@ These are on hold, not ruled out.
 ## Before you open a request
 
 1. Check this page first.
-2. Ask yourself: does it keep Tinycast simple, light and fast?
+2. Ask yourself: does it keep Ministart simple, light and fast?
 3. If Raycast already does it well, Raycast may suit you better.
-4. Want it anyway? Fork Tinycast and make it yours.
+4. Want it anyway? Fork Ministart and make it yours.
 
 Thank you for your ideas and your understanding.

@@ -16,7 +16,7 @@ else
 fi
 
 echo "▸ Building Ministart.app (Release)…"
-xcodebuild -project Tinycast.xcodeproj -scheme Tinycast -configuration Release \
+xcodebuild -project Ministart.xcodeproj -scheme Ministart -configuration Release \
     -derivedDataPath "$DERIVED" \
     "${SIGNING[@]}" \
     ${1:+MARKETING_VERSION="$1"} \

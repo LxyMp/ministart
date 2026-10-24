@@ -14,7 +14,7 @@ version cannot replace it. Restart also reopens the selected path. Uninstall is 
 indexed copies share the bundle ID, because their support files and preferences may be shared.
 
 `./Scripts/run-tests.sh app-installation-test` covers the shipped index and app-wide preferences.
-Set `TINYCAST_TEST_APP_LAUNCH=1` for temporary native-app launch, quit and restart checks; the harness
+Set `MINISTART_TEST_APP_LAUNCH=1` for temporary native-app launch, quit and restart checks; the harness
 reports notification-dependent checks as skipped when the session cannot deliver workspace events.
 
 ## Invariants
@@ -48,7 +48,7 @@ reports notification-dependent checks as skipped when the session cannot deliver
   apply to applications and quietly skip snippets — and nothing is built per keystroke. `AppIndex.scan`
   names the app slice on its own, off-main: transliterating a CJK index is ICU work, and
   `publishEntries` runs on the main actor whenever any unrelated slice changes.
-- **Tinycast never translates a name it did not write.** Apps, panes, quicklinks, snippets and
+- **Ministart never translates a name it did not write.** Apps, panes, quicklinks, snippets and
   extensions read the way their source names them. A built-in command shows its translated name and
   keeps its English source as an alternate title, so `clipboard` finds it in every language.
 - **The fields stay separate.** Which field matched is half of what the comparator reads — an exact
@@ -90,7 +90,7 @@ lives — `/Applications/Safari.app` is a symlink flagged hidden, so `.skipsHidd
 Finder ships as an individual bundle scope rather than by adding `/System/Library/CoreServices`, which
 holds ~120 background-agent bundles. There is no reliable way to filter those: `LSUIElement`,
 `LSBackgroundOnly` and "declares no icon" each also exclude legitimately launchable apps — Raycast,
-Stats, Tinycast itself, Mission Control, Siri, Time Machine, Screenshot, System Information, Font
+Stats, Ministart itself, Mission Control, Siri, Time Machine, Screenshot, System Information, Font
 Book. Don't reintroduce such a heuristic.
 
 `AppIndex.start(settings:)` observes `$searchScopes`, so an edit re-indexes immediately; overlapping
@@ -178,12 +178,12 @@ the Zed app: rule 3 only protects an exact title past three characters.
 
 - **Apps win the ties.** `KindDescriptor.rankPriority` puts applications (4) above command-like kinds
   (3), quicklinks (2), and System Settings panes (1), so a first-party app is never
-  shadowed by the Tinycast command named after it: Calculator over Calculator History.
+  shadowed by the Ministart command named after it: Calculator over Calculator History.
 - **Two entries with the same alias** fall through to the next rule.
 
 `settings` is the case these were measured against. Apple declares `Settings` in System Settings'
 `CFBundleAlternateNames`, so it is an exact alternate title and wins rule 3; the command is named
-`Tinycast Settings`, like About, Quit and Support Tinycast, so nothing ties it there.
+`Ministart Settings`, like About, Quit and Support Ministart, so nothing ties it there.
 
 ## One fold, everywhere
 
@@ -197,7 +197,7 @@ matches, and is learned, under the same key. ASCII text skips ICU entirely on a 
 
 `BundleLocalization` reads both `InfoPlist.loctable` and `<code>.lproj/InfoPlist.strings` for
 macOS's own languages (`SystemLanguages.preferred`) plus English — not `Locale.preferredLanguages`,
-which turns into Tinycast's interface language once one is picked, and would rename every app. This matters because `CFBundle` resolves only
+which turns into Ministart's interface language once one is picked, and would rename every app. This matters because `CFBundle` resolves only
 `InfoPlist.strings`, and every app under `/System/Applications` translates in the loctable alone — so
 all 65 of them read English on every Mac, whatever language it is set to.
 
@@ -308,7 +308,7 @@ handler through `AppLauncher.open`.
 The shape a query has to have is `QuicklinkDestination.detect` returning `.web`, reused rather than
 re-written so `github.com` and `https://…` mean the same thing here as they do in a quicklink. The
 entry is an ordinary `.command`, so `VisibilityStore` still gates it — Commands off hides the row —
-and its `url` carries the destination instead of the catalog's `tinycast://` placeholder. Nothing
+and its `url` carries the destination instead of the catalog's `ministart://` placeholder. Nothing
 learns from it and nothing pins it: `LauncherCoordinator.launch` records no visit for a contextual
 row, since a pasted URL is not a term any row should rank under; and ⇧⌘F and ⇧⌘H are both refused,
 because a favorite — or a hidden-item key — the empty query can never resolve is dead state a backup
@@ -476,7 +476,7 @@ so the sectioned view stays 1:1 with the flat selection.
 ### Suggestions
 
 `LauncherSuggestions.select` chooses at most five from every visible entry that is not a favorite or
-Tinycast itself:
+Ministart itself:
 
 1. up to two apps or extensions installed in the last five minutes and never opened —
    `AppEntry.installedAt` is the bundle's added-to-directory date;
@@ -545,7 +545,7 @@ id is what keeps "which pane owns this" out of the entry-ID namespace.
 Six panes own commands today — File Search, Notes, Snippets, Clipboard, Emoji and Quicklinks. What is
 left in Settings › Commands is
 the set no feature switch governs: Calculator History, Open Camera, the three backup commands, Check
-for Updates, Tinycast Settings, About, Support and Quit.
+for Updates, Ministart Settings, About, Support and Quit.
 
 A pane's list is also its display order, so `CommandID`'s declaration order is grouped by owner.
 Nothing keys on that order — `CommandCatalog.all` sorts by name and every preference keys on the raw
@@ -664,7 +664,7 @@ shortcut is available for them. `AppEntry.canRevealInFinder` is the one rule bot
 the key handler read, so the advertised chord can't drift from the behavior.
 
 `AppLauncher.showInFinder` is every feature's reveal. `activateFileViewerSelecting` leaves the file
-viewer to bring itself forward, and macOS refuses that request while Tinycast is `.regular` (an open
+viewer to bring itself forward, and macOS refuses that request while Ministart is `.regular` (an open
 Settings or About window) yet inactive, which the non-activating palette makes common. Only in that
 state does the reveal also open the viewer named by the global `NSFileViewer` default, Finder when it
 is unset, so every other reveal is exactly the one system call.

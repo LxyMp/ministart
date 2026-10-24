@@ -198,7 +198,7 @@ struct SettingsFileTest {
     private static func testRepository() async throws {
         let folder = scratchFolder()
         defer { try? FileManager.default.removeItem(at: folder) }
-        let url = folder.appending(path: "tinycast/settings.json")
+        let url = folder.appending(path: "ministart/settings.json")
 
         let first = Fixture()
         first.seconds = 15
@@ -323,7 +323,7 @@ struct SettingsFileTest {
     // MARK: - Paths
 
     private static func testContentFolders() throws {
-        let bundleID = "com.tinycast.settings-file-test.\(UUID().uuidString)"
+        let bundleID = "org.example.settings-file-test.\(UUID().uuidString)"
         let standard = AppPaths.applicationSupport(bundleID: bundleID)
         defer { try? FileManager.default.removeItem(at: standard) }
         let home = FileManager.default.homeDirectoryForCurrentUser.standardizedFileURL.path
@@ -378,7 +378,7 @@ struct SettingsFileTest {
 
     private static func scratchFolder() -> URL {
         FileManager.default.temporaryDirectory.appending(
-            path: "tinycast-settings-file-test-\(UUID().uuidString)", directoryHint: .isDirectory)
+            path: "ministart-settings-file-test-\(UUID().uuidString)", directoryHint: .isDirectory)
     }
 
     private static func write(_ text: String, to url: URL) throws {

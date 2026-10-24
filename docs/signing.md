@@ -1,6 +1,6 @@
 # Signing
 
-Tinycast is signed with a **stable self-signed identity** called `Ministart Self-Signed`. Keeping the
+Ministart is signed with a **stable self-signed identity** called `Ministart Self-Signed`. Keeping the
 _same_ identity on every build is what makes macOS remember the Accessibility permission across
 rebuilds and updates — ad-hoc signing changes every build and macOS forgets the grant.
 
@@ -29,12 +29,12 @@ openssl req -x509 -newkey rsa:2048 -nodes -days 3650 \
 # Bundle it as a .p12 (the non-empty password keeps `security import` happy).
 # -macalg/-keypbe/-certpbe: macOS 钥匙串读不懂 openssl 3 的默认加密，须指定传统算法
 openssl pkcs12 -export -inkey /tmp/tc-key.pem -in /tmp/tc-cert.pem \
-  -name "Ministart Self-Signed" -out /tmp/tc.p12 -passout pass:tinycast \
+  -name "Ministart Self-Signed" -out /tmp/tc.p12 -passout pass:ministart \
   -macalg sha1 -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES
 
 # Import into the login keychain so codesign can use it without prompting.
 security import /tmp/tc.p12 -k ~/Library/Keychains/login.keychain-db \
-  -P tinycast -A -T /usr/bin/codesign
+  -P ministart -A -T /usr/bin/codesign
 
 rm -f /tmp/tc-key.pem /tmp/tc-cert.pem /tmp/tc.p12
 ```
@@ -82,16 +82,16 @@ Accessibility once on their next update, then it's stable again.
 
 **Release only**, on both targets: `ENABLE_HARDENED_RUNTIME: YES`, which notarization requires. Debug
 must stay without it — hardened runtime turns on library validation, and Xcode's
-`Tinycast Dev.debug.dylib` is refused at launch because a self-signed identity carries no Team ID for
+`Ministart Dev.debug.dylib` is refused at launch because a self-signed identity carries no Team ID for
 the loader to match. The flag is not part of the designated requirement, so turning it on costs no
-Accessibility grant. Each entitlement in `Tinycast/Tinycast.entitlements` earns its place:
+Accessibility grant. Each entitlement in `Ministart/Ministart.entitlements` earns its place:
 
 | Entitlement | Without it |
 | --- | --- |
 | `com.apple.security.cs.allow-jit` | JavaScriptCore cannot JIT, and every extension command runs on the interpreter |
 | `com.apple.security.automation.apple-events` | Every Apple event is refused with `-1743` and no prompt — Get Info and the Finder selection an extension reads die silently |
 | `com.apple.security.device.camera` | The camera prompt never appears and access resolves as denied |
-| `com.apple.security.personal-information.calendars` | `requestFullAccessToEvents()` returns `false` in milliseconds with no dialog, and Tinycast never appears under System Settings › Calendars |
+| `com.apple.security.personal-information.calendars` | `requestFullAccessToEvents()` returns `false` in milliseconds with no dialog, and Ministart never appears under System Settings › Calendars |
 
 **A usage string is not enough under the hardened runtime.** `tccd` checks the matching entitlement
 *before* it prompts, and without it logs "requires entitlement … but it is missing" and denies on the
@@ -100,8 +100,8 @@ arrived keeps working, since `tccd` does not re-check it, which is why this surf
 installs. Adding a protected resource therefore means adding its usage string *and* its entitlement.
 
 `RESOURCE_ENTITLEMENTS` in `Scripts/verify-signature.sh` maps every protected resource's usage string
-to its entitlement, including resources Tinycast does not use. That grants nothing — only
-`Tinycast.entitlements` does, and a row whose usage string `Info.plist` doesn't declare is skipped. It
+to its entitlement, including resources Ministart does not use. That grants nothing — only
+`Ministart.entitlements` does, and a row whose usage string `Info.plist` doesn't declare is skipped. It
 is there so a future feature that adds the usage string but forgets the entitlement fails the release
 instead of shipping a prompt that can never appear.
 
@@ -117,7 +117,7 @@ missing its entitlement ships a permission that can never be granted.
 
 ## The Developer ID migration
 
-`BundleSignature` already accepts a bundle signed by the Tinycast team under Apple's Developer ID
+`BundleSignature` already accepts a bundle signed by the Ministart team under Apple's Developer ID
 chain, even though releases are still signed with `Ministart Self-Signed`. That is deliberate and
 staged: the updater compares signatures before it installs, so the code that trusts the new identity
 has to reach users *before* the first build carrying it. Until the switch it also accepts the running

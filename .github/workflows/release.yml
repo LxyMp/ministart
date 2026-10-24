@@ -50,8 +50,8 @@ jobs:
           BASE_VERSION="${{ github.event.inputs.version }}"
           # Each channel is a distinct side-by-side app with its own name, bundle id and cask.
           case "$CHANNEL" in
-            beta)   SUFFIX="-beta.${GITHUB_RUN_NUMBER}";  DISPLAY="Ministart Beta";  BUNDLE="com.ministart.app.beta";  CASK="tinycast@beta";  PRERELEASE=true ;;
-            stable) SUFFIX="";                            DISPLAY="Ministart";       BUNDLE="com.ministart.app";       CASK="tinycast";       PRERELEASE=false ;;
+            beta)   SUFFIX="-beta.${GITHUB_RUN_NUMBER}";  DISPLAY="Ministart Beta";  BUNDLE="com.ministart.app.beta";  CASK="ministart@beta";  PRERELEASE=true ;;
+            stable) SUFFIX="";                            DISPLAY="Ministart";       BUNDLE="com.ministart.app";       CASK="ministart";       PRERELEASE=false ;;
           esac
           FULL="${BASE_VERSION}${SUFFIX}"
           {
@@ -79,7 +79,7 @@ jobs:
           security import "$RUNNER_TEMP/cert.p12" -k "$KEYCHAIN" -P "${P12_PASSWORD}" -A -T /usr/bin/codesign
           # Let codesign use the key without an interactive prompt.
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KPW" "$KEYCHAIN" >/dev/null
-          # Prepend to the search list so xcodebuild's codesign finds "Tinycast Self-Signed".
+          # Prepend to the search list so xcodebuild's codesign finds "Ministart Self-Signed".
           security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | sed 's/"//g')
           rm -f "$RUNNER_TEMP/cert.p12"
 
@@ -91,12 +91,12 @@ jobs:
           BUILD_NUMBER: ${{ github.run_number }}
         run: |
           # ARCHS pinned: trusting ARCHS_STANDARD once let a thin arm64 build reach Intel users.
-          xcodebuild -project Tinycast.xcodeproj -scheme Tinycast -configuration Release \
+          xcodebuild -project Ministart.xcodeproj -scheme Ministart -configuration Release \
             -derivedDataPath "$RUNNER_TEMP/DerivedData" \
             ARCHS=arm64 ONLY_ACTIVE_ARCH=NO \
-            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Tinycast Self-Signed" \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Ministart Self-Signed" \
             OTHER_CODE_SIGN_FLAGS="--timestamp=none" \
-            PRODUCT_NAME="$DISPLAY_NAME" TINYCAST_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
+            PRODUCT_NAME="$DISPLAY_NAME" MINISTART_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
             MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             build
 
@@ -303,12 +303,12 @@ jobs:
         env:
           BUILD_NUMBER: ${{ github.run_number }}
         run: |
-          xcodebuild -project Tinycast.xcodeproj -scheme Tinycast -configuration Release \
+          xcodebuild -project Ministart.xcodeproj -scheme Ministart -configuration Release \
             -derivedDataPath "$RUNNER_TEMP/DerivedData" \
             ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO \
-            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Tinycast Self-Signed" \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Ministart Self-Signed" \
             OTHER_CODE_SIGN_FLAGS="--timestamp=none" \
-            PRODUCT_NAME="$DISPLAY_NAME" TINYCAST_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
+            PRODUCT_NAME="$DISPLAY_NAME" MINISTART_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
             MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             build
 

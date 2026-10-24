@@ -1,0 +1,566 @@
+import AppKit
+
+/// Single owner of every long-lived manager. Wired up once from the app delegate.
+@MainActor
+@Observable
+final class AppCore {
+    static let shared = AppCore()
+
+    let launcherRanking: LauncherRankingStore
+    let appIndex: AppIndex
+    let customCommands = CustomCommandStore()
+    let quicklinks = QuicklinkStore()
+    let clipboardStore = ClipboardStore()
+    let clipboardManager: ClipboardManager
+    let snippetsStore: SnippetsStore
+    let snippetListener = SnippetKeywordListener(
+        syntheticEventTag: Paster.ministartEventTag)
+    let textInjector: TextInjector
+    let hotKeys = HotKeyManager()
+    let settings: AppSettings
+    /// Mirrors settings into settings.json; nil while the Backup pane's switch is off.
+    @ObservationIgnored private var settingsFile: SettingsFileRepository?
+    /// The file's launcher items, kept to apply a waiting record once its app is installed.
+    @ObservationIgnored private var launcherSettingsFile: LauncherSettingsFile?
+    @ObservationIgnored private var appearanceObservation: NSKeyValueObservation?
+    @ObservationIgnored private let iconStyle = IconStyleMonitor()
+    let favorites = FavoritesStore()
+    let visibility = VisibilityStore()
+    let aliases = AliasStore()
+    let fallbacks = FallbackStore()
+    let currencyRates = CurrencyRateStore()
+    let emojiIndex = EmojiIndex()
+    let frequentEmoji = FrequentEmojiStore()
+    let pinnedEmoji = PinnedEmojiStore()
+    let runningApps = RunningAppsMonitor()
+    let palette = PaletteState()
+    let fileIndexer = FileIndexer()
+    @ObservationIgnored private(set) lazy var fileSearch = FileSearchSession(index: fileIndexer.index)
+    let dictionary = DictionarySession()
+    let activationPolicy = ActivationPolicy()
+    let uninstall = UninstallSession()
+    let notesStore: NotesStore
+    let extensions: ExtensionManager
+
+    var pendingExtensionStoreInstall: ExtensionDeepLink.StoreInstall?
+
+    @ObservationIgnored private(set) lazy var snippetCoordinator = SnippetCoordinator(
+        store: snippetsStore, listener: snippetListener, injector: textInjector,
+        clipboardStore: clipboardStore, appIndex: appIndex, settings: settings,
+        windowController: windowController, paletteCoordinator: paletteCoordinator,
+        palette: palette,
+        showMessage: { [unowned self] in self.showMessage($0, tone: $1) }, core: self)
+    @ObservationIgnored private(set) lazy var quicklinkCoordinator = QuicklinkCoordinator(
+        store: quicklinks, settings: settings,
+        appIndex: appIndex, injector: textInjector, hotKeys: hotKeys, favorites: favorites,
+        visibility: visibility, ranking: launcherRanking, aliases: aliases,
+        windowController: windowController,
+        paletteCoordinator: paletteCoordinator,
+        clipboardHistory: { [unowned self] in self.snippetCoordinator.clipboardHistoryForExpansion() },
+        core: self)
+
+    @ObservationIgnored private(set) lazy var paletteCoordinator = PaletteCoordinator(
+        palette: palette, settings: settings, appIndex: appIndex,
+        fileSearch: fileSearch,
+        windowController: windowController)
+    /// Its own window and lifecycle: neither coordinator shows or closes the other's surface.
+    @ObservationIgnored private(set) lazy var settingsCoordinator = SettingsCoordinator(core: self)
+    @ObservationIgnored private(set) lazy var onboardingCoordinator = OnboardingCoordinator(
+        core: self)
+@ObservationIgnored private(set) lazy var uninstallCoordinator = UninstallCoordinator(
+        session: uninstall, palette: palette, paletteCoordinator: paletteCoordinator,
+        appIndex: appIndex, runningApps: runningApps, hotKeys: hotKeys, favorites: favorites,
+        visibility: visibility, ranking: launcherRanking, aliases: aliases, core: self)
+    @ObservationIgnored private(set) lazy var extensionCoordinator = ExtensionCoordinator(
+        extensions: extensions, palette: palette, paletteCoordinator: paletteCoordinator,
+        settingsCoordinator: settingsCoordinator, settings: settings, core: self)
+    @ObservationIgnored private(set) lazy var customCommandCoordinator = CustomCommandCoordinator(
+        store: customCommands, settings: settings, appIndex: appIndex,
+        paletteCoordinator: paletteCoordinator, settingsCoordinator: settingsCoordinator,
+        hotKeys: hotKeys, favorites: favorites, visibility: visibility,
+        ranking: launcherRanking, aliases: aliases, activationPolicy: activationPolicy, core: self)
+    @ObservationIgnored private(set) lazy var appleShortcutCoordinator = AppleShortcutCoordinator(
+        settings: settings, appIndex: appIndex, hotKeys: hotKeys, favorites: favorites,
+        visibility: visibility, ranking: launcherRanking, aliases: aliases,
+        paletteCoordinator: paletteCoordinator, core: self)
+    /// Window state, not a preference: it rides `UserDefaults` like the active note's filename.
+    private nonisolated static let noteFormattingBarKey = "notesFormattingBarExpanded"
+    @ObservationIgnored private(set) lazy var notesCoordinator = NotesCoordinator(
+        store: notesStore,
+        settings: settings,
+        appIndex: appIndex,
+        core: self,
+        isFormattingBarExpanded: UserDefaults.standard.bool(forKey: Self.noteFormattingBarKey),
+        saveFormattingBarExpanded: {
+            UserDefaults.standard.set($0, forKey: Self.noteFormattingBarKey)
+        })
+
+    @ObservationIgnored private(set) lazy var launcherCoordinator = LauncherCoordinator(
+        ranking: launcherRanking, windowController: windowController,
+        paletteCoordinator: paletteCoordinator,
+        settingsCoordinator: settingsCoordinator,
+        customCommandCoordinator: customCommandCoordinator,
+        quicklinkCoordinator: quicklinkCoordinator,
+        snippetCoordinator: snippetCoordinator, fileSearchCoordinator: fileSearchCoordinator,
+        notesCoordinator: notesCoordinator, extensionCoordinator: extensionCoordinator,
+        core: self)
+    @ObservationIgnored private(set) lazy var fallbackCoordinator = FallbackCoordinator(
+        store: fallbacks, quicklinks: quicklinks, settings: settings, visibility: visibility,
+        core: self)
+    @ObservationIgnored private(set) lazy var clipboardCoordinator = ClipboardCoordinator(
+        clipboardStore: clipboardStore, clipboardManager: clipboardManager, settings: settings,
+        appIndex: appIndex, palette: palette, windowController: windowController,
+        paletteCoordinator: paletteCoordinator, core: self)
+    @ObservationIgnored private(set) lazy var emojiCoordinator = EmojiCoordinator(
+        frequentEmoji: frequentEmoji, settings: settings, windowController: windowController,
+        paletteCoordinator: paletteCoordinator)
+    @ObservationIgnored private(set) lazy var calculatorCoordinator = CalculatorCoordinator(
+        paletteCoordinator: paletteCoordinator, core: self)
+@ObservationIgnored private(set) lazy var fileSearchCoordinator = FileSearchCoordinator(
+        settings: settings, appIndex: appIndex, session: fileSearch, indexer: fileIndexer,
+        palette: palette, paletteCoordinator: paletteCoordinator,
+        windowController: windowController, core: self)
+    @ObservationIgnored private(set) lazy var dictionaryCoordinator = DictionaryCoordinator(
+        paletteCoordinator: paletteCoordinator)
+    @ObservationIgnored private lazy var windowController = PaletteWindowController(core: self)
+    @ObservationIgnored private lazy var messageHUD = MessageHUDController(settings: settings)
+    private(set) var isShowingDialog = false
+    var isDimmingPaletteForDialog: Bool { isShowingDialog && windowController.isVisible }
+    @ObservationIgnored private lazy var dialogs = DialogController(
+        settings: settings,
+        onPresentationChanged: { [weak self] isPresenting in
+            guard let self else { return }
+            isShowingDialog = isPresenting
+        })
+    private let healthTicker = HealthTicker()
+    /// Resolved once by AppKit, so it is what this process shows until it relaunches.
+    private let launchLocalization = Bundle.main.preferredLocalizations.first
+    private var relaunchRequested = false
+
+    private init() {
+        let launcherRanking = LauncherRankingStore()
+        let settings = AppSettings()
+        self.launcherRanking = launcherRanking
+        self.settings = settings
+        appIndex = AppIndex(ranking: launcherRanking, aliases: aliases)
+        let clipboardManager = ClipboardManager(store: clipboardStore, settings: settings)
+        self.clipboardManager = clipboardManager
+        extensions = ExtensionManager(clipboardStore: clipboardStore)
+        snippetsStore = SnippetsStore(repository: Self.snippetsRepository(for: settings))
+        textInjector = TextInjector(
+            clipboardManager: clipboardManager,
+            settings: settings)
+        let noteSelectionKey = "notesActiveFileName"
+        notesStore = NotesStore(
+            repository: Self.notesRepository(for: settings),
+            loadSelection: {
+                UserDefaults.standard.string(forKey: noteSelectionKey).map(NoteID.init(rawValue:))
+            },
+            saveSelection: { UserDefaults.standard.set($0?.rawValue, forKey: noteSelectionKey) })
+    }
+
+    func start(launchedByUser: Bool) {
+        Signposts.interval("AppCore.start") {
+            // Shorten AppKit's ~2–3s tooltip delay; registration domain, so a user default wins.
+            UserDefaults.standard.register(defaults: ["NSInitialToolTipDelay": 250])
+            NSApp.setActivationPolicy(.accessory)
+            applyAppearance()
+            applyMotion()
+            observeEffectiveAppearance()
+            pinnedEmoji.onPersistenceFailure = { [weak self] in
+                self?.showMessage(String(localized: "Couldn't save Emoji & Symbols pins"), tone: .danger)
+            }
+
+            appIndex.start(settings: settings)
+            clipboardCoordinator.applyEnabled()
+            extensions.start(appIndex: appIndex, coordinator: extensionCoordinator)
+            extensionCoordinator.applyEnabled()
+            fileSearchCoordinator.applyEnabled()
+            fileSearchCoordinator.applyPolicy()
+            notesCoordinator.applyEnabled()
+            customCommands.onChange = { [weak self] _ in
+                self?.customCommandCoordinator.applyCustomCommandsPresence()
+            }
+            customCommandCoordinator.applyCustomCommandsPresence()
+            quicklinks.onChange = { [weak self] _ in
+                self?.quicklinkCoordinator.applyQuicklinksPresence()
+            }
+            // Before `hotKeys.start` even when off: the prune reads it. docs/features/quicklinks.md
+            quicklinks.load()
+            quicklinkCoordinator.applyQuicklinksPresence()
+            appleShortcutCoordinator.applyPresence()
+            paletteCoordinator.onLauncherShown = { [weak self] in
+                self?.appleShortcutCoordinator.refresh()
+            }
+            paletteCoordinator.onScreenOpening = { [weak self] mode in
+                switch mode {
+                default: break
+                }
+            }
+            Task { await appIndex.refresh() }
+            Task { await emojiIndex.load(languages: SystemLanguages.preferred) }
+            currencyRates.start()
+
+            hotKeys.modifierTapMonitor.healthTicker = healthTicker
+            snippetListener.healthTicker = healthTicker
+
+            hotKeys.onTogglePalette = { [weak self] in self?.paletteCoordinator.togglePalette() }
+            hotKeys.onRunCommand = { [weak self] id in self?.launcherCoordinator.runCommand(id) }
+            hotKeys.onRunCustomCommand = { [weak self] id in
+                self?.customCommandCoordinator.runCustomCommand(id: id)
+            }
+            hotKeys.onOpenQuicklink = { [weak self] id in
+                self?.quicklinkCoordinator.openQuicklinkFromHotKey(id: id)
+            }
+            hotKeys.onRunAppleShortcut = { [weak self] id in
+                self?.appleShortcutCoordinator.run(id: id)
+            }
+            hotKeys.onExpandSnippet = { [weak self] id in
+                self?.snippetCoordinator.expandSnippetFromHotKey(id: id)
+            }
+            hotKeys.onRunExtensionCommand = { [weak self] entryID in
+                self?.extensionCoordinator.runExtensionCommand(entryID: entryID)
+            }
+            extensions.onDidUninstall = { [weak self] entryIDs in
+                self?.extensionCoordinator.removeExtensionReferences(entryIDs: entryIDs)
+            }
+            appIndex.onScan = { [weak self] in
+                guard let self else { return }
+                hotKeys.removeAppBindings(where: appIndex.isUninstalled)
+                // After the first scan, so the file's apps and panes have entries to match.
+                if settings.settingsFileEnabled, settingsFile == nil {
+                    startSettingsFile(importing: true)
+                } else if let launcherSettingsFile {
+                    reportSettingsFileIssues(launcherSettingsFile.applyInstalled())
+                }
+            }
+            hotKeys.displayName = { [weak self] action in self?.hotKeyDisplayName(for: action) }
+            hotKeys.allowsAction = { [weak self] action in
+                guard let self, visibility.allowsHotKey(action) else { return false }
+                // A disabled feature drops its commands from the launcher; their shortcuts go too.
+                guard case .command(let id) = action else { return true }
+                return appIndex.isCommandEnabled(id)
+            }
+            hotKeys.start(
+                customCommandIDs: Set(customCommands.commands.map(\.id)),
+                quicklinkIDs: Set(quicklinks.quicklinks.map(\.id)))
+            // After `hotKeys.start`: Secure Input equivalents are built from the loaded bindings.
+
+            snippetsStore.onSnapshot = { [weak self] snapshot in
+                guard let self else { return }
+                self.snippetCoordinator.applySnippetsLauncherPresence()
+                self.snippetListener.update(snapshot.records)
+                self.hotKeys.removeSnippetBindings(keeping: snapshot.fileIDs)
+            }
+            // Off out of the box, so an unused feature costs no load, watcher or tap.
+            if settings.snippetsEnabled {
+                Task { await snippetsStore.start() }
+                snippetCoordinator.startSnippetKeywordListener()
+            }
+            // Unconditional: a disabled feature has to take its command rows down with it.
+            snippetCoordinator.applySnippetsLauncherPresence()
+
+            observeFeatureSwitches()
+
+            // First launch binds no hotkey, so guide once; the marker is written at show-time.
+            if !OnboardingState.hasOnboarded {
+                OnboardingState.markShown()
+                onboardingCoordinator.showOnboarding()
+            } else if launchedByUser {
+                paletteCoordinator.showPalette(mode: .launcher)
+            }
+        }
+    }
+
+    func handleReopen() {
+        if settingsCoordinator.focusExisting() { return }
+        if onboardingCoordinator.focusExisting() { return }
+        if customCommandCoordinator.focusOutputWindow() { return }
+        paletteCoordinator.showPalette(mode: .launcher, restoreAnyMode: true)
+    }
+
+    func handleOpenURL(_ url: URL) {
+        guard ExtensionDeepLink.claims(url) else { return }
+        guard let route = ExtensionDeepLink.route(url: url) else {
+            paletteCoordinator.showPalette(mode: .launcher, restoreAnyMode: true)
+            return
+        }
+        switch route {
+        case .command(let link):
+            extensionCoordinator.runDeepLink(link)
+        case .storeInstall(let install):
+            extensionCoordinator.showStoreInstall(install)
+        }
+    }
+
+    /// The store-backed half of the conflict message; `HotKeyManager` names the catalogs itself.
+    private func hotKeyDisplayName(for action: HotKeyAction) -> String? {
+        switch action {
+        case .app(let bundleID):
+            return appIndex.apps.first { $0.kind == .application && $0.bundleID == bundleID }?.name
+        case .settingsPane(let bundleID):
+            return appIndex.apps.first { $0.kind == .systemSettings && $0.bundleID == bundleID }?
+                .name
+        case .customCommand(let id):
+            return customCommands.command(id: id)?.name
+        case .quicklink(let id):
+            return quicklinks.quicklink(id: id)?.name
+        case .appleShortcut(let id):
+            return appleShortcutCoordinator.name(of: id)
+        case .snippet(let id):
+            return snippetsStore.record(id: id)?.snippet.name
+        case .extensionCommand(let entryID):
+            return appIndex.apps.first { $0.kind == .extensionCommand && $0.id == entryID }?.name
+        case .togglePalette, .command:
+            return nil
+        }
+    }
+
+    func flushNotesForTermination() async {
+        await notesCoordinator.prepareForTermination()
+    }
+
+    func relaunch() {
+        guard !relaunchRequested else { return }
+        relaunchRequested = true
+        // AppKit's termination loop must start outside a Swift task or dispatch callback.
+        RunLoop.main.perform(inModes: [.common]) {
+            MainActor.assumeIsolated { NSApp.terminate(nil) }
+        }
+    }
+
+    func prepareForTermination() {
+        settingsFile?.flush()
+        // HID remaps first: they outlive the process.
+        textInjector.prepareForTermination()
+        snippetListener.stop()
+        snippetsStore.stop()
+        if relaunchRequested { RelaunchRunner.relaunchAfterExit(Bundle.main.bundleURL) }
+    }
+
+    // MARK: - Feature switches
+
+    private func observeFeatureSwitches() {
+        track(
+            {
+                _ = $0.customCommandsEnabled
+                _ = $0.customCommandsShowInLauncher
+            }, reproject: { $0.customCommandCoordinator.applyCustomCommandsPresence() })
+        track(
+            {
+                _ = $0.quicklinksEnabled
+                _ = $0.quicklinksShowInLauncher
+            }, reproject: { $0.quicklinkCoordinator.applyQuicklinksPresence() })
+        track(
+            { _ = $0.appleShortcutsEnabled },
+            reproject: { $0.appleShortcutCoordinator.applyPresence() })
+        track(
+            { _ = $0.clipboardEnabled }, reproject: { $0.clipboardCoordinator.applyEnabled() })
+        track({ _ = $0.fileSearchEnabled }, reproject: { $0.fileSearchCoordinator.applyEnabled() })
+        track(
+            { _ = $0.fileSearchShowInLauncher },
+            reproject: { $0.fileSearchCoordinator.applyLauncherFiles() })
+        track({ _ = $0.notesEnabled }, reproject: { $0.notesCoordinator.applyEnabled() })
+        track(
+            {
+                _ = $0.fileSearchScopes
+                _ = $0.fileSearchIgnorePatterns
+                _ = $0.fileSearchRemovedDefaultPatterns
+            }, reproject: { $0.fileSearchCoordinator.applyPolicy() })
+        track({ _ = $0.snippetsEnabled }, reproject: { $0.snippetCoordinator.applySnippetsEnabled() })
+        // Not a feature switch, but the same re-projection: a combo has the chord's ⇧ bit baked in.
+        track(
+            { _ = $0.snippetsShowInLauncher },
+            reproject: { $0.snippetCoordinator.applySnippetsLauncherPresence() })
+        track({ _ = $0.appearance }, reproject: { $0.applyAppearance() })
+        track({ _ = $0.animationsEnabled }, reproject: { $0.applyMotion() })
+        track({ _ = $0.language }, reproject: { $0.offerLanguageRelaunch() })
+        track({ _ = $0.interfaceSize }, reproject: { $0.windowController.applyInterfaceSize() })
+        // Settings panes did these on change; settings.json can change them with no pane open.
+        track(
+            { _ = $0.clipboardRetention },
+            reproject: { $0.clipboardCoordinator.applyRetention($0.settings.clipboardRetention) })
+        track(
+            { _ = $0.extensionsShowInLauncher },
+            reproject: { $0.extensionCoordinator.applyExtensionsLauncherPresence() })
+        track({ _ = $0.snippetsFolder }, reproject: { $0.applySnippetsFolder() })
+        track({ _ = $0.notesFolder }, reproject: { $0.applyNotesFolder() })
+    }
+
+    /// `.system` resolves to `nil`, so AppKit follows macOS with nothing polling.
+    private func applyAppearance() {
+        NSApp.appearance = settings.appearance.nsAppearance
+    }
+
+    /// A built panel keeps the behaviour it was made with, so the live ones are re-pointed.
+    private func applyMotion() {
+        Motion.isEnabled = settings.animationsEnabled
+        for case let panel as any AnimatedPanel in NSApp.windows {
+            panel.followMotion()
+        }
+    }
+
+    private var isLanguagePending: Bool { settings.language.rawValue != launchLocalization }
+
+    private func offerLanguageRelaunch() {
+        guard isLanguagePending else { return }
+        Task {
+            guard
+                await confirm(
+                    title: String(localized: "Relaunch Ministart?"),
+                    message: String(localized: "The new language applies after Ministart relaunches."),
+                    symbol: "globe", confirmTitle: String(localized: "Relaunch"), tone: .neutral,
+                    confirmRole: .standard, dismissTitle: String(localized: "Later")),
+                isLanguagePending
+            else { return }
+            relaunch()
+        }
+    }
+
+    /// IconCache is told here, not from `applyAppearance()`, which never fires under `.system`.
+    private func observeEffectiveAppearance() {
+        // Synchronous on main, so no row can cache a tile under the outgoing appearance's key.
+        appearanceObservation = NSApp.observe(\.effectiveAppearance, options: [.initial]) { app, _ in
+            MainActor.assumeIsolated { IconCache.setDarkSurface(app.effectiveAppearance.isDark) }
+        }
+    }
+
+    private func track(
+        _ reads: @escaping @Sendable @MainActor (AppSettings) -> Void,
+        reproject: @escaping @Sendable @MainActor (AppCore) -> Void
+    ) {
+        track(settings, reads, reproject: reproject)
+    }
+
+    /// Fires synchronously on main before the write lands, so the task re-arms and re-reads.
+    private func track<Store: AnyObject & Sendable>(
+        _ store: Store,
+        _ reads: @escaping @Sendable @MainActor (Store) -> Void,
+        reproject: @escaping @Sendable @MainActor (AppCore) -> Void
+    ) {
+        withObservationTracking {
+            reads(store)
+        } onChange: { [weak self] in
+            Task { @MainActor in
+                guard let self else { return }
+                self.track(store, reads, reproject: reproject)
+                reproject(self)
+            }
+        }
+    }
+
+    private func applySnippetsFolder() {
+        let repository = Self.snippetsRepository(for: settings)
+        Task { await snippetsStore.relocate(to: repository) }
+    }
+
+    private func applyNotesFolder() {
+        let repository = Self.notesRepository(for: settings)
+        Task { await notesStore.relocate(to: repository) }
+    }
+
+    private static func snippetsRepository(for settings: AppSettings) -> SnippetRepository {
+        SnippetRepository(
+            snippetsDirectory: AppPaths.contentFolder(settings.snippetsFolder, named: "Snippets"))
+    }
+
+    private static func notesRepository(for settings: AppSettings) -> NotesRepository {
+        NotesRepository(notesDirectory: AppPaths.contentFolder(settings.notesFolder, named: "Notes"))
+    }
+
+    // MARK: - Settings file
+
+    /// Mirrors settings into settings.json from now on; `importing` applies the file's own first.
+    func startSettingsFile(importing: Bool) {
+        guard settingsFile == nil else { return }
+        let shortcuts = HotKeySettingsFile(hotKeys: hotKeys)
+        let launcher = LauncherSettingsFile(
+            appIndex: appIndex, aliases: aliases, visibility: visibility, shortcuts: shortcuts)
+        let file = SettingsFileRepository(
+            fileURL: AppPaths.settingsFile(),
+            bindings: SettingsFileSchema.bindings(
+                settings: settings,
+                shortcuts: shortcuts, launcher: launcher),
+            commit: shortcuts.commit)
+        file.onIssues = { [weak self] issues in self?.reportSettingsFileIssues(issues) }
+        settingsFile = file
+        launcherSettingsFile = launcher
+        settings.settingsFileEnabled = true
+        file.start(importing: importing)
+    }
+
+    /// Stops the mirror; the file stays on disk as last written.
+    func stopSettingsFile() {
+        settingsFile?.flush()
+        settingsFile = nil
+        launcherSettingsFile = nil
+        settings.settingsFileEnabled = false
+    }
+
+    private func reportSettingsFileIssues(_ issues: [SettingsFileIssue]) {
+        guard let summary = SettingsFileIssue.summary(issues) else { return }
+        showMessage(summary, tone: .danger)
+    }
+
+
+    // MARK: - Dialogs, routed here so `dialogs` stays the single owner
+
+    func showNotice(title: String, message: String, symbol: String, tone: DialogTone) async {
+        await dialogs.notice(title: title, message: message, symbol: symbol, tone: tone)
+    }
+
+    /// `tone` styles the glyph, `confirmRole` the button; separate on purpose.
+    func confirm(
+        title: String, message: String?, symbol: String?, confirmTitle: String,
+        tone: DialogTone = .danger, confirmRole: DialogAction.Role = .destructive,
+        dismissTitle: String = String(localized: "Cancel")
+    ) async -> Bool {
+        await dialogs.confirm(
+            title: title, message: message, symbol: symbol, tone: tone, confirmTitle: confirmTitle,
+            confirmRole: confirmRole, dismissTitle: dismissTitle)
+    }
+
+    /// A question with more than two answers; the returned index is into `options`.
+    func choose(
+        title: String, message: String?, symbol: String?, options: [DialogAction],
+        defaultIndex: Int, tone: DialogTone = .neutral
+    ) async -> Int {
+        await dialogs.choose(
+            title: title, message: message, symbol: symbol, tone: tone, options: options,
+            defaultIndex: defaultIndex)
+    }
+
+    /// A failure with one usable second option; `true` when the user takes it.
+    func reportFailure(
+        title: String, message: String, symbol: String, recovery: String?
+    ) async
+        -> Bool
+    {
+        await dialogs.reportFailure(
+            title: title, message: message, symbol: symbol, recovery: recovery)
+    }
+
+    /// The transient success/info pill, so `messageHUD` stays single-owned alongside `dialogs`.
+    func showMessage(_ message: String, tone: DialogTone = .success) {
+        messageHUD.show(message: message, tone: tone)
+    }
+
+    /// The same pill with a spinner, for work the reader started and cannot otherwise see running.
+    func showProgress(_ message: String, onCancel: (() -> Void)? = nil) {
+        messageHUD.showProgress(message: message, onCancel: onCancel)
+    }
+
+    func hideProgress() {
+        messageHUD.dismiss()
+    }
+
+    func fillSnippetArguments(
+        snippetName: String, arguments: [SnippetTemplateEngine.MissingArgument]
+    ) async -> [String: String]? {
+        await dialogs.fillSnippetArguments(snippetName: snippetName, arguments: arguments)
+    }
+
+    func editClipboardText(_ text: String) async -> String? {
+        await dialogs.editClipboardText(text)
+    }
+}

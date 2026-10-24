@@ -59,7 +59,7 @@ System Settings panes use `boundPaneBundleIDs`; custom commands and quicklinks u
 in `boundCustomCommandIDs` and `boundQuicklinkIDs`. Those two are the per-item case — unlike a fixed
 catalog, there is no `allCases` to walk — so each needs an index for `start()`
 to re-register from
-and to prune bindings whose record was deleted while Tinycast wasn't running. That prune is why
+and to prune bindings whose record was deleted while Ministart wasn't running. That prune is why
 `QuicklinkStore` loads at launch even when the feature is off
 (see [quicklinks.md](quicklinks.md#hotkeys)).
 Apple Shortcuts keep the same kind of index in `boundAppleShortcutIDs`, pruned not at launch but after
@@ -69,7 +69,7 @@ the first successful read of the library, since a failed read looks exactly like
 Snippets index `StoredSnippet.ID`, the file's path, in `boundSnippetIDs`. The store runs only while
 the feature is on, so they are swept not at launch but on every snapshot, by
 `removeSnippetBindings`; a file that fails to parse still counts, since it is mid-edit rather than
-gone. A rename outside Tinycast or a new Snippets Folder therefore drops the shortcut, and none
+gone. A rename outside Ministart or a new Snippets Folder therefore drops the shortcut, and none
 travels in a backup, where an imported snippet lands at a new path
 (see [snippets.md](snippets.md#shortcuts)).
 

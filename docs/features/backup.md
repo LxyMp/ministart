@@ -1,6 +1,6 @@
 # Backup
 
-Export and import of Tinycast's own data as a single `.tinycast` file.
+Export and import of Ministart's own data as a single `.ministart` file.
 The feature lives in `Features/Backup/`.
 
 A backup carries five independently selectable categories, ticked on export and again on import:
@@ -21,7 +21,7 @@ A backup carries five independently selectable categories, ticked on export and 
   config must not be able to grant something the user never granted. `FallbackStore` is the second
   case: its order and checkboxes live on their own `UserDefaults` keys precisely so an import cannot
   arm **Run Shell Command** in someone's launcher. This change adds *content*, never a capability.
-- **No absolute path may enter a `.tinycast`.** A clip's `imagePath` names a file on the Mac that wrote
+- **No absolute path may enter a `.ministart`.** A clip's `imagePath` names a file on the Mac that wrote
   it, so `BackupClipboardItem` carries a bundle-relative `imageName` instead. `backup-archive-test`
   asserts the produced file contains neither `/Users` nor `/Library` — the analogue of
   `settings-backup-test`'s `snippetsEnabled` check, and for the same reason: this file gets sent to
@@ -42,7 +42,7 @@ A backup carries five independently selectable categories, ticked on export and 
 | `Model/BackupCategory.swift` | The categories and the descriptor every one of them must name |
 | `Model/BackupManifest.swift` | The table of contents, the format constant and its guard |
 | `Model/BackupBundle.swift` | The payload directory's layout and part-by-part encode/decode |
-| `Model/BackupArchive.swift` | Directory ⇄ `.tinycast`; the only file importing `AppleArchive` |
+| `Model/BackupArchive.swift` | Directory ⇄ `.ministart`; the only file importing `AppleArchive` |
 | `Model/BackupClipboardItem.swift` | The portable clip, with no path in it |
 | `Model/SettingsBackup.swift` | The settings, fixed/per-item hotkey payloads, and their `Codable` shape |
 | `Model/SettingsBackupCoverage.swift` | The coverage declaration the harness checks |
@@ -133,4 +133,4 @@ Per category:
 An `id` never travels with a clip: `items.id` is `UNIQUE`, so a re-import minting fresh identities is
 what keeps a second pass from silently failing its inserts. Same reasoning as `QuicklinkArchive.merge`.
 
-The old flat `Tinycast-Settings-*.json` export is gone rather than deprecated, and nothing reads it.
+The old flat `Ministart-Settings-*.json` export is gone rather than deprecated, and nothing reads it.
