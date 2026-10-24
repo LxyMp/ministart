@@ -29,7 +29,6 @@ final class AppCore {
     let aliases = AliasStore()
     let fallbacks = FallbackStore()
     let currencyRates = CurrencyRateStore()
-    let supportReminders: SupportReminderStore
     let emojiIndex = EmojiIndex()
     let frequentEmoji = FrequentEmojiStore()
     let pinnedEmoji = PinnedEmojiStore()
@@ -123,8 +122,6 @@ final class AppCore {
         windowController: windowController, core: self)
     @ObservationIgnored private(set) lazy var dictionaryCoordinator = DictionaryCoordinator(
         paletteCoordinator: paletteCoordinator)
-    @ObservationIgnored private(set) lazy var supportCoordinator = SupportCoordinator(
-        store: supportReminders, core: self)
     @ObservationIgnored private lazy var windowController = PaletteWindowController(core: self)
     @ObservationIgnored private lazy var messageHUD = MessageHUDController(settings: settings)
     private(set) var isShowingDialog = false
@@ -145,7 +142,6 @@ final class AppCore {
         let settings = AppSettings()
         self.launcherRanking = launcherRanking
         self.settings = settings
-        supportReminders = SupportReminderStore(settings: settings)
         appIndex = AppIndex(ranking: launcherRanking, aliases: aliases)
         let clipboardManager = ClipboardManager(store: clipboardStore, settings: settings)
         self.clipboardManager = clipboardManager
@@ -204,8 +200,6 @@ final class AppCore {
             Task { await appIndex.refresh() }
             Task { await emojiIndex.load(languages: SystemLanguages.preferred) }
             currencyRates.start()
-            supportReminders.onDue = { [weak self] in self?.supportCoordinator.presentIfDue() }
-            supportReminders.start()
 
             hotKeys.modifierTapMonitor.healthTicker = healthTicker
             snippetListener.healthTicker = healthTicker
@@ -281,7 +275,6 @@ final class AppCore {
     func handleReopen() {
         if settingsCoordinator.focusExisting() { return }
         if onboardingCoordinator.focusExisting() { return }
-        if supportCoordinator.focusExisting() { return }
         if customCommandCoordinator.focusOutputWindow() { return }
         paletteCoordinator.showPalette(mode: .launcher, restoreAnyMode: true)
     }
@@ -509,18 +502,6 @@ final class AppCore {
         showMessage(summary, tone: .danger)
     }
 
-    // MARK: - Interruption
-
-    /// Ordered by consequence: work in flight outranks an open panel. See docs/features/support.md.
-    var canInterruptUser: Bool {
-        if textInjector.isDelivering { return false }
-        if extensions.running != nil { return false }
-        if uninstall.isTrashing { return false }
-        if hotKeys.recordingAction != nil { return false }
-        if isShowingDialog { return false }
-        if paletteCoordinator.isVisible { return false }
-        return true
-    }
 
     // MARK: - Dialogs, routed here so `dialogs` stays the single owner
 

@@ -24,7 +24,7 @@ Independently of the folder tree, every mature subsystem has converged on the sa
 │ ShellCommandRunner · DoubleTap{Modifier,Detector} · ClipboardStore ·       │
 │ RaycastDecoder · Scrypt · AppSettingsKey · SettingsBackupCoverage          │
 │ SettingsFile{JSON,Key,Value,Format,Binding,Issue,Identity} ·               │
-│ HotKeySpelling · SupportReminderSchedule ·                                 │
+│ HotKeySpelling ·                                                           │
 └──────────────────────────────────┬─────────────────────────────────────────┘
                                    │ consumed by
 ┌─ EFFECT ─────────────────────────▼─────────────────────────────────────────┐
@@ -35,7 +35,7 @@ Independently of the folder tree, every mature subsystem has converged on the sa
 │ SnippetKeywordListener · NotesRepository · CurrencyRateStore · Paster ·    │
 │ HotKeyCenter · HyperKeyTap · KeyboardRemapper · ModifierTapMonitor ·       │
 │ SecureInputMonitor · RunningAppsMonitor · CameraSession ·                  │
-│ SupportReminderStore · AppleShortcutRunner · SettingsFileRepository ·      │
+│ AppleShortcutRunner · SettingsFileRepository ·                             │
 │ SettingsFileMonitor                                                        │                                               │
 └──────────────────────────────────┬─────────────────────────────────────────┘
                                    │ published through
@@ -142,10 +142,6 @@ driven imperatively from AppKit. Extension menu extras are dynamic `NSStatusItem
   confirmations, failure reports and value prompts. Presentation is `async`, so nothing blocks the main
   actor, and the presenter refuses a second dialog while one is up — that, not a flag, is what stops a
   held hotkey stacking dialogs.
-- **Support** — a titled `AppWindowController` window owned by `SupportCoordinator`, sized to the
-  height its content measured. Every route into it — the palette's menu circle and the 30-day
-  reminder — lands on `showSupport()`, which is what moves the
-  reminder's anchor. See [features/support.md](features/support.md).
 - **HUDs** are separate, because a dialog asks and a HUD reports: `MessageHUDController` (the pill), over a shared `HUDPresenter` that owns the
   one-at-a-time, auto-dismiss and fade policy. See [ui.md](ui.md#dialogs--hud).
 

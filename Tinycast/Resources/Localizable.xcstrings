@@ -1433,16 +1433,6 @@
         }
       }
     },
-    "About once a month. Turn this off and %@ won't ask again.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "大约每月一次。关闭此项后，%@ 将不再询问。"
-          }
-        }
-      }
-    },
     "Acceleration": {
       "localizations": {
         "zh-Hans": {
@@ -2272,16 +2262,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "构建一次，之后随文件变化保持最新。仅在运行时，索引才会占用额外内存。"
-          }
-        }
-      }
-    },
-    "Built with love.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用心打造。"
           }
         }
       }
@@ -9034,16 +9014,6 @@
         }
       }
     },
-    "Remind me occasionally": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "偶尔提醒我"
-          }
-        }
-      }
-    },
     "Remove %@": {
       "localizations": {
         "zh-Hans": {
@@ -9845,16 +9815,6 @@
         }
       }
     },
-    "Secure checkout on Polar.": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通过 Polar 安全结账。"
-          }
-        }
-      }
-    },
     "Select All": {
       "localizations": {
         "zh-Hans": {
@@ -10553,26 +10513,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "总和"
-          }
-        }
-      }
-    },
-    "Support %@": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "支持 %@"
-          }
-        }
-      }
-    },
-    "Support Ministart": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "支持 Ministart"
           }
         }
       }

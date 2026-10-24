@@ -43,8 +43,7 @@ enum SettingsBackupCoverage {
         "quicklinkPassesSelectedText": .quicklinkPassesSelectedText,
         "quicklinkConfirmsBeforeDelete": .quicklinkConfirmsBeforeDelete,
         "appleShortcutsEnabled": .appleShortcutsEnabled,
-        "extensionsShowInLauncher": .extensionsShowInLauncher,
-        "supportReminders": .supportReminders
+        "extensionsShowInLauncher": .extensionsShowInLauncher
     ]
 
     /// The `SettingsData` fields no `AppSettings` key stands behind, and what they read instead.

@@ -176,9 +176,6 @@ struct RootPaletteView: View {
                         openURL(url)
                     }
                 },
-                PopoverMenuItem(title: String(localized: "Support Ministart"), systemImage: "heart") {
-                    core.supportCoordinator.showSupport()
-                },
                 PopoverMenuItem(
                     title: String(localized: "Settings"), systemImage: "gearshape", shortcut: "⌘,"
                 ) {

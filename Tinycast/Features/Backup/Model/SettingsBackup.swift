@@ -60,7 +60,6 @@ struct SettingsBackup: Codable {
         // Carried like quicklinks: running a shortcut the user built grants no permission class.
         var appleShortcutsEnabled: Bool?
         // Safe to carry: it silences a prompt rather than granting anything.
-        var supportReminders: Bool?
     }
 
     struct HotkeyBackup: Codable {
@@ -134,8 +133,8 @@ extension SettingsBackup {
             extensionsShowInLauncher: s.extensionsShowInLauncher,
             quicklinkPassesSelectedText: s.quicklinkPassesSelectedText,
             quicklinkConfirmsBeforeDelete: s.quicklinkConfirmsBeforeDelete,
-            appleShortcutsEnabled: s.appleShortcutsEnabled,
-            supportReminders: s.supportRemindersEnabled)
+            appleShortcutsEnabled: s.appleShortcutsEnabled
+        )
 
         let hk = core.hotKeys
         var hotkeys = HotkeyBackup()
@@ -360,10 +359,6 @@ extension SettingsBackup {
         }
         if let flag = s.quicklinkConfirmsBeforeDelete {
             settings.quicklinkConfirmsBeforeDelete = flag
-            count += 1
-        }
-        if let flag = s.supportReminders {
-            settings.supportRemindersEnabled = flag
             count += 1
         }
         return count

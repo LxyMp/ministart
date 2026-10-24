@@ -71,9 +71,7 @@ Raycast 扩展。
 | Settings / Onboarding | 有标题 `NSWindow`（`Windows/AppWindowController.swift`） | `SettingsCoordinator` / `OnboardingCoordinator` |
 | Notes | 常驻非激活 `NotesPanel` | `NotesWindowController` |
 | 对话框 | `DialogPanel` | `DialogController`（唯一 presenter，async 呈现，一次一个） |
-| HUD | `MessageHUDController`、`VolumeHUDController` | `HUDPresenter`（独占一次性自动消退策略） |
-| Camera | 非激活浮动 `CameraPanel`（独立 `Open Camera` 命令） | `CameraCoordinator` |
-| Support | 有标题 `AppWindowController` | `SupportCoordinator`，所有入口汇于 `showSupport()` |
+| HUD | `MessageHUDController` | `HUDPresenter`（独占一次性自动消退策略） |
 
 **铁律：禁用 `NSAlert` 与系统 popover**——提问走 `DialogController`，报告走 `HUDPresenter`。
 外观与动效只由 `AppCore.applyAppearance()` / `applyMotion()` 全局投射，别处不得再设。
@@ -102,7 +100,6 @@ Raycast 扩展。
 | `Backup/` | `.tinycast` 备份导出/导入 | 无 `UI/` | [backup.md](docs/features/backup.md) |
 | `Settings/` | **设置外壳**：`SettingsCoordinator`、`AppSettings`、settings.json 镜像、`Panes/`（General、Permissions） | 本体即外壳，无 UI/ 子目录 | [settings-file.md](docs/features/settings-file.md) |
 | `Onboarding/` | 首启引导（扁平 4 文件） | 扁平 | |
-| `Support/` | Support 窗口与 30 天提醒 | 无 `Settings/` | [support.md](docs/features/support.md) |
 
 两点特殊位置：
 

@@ -39,7 +39,7 @@ open with an `## Invariants` section; read it before changing anything in that a
 [backup](features/backup.md) ·
 [settings file](features/settings-file.md) ·
 [Raycast extensions](features/extensions.md) ·
-[support](features/support.md)
+
 
 ## Contributing
 
