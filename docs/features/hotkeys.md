@@ -147,7 +147,10 @@ details are load-bearing:
   rewriting tap another tool installs.
 - Like every keyboard tap it needs the **Accessibility** grant, and it never prompts for it. The
   binding records regardless; the recorder shows an inline warning that opens System Settings, and the
-  one-second health timer installs the tap the moment the grant lands.
+  one-second health timer installs the tap the moment the grant lands. A tap that is already alive
+  comes down only after the trust check fails on three consecutive ticks — TCC's cached answer flaps
+  while it revalidates a re-signed binary, and one flaky poll must not blink the warning or kill a
+  working tap.
 
 ⇧ is bindable this way like the other modifiers.
 

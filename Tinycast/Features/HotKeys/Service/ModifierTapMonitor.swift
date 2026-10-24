@@ -58,6 +58,8 @@ final class ModifierTapMonitor: HealthCheckable {
     @ObservationIgnored private var sessionTokens: [NotificationToken] = []
     private var sessionActive = true
     private var loggedTapFailure = false
+    /// TCC's cached trust answer flaps while it revalidates a re-signed binary; misses must repeat.
+    @ObservationIgnored private var untrustedTicks = 0
 
     @ObservationIgnored weak var healthTicker: HealthTicker?
 
@@ -243,6 +245,7 @@ final class ModifierTapMonitor: HealthCheckable {
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
         CGEvent.tapEnable(tap: port, enable: true)
         needsAccessibility = false
+        untrustedTicks = 0
     }
 
     private func tearDownTap() {
@@ -270,11 +273,17 @@ final class ModifierTapMonitor: HealthCheckable {
         if tapPort == nil {
             installTapIfNeeded()
         } else if !Permissions.isAccessibilityTrusted() {
+            // A live tap beats one flaky poll: come down only after consecutive misses.
+            untrustedTicks += 1
+            guard untrustedTicks >= 3 else { return }
             tearDownTap()
             needsAccessibility = true
-        } else if let tapPort, !CGEvent.tapIsEnabled(tap: tapPort) {
-            resetDetectors()
-            CGEvent.tapEnable(tap: tapPort, enable: true)
+        } else {
+            untrustedTicks = 0
+            if let tapPort, !CGEvent.tapIsEnabled(tap: tapPort) {
+                resetDetectors()
+                CGEvent.tapEnable(tap: tapPort, enable: true)
+            }
         }
     }
 }
