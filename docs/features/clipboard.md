@@ -63,6 +63,14 @@ sensitive-type guards, which stay unconditional — a secret must never be recor
 arrives in. A bare screenshot carries no file URL and still falls through to the `.png`/`.tiff`
 branch untouched.
 
+**Between text and image sits a rich-text fallback** (upstream #1697): a web page's Clipboard API
+copy can carry `public.html` — or `public.rtf` — with no plain flavour at all, and without the
+fallback the poll advances past it and the copy is lost. RTF decodes through
+`NSAttributedString(rtf:)`; HTML goes through `RichTextFlattener`, a Foundation-only tag stripper in
+`Model/` — `NSAttributedString(html:)` would spin up WebKit on the poll's thread. The flattened
+text enters history as an ordinary text entry, `maxTextLength` and all, and re-pasting gives the
+plain text, the same as any other text row.
+
 `ClipboardManager.fileURLs(on:volatileRoots:)` takes both the pasteboard and the roots as
 parameters, so `pasteboard-test` can drive an `NSPasteboard.withUniqueName()` and its own scratch
 tree: a harness that touched `NSPasteboard.general` would land in the reader's own running Tinycast

@@ -163,6 +163,7 @@ run apple-shortcut-test    Tinycast/Features/AppleShortcuts/Model/*.swift
 run calc-test              Tinycast/Features/Calculator/Model/*.swift
 run index calc-performance Tinycast/Features/Calculator/Model/*.swift
 run clipboard-test         Tinycast/Features/Clipboard/Model/ClipboardStore.swift \
+                           Tinycast/Features/Clipboard/Model/RichTextFlattener.swift \
                            Tinycast/Platform/Images/ImageDerivative.swift \
                            Tinycast/Features/Clipboard/Model/ClipboardFilter.swift \
                            Tinycast/Features/Clipboard/Model/ClipboardFileKind.swift \
@@ -193,6 +194,7 @@ run clipboard-thumbnail-test Tinycast/Features/Clipboard/Model/ClipboardStore.sw
 Q=Tinycast/Features/Quicklinks/Model/QuicklinkDestination.swift
 run paste-sequence-test    Tinycast/Features/Clipboard/Model/*.swift Tinycast/Platform/Images/ImageDerivative.swift $Q
 run pasteboard-test        Tinycast/Platform/PasteboardFiles.swift \
+                           Tinycast/Features/Clipboard/Model/RichTextFlattener.swift \
                            Tinycast/Features/Clipboard/Model/ClipboardStore.swift \
                            Tinycast/Platform/Images/ImageDerivative.swift \
                            Tinycast/Features/Clipboard/Model/ClipboardFilter.swift \

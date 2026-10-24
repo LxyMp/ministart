@@ -23,6 +23,7 @@ struct PasteboardTests {
         fileEntriesWriteBackAsFiles()
         aVanishedFileWritesNothing()
         imageEntriesWriteBackWithTheirFile()
+        richOnlyCopiesReadAsText()
 
         print("\(passes)/\(passes + failures) passed")
         if failures > 0 { exit(1) }
@@ -333,6 +334,29 @@ struct PasteboardTests {
     // MARK: - Harness
 
     static func board() -> NSPasteboard { NSPasteboard.withUniqueName() }
+
+    /// Upstream #1697: a board with no plain flavour at all still yields text for the history.
+    static func richOnlyCopiesReadAsText() {
+        let rtf = try? NSAttributedString("rich text body").data(
+            from: NSRange(location: 0, length: "rich text body".count),
+            documentAttributes: [.documentType: NSAttributedString.DocumentType.rtf])
+        let rtfBoard = board()
+        if let rtf {
+            rtfBoard.setData(rtf, forType: .rtf)
+        }
+        expect(
+            ClipboardManager.richTextFallback(on: rtfBoard) == "rich text body",
+            "an RTF-only copy flattens to its text")
+
+        let htmlBoard = board()
+        htmlBoard.setData(Data("<b>hello from html</b>".utf8), forType: .html)
+        expect(
+            ClipboardManager.richTextFallback(on: htmlBoard) == "hello from html",
+            "an HTML-only copy flattens to its text")
+
+        let bare = board()
+        expect(ClipboardManager.richTextFallback(on: bare) == nil, "a bare board reads as nothing")
+    }
 
     static func withScratch(_ body: (URL) -> Void) {
         let dir = FileManager.default.temporaryDirectory

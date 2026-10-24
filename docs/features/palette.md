@@ -402,8 +402,10 @@ the arrow outside it, and AppKit's own alternation over the field came straight 
 All editable text controls use this same cursor policy, including extension fields. It checks visible
 native control bounds, since SwiftUI's hit-test can return a hosting view instead of its text field.
 Hidden or clipped controls cannot claim the cursor. The search rectangle remains the stable fallback.
-`FormTextInput` uses an `NSTextField` and its native placeholder; `FormTextArea` uses a growing
-TextKit 2 `NSTextView`.
+`FormTextInput` uses an `NSTextField` and its native placeholder; `FormTextArea` uses a TextKit 2
+`NSTextView` in its own scroll view, growing with its text up to a cap and scrolling inside itself
+beyond it (upstream #1655: an unbounded one inside the window's constraint pass crashed the editor
+on huge templates).
 Both clip to their own bounds so AppKit's visible-rect tracking area stays inside the field.
 Without this, the unclipped form scroll view makes each text view track the entire window, and their
 cursor claims overlap even in the gaps between fields. The page itself keeps its edge dissolve.

@@ -17,7 +17,14 @@ struct FormTextArea: NSViewRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
-    func makeNSView(context: Context) -> InputView {
+    /// Past the cap the area scrolls inside itself — an unbounded TextKit 2 view inside a
+    /// constraint pass is what crashed the editor on huge templates (upstream #1655).
+    private static let maximumHeight: CGFloat = 240
+    /// A document past this length cannot measure shorter than the cap, and laying the whole
+    /// thing out per keystroke is what pegged the CPU.
+    private static let measuredLengthLimit = 20_000
+
+    func makeNSView(context: Context) -> NSScrollView {
         let view = InputView(usingTextLayoutManager: true)
         view.delegate = context.coordinator
         view.textStorage?.delegate = context.coordinator
@@ -38,14 +45,24 @@ struct FormTextArea: NSViewRepresentable {
         view.textContainer?.widthTracksTextView = true
         view.textContainer?.lineFragmentPadding = 0
         view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        view.autoresizingMask = [.width]
+
+        let scroll = NSScrollView()
+        scroll.documentView = view
+        scroll.drawsBackground = false
+        scroll.borderType = .noBorder
+        scroll.hasVerticalScroller = true
+        scroll.hasHorizontalScroller = false
+        scroll.autohidesScrollers = true
         view.onFocus = { [weak coordinator = context.coordinator] focused in
             guard let coordinator, coordinator.input.focused != focused else { return }
             coordinator.input.focused = focused
         }
-        return view
+        return scroll
     }
 
-    func updateNSView(_ view: InputView, context: Context) {
+    func updateNSView(_ scroll: NSScrollView, context: Context) {
+        guard let view = scroll.documentView as? InputView else { return }
         context.coordinator.input = self
         context.coordinator.isUpdating = true
         defer { context.coordinator.isUpdating = false }
@@ -85,20 +102,28 @@ struct FormTextArea: NSViewRepresentable {
         view.updateFocus()
     }
 
-    func sizeThatFits(_ proposal: ProposedViewSize, nsView view: InputView, context: Context) -> CGSize? {
-        guard let width = proposal.width, width > 0 else { return nil }
-        view.setFrameSize(NSSize(width: width, height: max(view.frame.height, minimumHeight)))
+    func sizeThatFits(_ proposal: ProposedViewSize, nsView scroll: NSScrollView, context: Context) -> CGSize? {
+        guard let width = proposal.width, width > 0,
+            let view = scroll.documentView as? InputView
+        else { return nil }
         var height = view.font.map { $0.ascender - $0.descender + $0.leading } ?? 0
-        if let layout = view.textLayoutManager {
-            layout.enumerateTextLayoutFragments(
-                from: layout.documentRange.endLocation, options: [.reverse, .ensuresLayout]
-            ) { fragment in
-                height = max(height, fragment.layoutFragmentFrame.maxY)
-                return false
+        if (view.textStorage?.length ?? 0) <= Self.measuredLengthLimit {
+            if let layout = view.textLayoutManager {
+                layout.enumerateTextLayoutFragments(
+                    from: layout.documentRange.endLocation, options: [.reverse, .ensuresLayout]
+                ) { fragment in
+                    height = max(height, fragment.layoutFragmentFrame.maxY)
+                    return false
+                }
             }
+        } else {
+            height = .greatestFiniteMagnitude
         }
         return CGSize(
-            width: width, height: max(minimumHeight, ceil(height + view.textContainerInset.height * 2)))
+            width: width,
+            height: min(
+                max(minimumHeight, ceil(height + view.textContainerInset.height * 2)),
+                Self.maximumHeight))
     }
 
     final class InputView: NSTextView {
@@ -168,7 +193,7 @@ struct FormTextArea: NSViewRepresentable {
         ) {
             guard !isUpdating, editedMask.contains(.editedCharacters) else { return }
             input.text = textStorage.string
-            view?.invalidateIntrinsicContentSize()
+            view?.enclosingScrollView?.invalidateIntrinsicContentSize()
         }
 
         func textViewDidChangeSelection(_ notification: Notification) {

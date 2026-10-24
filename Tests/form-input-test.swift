@@ -172,12 +172,12 @@ struct FormInputTests {
             return
         }
         expect(input.clipsToBounds, "textarea tracking stays inside its bounds")
-        expect(input.isVerticallyResizable, "textarea grows instead of internally scrolling")
+        expect(input.isVerticallyResizable, "textarea lays its whole document out vertically")
         expect(
             input.textContainerInset.height == InterfaceMetrics.standard.spacing.md,
             "textarea keeps its top padding")
         expect(input.textLayoutManager != nil, "textarea uses TextKit 2")
-        expect(input.enclosingScrollView == nil, "textarea has no internal scroll view")
+        expect(input.enclosingScrollView != nil, "textarea owns a scroll view (upstream #1655)")
         expect(input.accessibilityLabel() == "Template", "textarea has an accessibility label")
         expect(input.undoManager?.canUndo == false, "loading a draft creates no undo step")
         window.makeFirstResponder(input)
@@ -189,7 +189,9 @@ struct FormInputTests {
         expect(
             find(FormTextArea.InputView.self, in: hosting) === input,
             "binding updates preserve native view identity")
-        expect(hosting.fittingSize.height > height, "long content expands the textarea")
+        expect(
+            hosting.fittingSize.height > height && hosting.fittingSize.height <= 240,
+            "long content grows the textarea only to its cap")
         expect(input.undoManager?.canUndo == true, "programmatic insertion uses native undo")
         let undo = NSEvent.keyEvent(
             with: .keyDown, location: .zero, modifierFlags: .command, timestamp: 0,

@@ -161,6 +161,15 @@ final class ClipboardManager {
             return
         }
 
+        // A web page can copy rich text with no plain flavour at all; flatten it or it is lost.
+        if let text = Self.richTextFallback(on: pb),
+            !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        {
+            guard text.count <= ClipboardStore.maxTextLength else { return }
+            store.addText(text, sourceBundleID: sourceBundleID)
+            return
+        }
+
         if let type = pb.availableType(from: [.png, .tiff]), let data = pb.data(forType: type) {
             let isPNG = type == .png
             let store = store
@@ -174,5 +183,19 @@ final class ClipboardManager {
                 await store.addImage(png, sourceBundleID: sourceBundleID)
             }
         }
+    }
+
+    /// RTF decodes through AppKit, HTML through the Foundation-only flattener — never WebKit.
+    /// Internal so the harness can drive it against a named board. See docs/features/clipboard.md.
+    static func richTextFallback(on pb: NSPasteboard) -> String? {
+        if let rtf = pb.data(forType: .rtf),
+            let attributed = try? NSAttributedString(rtf: rtf, documentAttributes: nil),
+            !attributed.string.isEmpty
+        {
+            return attributed.string
+        }
+        guard let html = pb.data(forType: .html), let raw = String(data: html, encoding: .utf8)
+        else { return nil }
+        return RichTextFlattener.plainText(fromHTML: raw)
     }
 }

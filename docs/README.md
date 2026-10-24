@@ -14,6 +14,7 @@ contradicts the code is a defect, so fix it in the commit that made it wrong.
 | [development.md](development.md) | The local loop: setup, build, dev channel, editor, format/lint, generated data | the local toolchain changes |
 | [release.md](release.md) | How a build reaches a user: packaging, PR review, releases, the Homebrew tap | the pipeline changes |
 | [signing.md](signing.md) | The self-signed identity and the two CI secrets | the signing setup changes |
+| [upstream-issues.md](upstream-issues.md) | 上游 issue 与本 fork 的对照：影响与否、修复状态 | 查过新的上游 issue，或修复/忽略了一个 |
 | [ui.md](ui.md) | The design system: tokens, panel chrome, row grammar, glass, dialogs and HUDs | a token or a presentation rule changes |
 
 ## Features

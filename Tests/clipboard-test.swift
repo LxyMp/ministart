@@ -77,6 +77,7 @@ struct ClipboardTests {
         importedFilesArriveOncePerPath()
         defaultActionChords()
         plainTextSkipsTheFile()
+        richTextFlattening()
 
         print("\(passes)/\(passes + failures) passed")
         if failures > 0 { exit(1) }
@@ -967,6 +968,35 @@ struct ClipboardTests {
         expect(
             ClipboardItem(imagePath: "/a/b.png", sourceBundleID: nil).plainText == nil,
             "an image has no plain text")
+    }
+
+    /// Upstream #1697: a copy carrying only rich flavours still lands in history as plain text.
+    static func richTextFlattening() {
+        func flatten(_ html: String) -> String {
+            RichTextFlattener.plainText(fromHTML: html)
+        }
+        expect(
+            flatten("<b>hello from html</b>") == "hello from html",
+            "a bold fragment flattens to its text")
+        expect(
+            flatten("<p>one</p><p>two</p>") == "one\ntwo",
+            "paragraph edges become newlines")
+        expect(
+            flatten("a<br>b<div>c</div><li>d</li>") == "a\nb\nc\nd",
+            "line-break tags each end their line")
+        expect(
+            flatten("<style>p{color:red}</style>visible") == "visible",
+            "style bodies never reach the history")
+        expect(
+            flatten("<SCRIPT>x=1;</SCRIPT>ok") == "ok",
+            "script bodies never reach the history, whatever the case")
+        expect(
+            flatten("a &amp; b &lt;tag&gt; &quot;q&quot; &#39;&#x2713;") == "a & b <tag> \"q\" '✓",
+            "entities decode, &amp; last so escaped ones stay")
+        expect(
+            flatten("&nbsp;spaced&nbsp;") == "spaced",
+            "non-breaking spaces read as spaces and trim away")
+        expect(flatten("") == "", "empty html flattens to empty text")
     }
 
     // MARK: - Harness
