@@ -60,3 +60,4 @@ node_modules/
 
 # Real Raycast exports carry the author's clipboard history; the harness builds its own fixtures.
 *.rayconfig
+.zcode/
