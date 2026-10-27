@@ -1,5 +1,53 @@
-# ministart
+# Ministart
 
-个人使用。
+**个人使用项目。**本项目是 [abue-ammar/tinycast](https://github.com/abue-ammar/tinycast)（AGPL-3.0）的一个分支，仅按照本人个人使用习惯进行修改与使用，所有取舍以个人需求为准，不保证对其他场景适用。感谢原作者的工作。
 
-来源仓库：[abue-ammar/tinycast](https://github.com/abue-ammar/tinycast)（AGPL-3.0），本项目基于其修改，感谢原作者。
+## 与上游项目的区别
+
+### 新增的功能
+
+- **快速链接分组**：设置页按分组分节展示；分组可新增、重命名、删除、上下排序（顺序持久化）；链接可拖拽跨组移动，行内按钮直接选择目标分组，链接组内顺序可拖拽调整；新增「默认」分组承接未分组链接。
+- **中文搜索增强**：多音字读音覆盖表（如「轧」读 zhá 而非 yà），「马钢冷轧」可搜 `mglz`；持续补充。
+- **计算器增强**：英寸双引号符号（`5"` = 5 inch）；分数接单位（`5/16 inch in mm` → 7.9375 mm）正确解析。
+- **交互命令输出可见**：运行交互 CLI 时，提示符（如 `Continue? [y/N]`）在等待输入期间即时显示，不再隐藏。
+- **扩展登录取消修复**：取消浏览器登录后状态正确清理，可重新发起登录。
+- **应用图标**：重建并接入构建，Finder/Dock 正常显示。
+
+### 修复的上游问题
+
+- 拖入的剪贴板内容只含 HTML/RTF（无纯文本）时静默丢失——现在转换为纯文本入库。
+- 超长片段模板导致片段编辑器崩溃——编辑区自带滚动并限高。
+- 启动器模糊匹配的空格落点问题（`my sql` 搜不到 MySQL 一类）。
+- 分数单位转换失败、扩展 OAuth 取消悬挂等其他问题，详见 [docs/upstream-issues.md](docs/upstream-issues.md) 的完整对照档案。
+
+### 删除的功能
+
+按个人使用需要，删除了以下上游功能：
+
+- AI 相关：AI 对话、听写、MCP、Quick Actions、Apple Intelligence 集成
+- 窗口管理 / 窗口切换器
+- 日历、系统操作（音量 HUD 等）、摄像头
+- Hyper Key（大小写锁定键改键）
+- 应用内更新（检查更新、下载、安装——升级为手动替换）
+- 支持赞助系统（支持窗口、30 天提醒、赞助页）
+- 上游官网（website/）与配套 CI
+- Raycast 导入、关于页、Dictation 相关助手
+
+### 其他变更
+
+- 语言仅保留简体中文与英文
+- 应用更名 Tinycast → Ministart（含 URL scheme `ministart://`、备份格式 `.ministart`、签名证书）
+- 每次构建签名稳定（自签证书），辅助功能授权跨版本保留
+- 快捷键：菜单栏菜单精简为 打开 / 设置 / 重启 / 退出
+
+## 构建
+
+```sh
+./Scripts/build-dmg.sh    # 产出 build/Ministart-<版本>.dmg
+```
+
+依赖 XcodeGen 与 Xcode；测试跑 `./Scripts/run-tests.sh`。
+
+## 许可
+
+沿用上游 [AGPL-3.0](LICENSE)。
