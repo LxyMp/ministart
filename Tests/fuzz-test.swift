@@ -88,6 +88,8 @@ struct FuzzTest {
             )
             .humps == [10])
         check("…but not in a name the fold can shift", score("s", "CaféStack") == 2)
+        check("a polyphonic character uses the override reading", score("zha", "冷轧") != nil)
+        check("…and its wrong default does not", score("ya", "冷轧") == nil)
     }
 
     // MARK: - Sensitivity

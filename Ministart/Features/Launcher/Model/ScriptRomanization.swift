@@ -16,7 +16,7 @@ enum ScriptRomanization {
         guard let script = script(of: name) else { return nil }
         let reading: String? =
             switch script {
-            case .han: transform(name, .mandarinToLatin)
+            case .han: transform(mandarinReading(of: name), .mandarinToLatin)
             // Only the kana romanize: ICU would read the kanji as Mandarin, which is a wrong word.
             case .japanese: transform(dropping(name, in: hanRanges), .toLatin)
             case .hangul, .other: transform(name, .toLatin)
@@ -76,6 +76,52 @@ enum ScriptRomanization {
         "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch", "ъ": "", "ы": "y", "ь": "",
         "э": "e", "ю": "yu", "я": "ya"
     ]
+
+    /// Polyphonic characters ICU reads by its highest-frequency sense, which is wrong for
+    /// industrial and personal names — the words users actually search. Replacement is the
+    /// pinyin **without tone marks**; ICU passes Latin through untouched.
+    private static let mandarinOverrides = [
+        "轧": "zha", // 轧钢 zhá，ICU 默认 yà
+        "重": "zhong",
+        "什": "shi",
+        "屏": "ping",
+        "乐": "le",
+        "行": "xing",
+        "发": "fa",
+        "得": "de",
+        "地": "di",
+        "还": "hai",
+        "系": "xi",
+        "率": "lü",
+        "差": "cha",
+        "参": "can",
+        "调": "diao",
+        "降": "jiang",
+        "省": "sheng",
+        "处": "chu",
+        "传": "chuan",
+        "担": "dan",
+        "曲": "qu",
+        "数": "shu",
+        "壳": "ke",
+        "卡": "ka",
+        "血": "xue",
+        "骨": "gu",
+        "露": "lu",
+        "落": "luo",
+        "薄": "bao",
+        "泊": "po",
+        "柏": "bai",
+    ]
+
+    /// Applies the polyphonic overrides before ICU sees the text.
+    private static func mandarinReading(of name: String) -> String {
+        var text = name
+        for (character, pinyin) in mandarinOverrides where !pinyin.isEmpty {
+            text = text.replacing(character, with: " \(pinyin) ")
+        }
+        return text
+    }
 
     private static func transform(_ value: String, _ transform: StringTransform) -> String? {
         value.applyingTransform(transform, reverse: false)?
