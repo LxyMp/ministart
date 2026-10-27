@@ -1,7 +1,10 @@
 # Ministart
 
+A personal-use branch of [abue-ammar/tinycast](https://github.com/abue-ammar/tinycast), modified
+for one user's habits; see the README for everything that differs from upstream.
+
 A native macOS menu-bar launcher: fuzzy app launcher, global and per-app hotkeys, a text/image
-clipboard history, an inline calculator, a floating note, snippets, quicklinks
+clipboard history, an inline calculator, a floating note, snippets, grouped quicklinks
 and an emoji picker. It also **runs Raycast extensions** natively, in JavaScriptCore.
 SwiftUI + AppKit, running as an accessory with no Dock icon (`LSUIElement`). Zero third-party
 dependencies.
@@ -41,7 +44,7 @@ system-wide chord, and HIToolbox's TIS APIs remain the public input-source mecha
 | `Ministart/DesignSystem/` | shared visual primitives; `Theme.swift` is the only design-token source                 |
 | `Ministart/Platform/`     | system shims: `Permissions`, `AppPaths`, `Signposts`, `NotificationToken`, …            |
 | `Ministart/Palette/`      | the palette shell: panel, window controller, `RootPaletteView`, `PaletteScreen`         |
-| `Ministart/Windows/`      | the non-palette AppKit surfaces: `Dialog/`, `HUD/`, `About/`, `AppWindowController`     |
+| `Ministart/Windows/`      | the non-palette AppKit surfaces: `Dialog/`, `HUD/`, `AppWindowController`               |
 | `Ministart/Features/`     | one folder per feature; larger ones split `Model/` `Service/` `UI/` `Settings/`         |
 | `Tests/`                 | the standalone harnesses — one Swift file each, no XCTest target                        |
 | `Scripts/`               | every executable script: test runner, data generators, packaging, linting, editor setup |
