@@ -26,6 +26,8 @@ struct QuicklinkTests {
         corruptDatabaseIsPreserved()
         archiveRoundTrip()
         archiveMerge()
+        groupManagement()
+        groupOrder()
         archiveAcceptsAHandWrittenFile()
 
         print("\(passes)/\(passes + failures) passed")
@@ -145,8 +147,8 @@ struct QuicklinkTests {
         expect(!fresh.canSave, "an empty quicklink cannot be saved")
         expect(
             fresh.showsInRootSearch && !fresh.isPinned && fresh.iconSymbol == nil
-                && fresh.openWithBundleID == nil,
-            "a new editor keeps the existing quicklink defaults")
+                && fresh.openWithBundleID == nil && fresh.group == nil,
+            "a new editor keeps the existing quicklink defaults (ungrouped)")
         fresh.name = " GitHub "
         fresh.link = " https://github.com "
         expect(fresh.canSave, "a named destination can be saved")
@@ -381,6 +383,7 @@ struct QuicklinkTests {
         expect(!row.showsInRootSearch, "the root-search flag lines up")
         expect(!row.isPinned, "a null pin stamp reads as unpinned")
         expect(row.isEnabled, "a table written before is_enabled loads its rows as enabled")
+        expect(row.group == nil, "a table written before group_name reads as ungrouped")
 
         // A second open must find the column already there rather than adding it twice.
         let reopened = QuicklinkStore(directory: dir)
@@ -405,6 +408,161 @@ struct QuicklinkTests {
         expect(
             throwsError(store, link("Anything")) == .storageUnavailable,
             "a mutation refuses rather than pretending to save")
+    }
+
+    // MARK: - Groups
+
+    /// Groups are labels on the links: derived, movable, renamable, never a second table.
+    static func groupManagement() {
+        withStore { store in
+            let alpha = try? store.add(link("Alpha", "https://alpha.example.com", group: "Work"))
+            let beta = try? store.add(link("Beta", "https://beta.example.com", group: "Work"))
+            let gamma = try? store.add(link("Gamma", "https://gamma.example.com"))
+            guard let alpha, let beta, let gamma else {
+                return fail("grouped links are stored")
+            }
+            expect(store.groups() == ["Work"], "one named group comes back, sorted once more arrive")
+
+            store.moveLinks(ids: [gamma.id], toGroup: "Work")
+            expect(store.quicklink(id: gamma.id)?.group == "Work", "a link moves into the group")
+            expect(
+                Array(store.quicklinks.filter { $0.group == "Work" }.compactMap(\.name).suffix(1))
+                    == ["Gamma"],
+                "a moved link lands at the end of its new group")
+
+            // 组内手动排序：把 Beta 拖到 Alpha 上 → Beta 落在 Alpha 后一位
+            let alphaID = store.quicklinks.first { $0.name == "Alpha" }?.id
+            let betaID = store.quicklinks.first { $0.name == "Beta" }?.id
+            if let betaID, let alphaID {
+                store.moveLinks(ids: [betaID], toGroup: "Work", afterID: alphaID)
+                expect(
+                    store.quicklinks.filter { $0.group == "Work" }.compactMap(\.name).prefix(2)
+                        == ["Alpha", "Beta"],
+                    "a drop on a link lands right after it")
+                expect(
+                    store.quicklinks.first { $0.id == betaID }?.position == 1,
+                    "the drop renumbers the group")
+            }
+
+            store.moveLinks(ids: [alpha.id], toGroup: nil)
+            expect(
+                store.quicklink(id: alpha.id)?.group == nil,
+                "a nil move returns the link to the Default group")
+
+            store.renameGroup("Work", to: "Personal")
+            expect(store.groups() == ["Personal"], "a rename rewrites every member")
+            expect(
+                store.quicklink(id: beta.id)?.group == "Personal"
+                    && store.quicklink(id: gamma.id)?.group == "Personal",
+                "membership follows the rename")
+
+            store.renameGroup("Personal", to: "work")
+            expect(
+                store.quicklink(id: beta.id)?.group == "work",
+                "a case-variant target renames rather than merging into itself")
+
+            store.moveLinks(ids: [beta.id, gamma.id], toGroup: nil)
+            expect(store.groups().isEmpty, "an emptied group no longer exists")
+
+            // 删除分组：链接回默认组，order 行同步清除且跨重开
+            let delDir = scratchDirectory()
+            defer { try? FileManager.default.removeItem(at: delDir) }
+            let delStore = QuicklinkStore(directory: delDir)
+            _ = try? delStore.add(link("D1", "https://d1.example.com", group: "Temp"))
+            delStore.deleteGroup("Temp")
+            expect(
+                !delStore.groups().contains("Temp")
+                    && delStore.quicklinks.allSatisfy { $0.group == nil },
+                "deleting a group moves its links to Default and drops the row")
+            let delReopened = QuicklinkStore(directory: delDir)
+            delReopened.load()
+            expect(!delReopened.groups().contains("Temp"), "the deletion survives a reopen")
+        }
+
+        // 重名目标获得数字后缀，绝不静默合并
+        withStore { store in
+            _ = try? store.add(link("A", "https://a.example.com", group: "Work"))
+            _ = try? store.add(link("B", "https://b.example.com", group: "Life"))
+            _ = try? store.add(link("C", "https://c.example.com", group: "Life"))
+            store.renameGroup("Life", to: "Work")
+            expect(
+                store.groups().sorted() == ["Work", "Work 2"],
+                "a colliding rename suffixes the proposed name")
+            expect(
+                Set(store.quicklinks.compactMap(\.group)) == Set(["Work", "Work 2"]),
+                "the two groups stay separate")
+        }
+
+        // 普通重命名：改名后组还在，成员都跟过去
+        withStore { store in
+            _ = try? store.add(link("Solo", "https://solo.example.com", group: "哈哈"))
+            store.renameGroup("哈哈", to: "呵呵")
+            expect(store.groups() == ["呵呵"], "a plain rename keeps the group")
+            expect(
+                store.quicklink(id: store.quicklinks[0].id)?.group == "呵呵",
+                "the member follows a plain rename")
+        }
+
+        // 持久化：group 往返数据库
+        let dir = scratchDirectory()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let store = QuicklinkStore(directory: dir)
+        _ = try? store.add(link("Kept", "https://kept.example.com", group: "Trips"))
+        let reopened = QuicklinkStore(directory: dir)
+        reopened.load()
+        expect(
+            reopened.quicklinks.first?.group == "Trips",
+            "the group column survives a reopen")
+    }
+
+    // MARK: - Group order
+
+    /// The order table is a first-class list: empty groups survive, drags persist, renames follow.
+    static func groupOrder() {
+        withStore { store in
+            expect(store.groupOrder().isEmpty, "a fresh store has no group order")
+            store.addGroup("Work")
+            store.addGroup("Life")
+            store.addGroup("Life")
+            expect(store.groupOrder() == ["Work", "Life"], "groups append in create order, deduped")
+
+            // 空组跨重开存活
+            let dir = scratchDirectory()
+            _ = store  // (withStore owns its dir; recreate below for the reopen check)
+        }
+
+        withStore { store in
+            store.addGroup("Work")
+            store.addGroup("Life")
+            store.setGroupOrder(["Life", "Work"])
+            expect(store.groupOrder() == ["Life", "Work"], "a rewrite takes the exact order")
+            store.setGroupOrder(["Life", "Work", "Ghost"])
+            expect(
+                store.groupOrder() == ["Life", "Work", "Ghost"],
+                "an order may name a group with no links yet")
+
+            _ = try? store.add(link("A", "https://a.example.com", group: "Work"))
+            store.renameGroup("Work", to: "Job")
+            expect(
+                store.groupOrder() == ["Life", "Job", "Ghost"],
+                "a rename follows the order row, untouched groups stay put")
+
+            store.moveLinks(ids: [], toGroup: "Trips")
+            expect(store.groups().contains("Trips"), "moving into a fresh group registers it")
+        }
+
+        // 空组跨重开存活
+        let dir = scratchDirectory()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let store = QuicklinkStore(directory: dir)
+        store.addGroup("Empty")
+        store.addGroup("Filled")
+        _ = try? store.add(link("L", "https://l.example.com", group: "Filled"))
+        let reopened = QuicklinkStore(directory: dir)
+        reopened.load()
+        expect(
+            reopened.groupOrder() == ["Empty", "Filled"],
+            "the order table survives a reopen, empty groups included")
     }
 
     // MARK: - Archive
@@ -493,8 +651,10 @@ struct QuicklinkTests {
         return url
     }
 
-    static func link(_ name: String, _ target: String = "https://example.com") -> Quicklink {
-        Quicklink(name: name, link: target)
+    static func link(
+        _ name: String, _ target: String = "https://example.com", group: String? = nil
+    ) -> Quicklink {
+        Quicklink(name: name, link: target, group: group)
     }
 
     static func names(_ store: QuicklinkStore) -> [String] {

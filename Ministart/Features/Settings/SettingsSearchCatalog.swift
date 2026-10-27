@@ -206,8 +206,11 @@ enum SettingsSearchCatalog {
             .quicklinksQuicklinks, "Enable quicklinks",
             keywords: ["url", "bookmark"]),
         .init(
-            .quicklinksQuicklinks, "Add Quicklink",
+            .quicklinksQuicklinks, "Add Link",
             keywords: ["new", "url", "bookmark", "alias"]),
+        .init(
+            .quicklinksGroups, "Add Group",
+            keywords: ["group", "organize", "section", "move"]),
         .init(
             group: .quicklinksCommands, "Quicklink commands",
             keywords: ["shortcut", "launcher", "search", "import", "export"]),

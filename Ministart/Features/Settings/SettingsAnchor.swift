@@ -30,6 +30,7 @@ extension SettingsAnchor {
     static let commandsCustomCommands = Self(tab: .commands, title: "Custom Commands")
 
     static let quicklinksQuicklinks = Self(tab: .quicklinks, title: "Quicklinks")
+    static let quicklinksGroups = Self(tab: .quicklinks, title: "Groups")
     static let quicklinksCommands = Self(tab: .quicklinks, title: "Commands")
     static let quicklinksBehaviour = Self(tab: .quicklinks, title: "Behaviour")
     static let quicklinksImportExport = Self(tab: .quicklinks, title: "Import & Export")

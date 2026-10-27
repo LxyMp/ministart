@@ -5,6 +5,18 @@ import AppKit
 final class QuicklinkCoordinator {
     private(set) var editor: QuicklinkEditorSession?
     private let store: QuicklinkStore
+    /// The editor's Group menu reads the group names; membership stays on the links.
+    var groups: [String] { store.groups() }
+
+    /// Deleting a group keeps every link, so the confirm names what actually goes away.
+    func confirmGroupRemoval(name: String, count: Int) async -> Bool {
+        await core.confirm(
+            title: String(localized: "Delete group “\(name)”?"),
+            message: String(
+                localized: "Its \(count) links move back to the Default group."),
+            symbol: "folder",
+            confirmTitle: String(localized: "Delete"))
+    }
     private let settings: AppSettings
     private let appIndex: AppIndex
     private let injector: TextInjector

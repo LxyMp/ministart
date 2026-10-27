@@ -21,7 +21,9 @@ every shortcut without re-registering.
   `SnippetTemplateEngine.declaredArguments(in:)`, a parse of the template alone, so moving the
   selection never touches the clipboard or the frontmost app's selection. Only opening does.
 - **`Quicklink.precedes` is the one display order**, sorted through by both the store and the `AppIndex`
-  slice.
+  slice. **Groups are labels on the links, not a second order**: `Quicklink.group` only decides which
+  section of the settings Library a row renders under, and the launcher never sections by it.
+  `nil` is the built-in **Default** group, which cannot be renamed or deleted.
 - **A disabled quicklink is inert, not gone.** `isEnabled == false` takes it out of root search and out
   of Search Quicklinks, and `openQuicklink` refuses it, so no surface can offer or open it. Everything
   attached — name, link, alias, shortcut, favorite slot, ranking — stays exactly as it was. The
@@ -217,7 +219,8 @@ buttons all open `PaletteMode.quicklinkEditor`. `QuicklinkCoordinator` owns the 
 `QuicklinkEditorScreen` only adapts the palette contract, and `QuicklinkEditorView` owns the fields.
 The settings Library keeps its existing enable, alias, hotkey and deletion controls.
 
-The form contains only the existing link, name, icon, Open With, root-search and pin options. Insert
+The form contains only the existing link, name, icon, Open With, Group, root-search and pin
+options. Group lists the Default group plus every group in use; a new link defaults to Default. Insert
 stays beside the destination and writes plain placeholder text at the selection; there is no token
 markup or tag field. Insert, the icon selector and Open With use the palette's searchable menu with
 their existing choices, including Automatic for icons and Default app for the application.
@@ -275,7 +278,21 @@ required. Duplicate detection is by **name or destination** — either match mea
 it — compared against the existing library _and_ against the rest of the incoming file, so one file
 can't import its own duplicates. Skipped entries are counted and reported in the summary. An import
 takes a fresh identity for every entry, so it can never collide with a shortcut an existing quicklink
-owns.
+owns. The `group` label travels with each entry (`decodeIfPresent`, so older files import as
+ungrouped); a name colliding with an existing group stays its own group — groups are labels, and
+imports never merge them.
+
+## Groups
+
+The settings Library renders the links **sectioned by `Quicklink.group`**: the built-in **Default**
+group first (ungrouped links, and the drop target a link returns to), then every named group in
+alphabetical order; within a section the display order is unchanged. Groups are also first-class rows in a
+`quicklink_groups` order table, so the **Group Order** sheet (next to Add Group) can drag them into
+a saved order and an empty group still exists across relaunches. A group exists only while a link
+names it or the order table lists it; deleting a group's last link keeps the group until the sheet
+or a link move removes it. Rows drag between sections (a header is the drop target); ✎ renames a
+group by rewriting every member, 🗑 deletes just the group, moving its links back to Default. Both
+are settings-only: the launcher list stays flat.
 
 Quicklinks and their bindings also ride in native settings backups, and the settings flags with them.
 Unlike `snippetsEnabled`, `quicklinksEnabled` grants no permission class and enables no listening, so

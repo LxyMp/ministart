@@ -15,6 +15,7 @@ struct QuicklinkEditorView: View {
     @State private var iconMenuFrame: CGRect = .zero
     @State private var insertMenuFrame: CGRect = .zero
     @State private var applicationMenuFrame: CGRect = .zero
+    @State private var groupMenuFrame: CGRect = .zero
 
     var body: some View {
         ScrollView {
@@ -22,6 +23,7 @@ struct QuicklinkEditorView: View {
                 FormRow("Link", alignment: .top) { linkEditor }
                 FormRow("Name & Icon") { nameField }
                 FormRow("Open With") { applicationMenu }
+                FormRow("Group") { groupMenu }
                 FormRow {
                     VStack(alignment: .leading, spacing: metrics.spacing.lg) {
                         option(
@@ -235,6 +237,62 @@ struct QuicklinkEditorView: View {
             .foregroundStyle(Theme.Colors.textSecondary)
             .rotationEffect(.degrees(isOpen ? 180 : 0))
             .animation(reduceMotion ? nil : Theme.MenuMotion.chevronAnimation, value: isOpen)
+    }
+
+    private var groupMenu: some View {
+        let groups = coordinator.groups
+        let selected = groups.first { $0.caseInsensitiveCompare(editor.group ?? "") == .orderedSame }
+        return HStack(spacing: metrics.spacing.lg) {
+            if let selected {
+                Image(systemName: "folder").foregroundStyle(.secondary)
+                Text(selected).lineLimit(1)
+            } else {
+                Text("Default group")
+            }
+            Spacer(minLength: 0)
+            menuChevron(for: groupMenuFrame)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, metrics.spacing.xl)
+        .frame(height: metrics.size.dialogButtonHeight)
+        .contentShape(.rect)
+        .onTapGesture(perform: showGroupMenu)
+        .focusable()
+        .focused($focusedControl, equals: .group)
+        .onKeyPress(keys: [.return, .space, .downArrow]) { _ in
+            showGroupMenu()
+            return .handled
+        }
+        .onGeometryChange(for: CGRect.self) {
+            $0.frame(in: .global)
+        } action: {
+            groupMenuFrame = $0
+        }
+        .formFieldChrome(focused: focusedField == .group)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Group")
+        .accessibilityValue(selected ?? String(localized: "Default group"))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction { showGroupMenu() }
+    }
+
+    private func showGroupMenu() {
+        let groups = coordinator.groups
+        let items =
+            [
+                PopoverMenuItem(title: String(localized: "Default group"), icon: .blank) {
+                    editor.group = nil
+                }
+            ]
+            + groups.map { group in
+                PopoverMenuItem(title: group, icon: .blank, startsSection: false) {
+                    editor.group = group
+                }
+            }
+        let selected = groups.firstIndex {
+            $0.caseInsensitiveCompare(editor.group ?? "") == .orderedSame
+        }.map { $0 + 1 } ?? 0
+        openInputMenu(PopoverMenuContent(items: items), .belowControl(groupMenuFrame), selected)
     }
 
     private var applicationMenu: some View {

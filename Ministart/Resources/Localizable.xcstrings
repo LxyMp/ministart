@@ -1555,12 +1555,22 @@
         }
       }
     },
-    "Add Quicklink": {
+    "Add Group": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "添加快速链接"
+            "value": "新增分组"
+          }
+        }
+      }
+    },
+    "Add Link": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新增链接"
           }
         }
       }
@@ -1730,22 +1740,22 @@
         }
       }
     },
-    "Allow Ministart to use Accessibility in System Settings": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在“系统设置”中允许 Ministart 使用辅助功能"
-          }
-        }
-      }
-    },
     "Allow Ministart to control Finder in System Settings › Privacy & Security › Automation, then try again.": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "请先在“系统设置”›“隐私与安全性”›“自动化”中允许 Ministart 控制 Finder，然后重试。"
+          }
+        }
+      }
+    },
+    "Allow Ministart to use Accessibility in System Settings": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在“系统设置”中允许 Ministart 使用辅助功能"
           }
         }
       }
@@ -3006,6 +3016,16 @@
         }
       }
     },
+    "Confirm Order": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认排序"
+          }
+        }
+      }
+    },
     "Confirm before deleting": {
       "localizations": {
         "zh-Hans": {
@@ -3732,6 +3752,16 @@
         }
       }
     },
+    "Default group": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "默认分组"
+          }
+        }
+      }
+    },
     "Define Word": {
       "localizations": {
         "zh-Hans": {
@@ -3819,6 +3849,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "删除文本片段"
+          }
+        }
+      }
+    },
+    "Delete group": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除分组"
+          }
+        }
+      }
+    },
+    "Delete group “%@”?": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除分组“%@”？"
           }
         }
       }
@@ -5275,6 +5325,36 @@
         }
       }
     },
+    "Group": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分组"
+          }
+        }
+      }
+    },
+    "Group name": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分组名称"
+          }
+        }
+      }
+    },
+    "Groups": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分组"
+          }
+        }
+      }
+    },
     "HSL with Alpha": {
       "localizations": {
         "zh-Hans": {
@@ -6175,6 +6255,16 @@
         }
       }
     },
+    "Its %lld links move back to the Default group.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 个链接将移回默认分组。"
+          }
+        }
+      }
+    },
     "Its enclosing folder isn’t writable by you, and Ministart never asks for an administrator password.": {
       "localizations": {
         "zh-Hans": {
@@ -6867,6 +6957,16 @@
         }
       }
     },
+    "Move %@ to a group": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将 %@ 移动到分组"
+          }
+        }
+      }
+    },
     "Move %@ up": {
       "localizations": {
         "zh-Hans": {
@@ -6917,6 +7017,26 @@
         }
       }
     },
+    "Move group down": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分组下移"
+          }
+        }
+      }
+    },
+    "Move group up": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分组上移"
+          }
+        }
+      }
+    },
     "Move the launcher by dragging the search bar.": {
       "localizations": {
         "zh-Hans": {
@@ -6933,6 +7053,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "移到废纸篓"
+          }
+        }
+      }
+    },
+    "Move to group": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移动到分组"
           }
         }
       }
@@ -9084,6 +9214,16 @@
         }
       }
     },
+    "Rename group": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重命名分组"
+          }
+        }
+      }
+    },
     "Render Markdown": {
       "localizations": {
         "zh-Hans": {
@@ -10338,6 +10478,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "部分项目未被移动"
+          }
+        }
+      }
+    },
+    "Sort Groups": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分组排序"
           }
         }
       }

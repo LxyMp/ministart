@@ -4,7 +4,7 @@ import SwiftUI
 @Observable
 final class QuicklinkEditorSession {
     enum Field: CaseIterable, Hashable {
-        case link, name, icon, application, rootSearch, pin
+        case link, name, icon, application, group, rootSearch, pin
     }
 
     let original: Quicklink?
@@ -13,6 +13,7 @@ final class QuicklinkEditorSession {
     var link: String
     var iconSymbol: String?
     var openWithBundleID: String?
+    var group: String?
     var showsInRootSearch: Bool
     var isPinned: Bool
     var selection: TextSelection?
@@ -26,6 +27,7 @@ final class QuicklinkEditorSession {
         link = quicklink?.link ?? ""
         iconSymbol = quicklink?.iconSymbol
         openWithBundleID = quicklink?.openWithBundleID
+        group = quicklink?.group
         showsInRootSearch = quicklink?.showsInRootSearch ?? true
         isPinned = quicklink?.isPinned ?? false
     }
@@ -41,7 +43,7 @@ final class QuicklinkEditorSession {
             iconSymbol: iconSymbol, isEnabled: original?.isEnabled ?? true,
             showsInRootSearch: showsInRootSearch,
             pinnedAt: isPinned ? (original?.pinnedAt ?? now) : nil,
-            createdAt: original?.createdAt ?? now)
+            createdAt: original?.createdAt ?? now, group: group)
     }
 
     func advanceFocus(backwards: Bool) {

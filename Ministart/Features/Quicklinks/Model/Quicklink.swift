@@ -19,11 +19,17 @@ struct Quicklink: Codable, Hashable, Identifiable, Sendable {
     /// A stamp rather than a flag, so the pinned block is ordered by *when* you pinned.
     var pinnedAt: Date?
     var createdAt: Date
+    /// Display-only group label; nil is the built-in Default group the settings list leads with.
+    var group: String?
+    /// Position inside the group, for the settings Library's manual drag order. Purely a
+    /// settings-surface fact; new links take `max+1` and a fresh import appends per group.
+    var position: Int?
 
     init(
         id: UUID = UUID(), name: String, link: String, openWithBundleID: String? = nil,
         iconSymbol: String? = nil, isEnabled: Bool = true, showsInRootSearch: Bool = true,
-        pinnedAt: Date? = nil, createdAt: Date = Date()
+        pinnedAt: Date? = nil, createdAt: Date = Date(), group: String? = nil,
+        position: Int? = nil
     ) {
         self.id = id
         self.name = name
@@ -34,9 +40,18 @@ struct Quicklink: Codable, Hashable, Identifiable, Sendable {
         self.showsInRootSearch = showsInRootSearch
         self.pinnedAt = pinnedAt
         self.createdAt = createdAt
+        self.group = group
+        self.position = position
     }
 
     var isPinned: Bool { pinnedAt != nil }
+
+    /// A copy with just the group changed, so store mutations read as one intent.
+    func withGroup(_ group: String?) -> Quicklink {
+        var copy = self
+        copy.group = group
+        return copy
+    }
 
     var symbol: String {
         iconSymbol ?? QuicklinkDestination.detect(link)?.defaultSymbol ?? Self.sfSymbol
@@ -67,7 +82,7 @@ struct Quicklink: Codable, Hashable, Identifiable, Sendable {
     // Hand-written, so an added field keeps old exports importable and imports stay minimal.
     private enum CodingKeys: String, CodingKey {
         case id, name, link, openWithBundleID, iconSymbol, isEnabled, showsInRootSearch, pinnedAt
-        case createdAt
+        case createdAt, group, position
     }
 
     init(from decoder: Decoder) throws {
@@ -82,6 +97,8 @@ struct Quicklink: Codable, Hashable, Identifiable, Sendable {
             try container.decodeIfPresent(Bool.self, forKey: .showsInRootSearch) ?? true
         pinnedAt = try container.decodeIfPresent(Date.self, forKey: .pinnedAt)
         createdAt = try container.decodeIfPresent(Date.self, forKey: .createdAt) ?? Date()
+        group = try container.decodeIfPresent(String.self, forKey: .group)
+        position = try container.decodeIfPresent(Int.self, forKey: .position)
     }
 }
 

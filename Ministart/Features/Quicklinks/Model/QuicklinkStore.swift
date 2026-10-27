@@ -12,6 +12,9 @@ final class QuicklinkStore {
     private(set) var quicklinks: [Quicklink] = []
     /// False when the database wouldn't open; every mutation then refuses rather than pretends.
     private(set) var isAvailable = false
+    /// Bumped on every group-order write, so views deriving order from `groups()` re-render —
+    /// the quicklinks array itself is untouched by a reorder.
+    var groupOrderRevision = 0
     var onChange: (([Quicklink]) -> Void)?
 
     private static let schema = """
@@ -25,6 +28,10 @@ final class QuicklinkStore {
           pinned_at REAL,
           created_at REAL NOT NULL,
           is_enabled INTEGER NOT NULL DEFAULT 1
+        );
+        CREATE TABLE IF NOT EXISTS quicklink_groups(
+          name TEXT PRIMARY KEY NOT NULL,
+          position INTEGER NOT NULL
         );
         """
 
@@ -64,7 +71,7 @@ final class QuicklinkStore {
             if let row = Self.row(stmt) { loaded.append(row) }
         }
         sqlite3_reset(stmt)
-        quicklinks = loaded.sorted(by: Quicklink.precedes)
+        quicklinks = loaded.sorted(by: Self.displayOrder)
     }
 
     /// A disabled quicklink is offered nowhere, so every surface lists this, not `quicklinks`.
@@ -81,7 +88,12 @@ final class QuicklinkStore {
     // Takes a whole draft, so adding an option doesn't churn every call site.
     @discardableResult
     func add(_ draft: Quicklink) throws(QuicklinkError) -> Quicklink {
-        let value = try validated(draft)
+        var value = try validated(draft)
+        // A new link lands at the end of its group: after everything sharing that label.
+        if let group = value.group {
+            value.position = ((quicklinks.filter { $0.group == group }.compactMap(\.position).max())
+                ?? -1) + 1
+        }
         try write(value)
         return value
     }
@@ -128,7 +140,168 @@ final class QuicklinkStore {
                 name: Self.uniqueName(basedOn: source.name, taken: quicklinks.map(\.name)),
                 link: source.link, openWithBundleID: source.openWithBundleID,
                 iconSymbol: source.iconSymbol, isEnabled: source.isEnabled,
-                showsInRootSearch: source.showsInRootSearch))
+                showsInRootSearch: source.showsInRootSearch, group: source.group))
+    }
+
+    // MARK: - Groups
+
+    /// Group names as the links spell them, in the user's saved order.
+    /// A group is a first-class row here, so an empty one still exists.
+    func groups() -> [String] {
+        var names = groupOrder()
+        for group in Set(quicklinks.compactMap(\.group)).sorted()
+        where !names.contains(where: { $0.caseInsensitiveCompare(group) == .orderedSame }) {
+            names.append(group)
+        }
+        return names
+    }
+
+    /// The saved group order; names the links no longer use stay until pruned by a rewrite.
+    func groupOrder() -> [String] {
+        guard let stmt = prepare("SELECT name FROM quicklink_groups ORDER BY position") else {
+            return []
+        }
+        defer { sqlite3_finalize(stmt) }
+        var names: [String] = []
+        while sqlite3_step(stmt) == SQLITE_ROW {
+            if let name = Self.columnString(stmt, 0) { names.append(name) }
+        }
+        return names
+    }
+
+    /// Rewrites the whole order in one transaction; names missing from the links are dropped,
+    /// links whose group is missing from the list gain their group at the end.
+    func setGroupOrder(_ names: [String]) {
+        guard isAvailable,
+            sqlite3_exec(db, "DELETE FROM quicklink_groups", nil, nil, nil) == SQLITE_OK
+        else { return }
+        var stmt: OpaquePointer?
+        guard
+            sqlite3_prepare_v2(
+                db, "INSERT INTO quicklink_groups(name, position) VALUES(?,?)", -1, &stmt, nil)
+                == SQLITE_OK
+        else { return }
+        defer { sqlite3_finalize(stmt) }
+        for (index, name) in names.enumerated() {
+            sqlite3_bind_text(stmt, 1, name, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_int(stmt, 2, Int32(index))
+            sqlite3_step(stmt)
+            sqlite3_reset(stmt)
+            sqlite3_clear_bindings(stmt)
+        }
+        groupOrderRevision += 1
+    }
+
+    /// Registers a group name at the end of the order, so a fresh create lands last.
+    func addGroup(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+            !groups().contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame })
+        else { return }
+        setGroupOrder(groupOrder() + [trimmed])
+    }
+
+    /// Deletes a group: its links return to Default and the order row goes with it.
+    /// Without the order-table cleanup the group survives its own deletion — the links
+    /// move but the row still names it, and `groups()` reads the row back.
+    func deleteGroup(_ name: String) {
+        moveLinks(
+            ids: Set(quicklinks.filter {
+                $0.group?.caseInsensitiveCompare(name) == .orderedSame
+            }.map(\.id)), toGroup: nil)
+        setGroupOrder(groupOrder().filter {
+            $0.caseInsensitiveCompare(name) != .orderedSame
+        })
+    }
+
+    /// Moves links into a group (nil = Default). No anchor appends to the group's end;
+    /// `beforeID`/`afterID` insert the drag right at that neighbour, keeping relative order.
+    func moveLinks(
+        ids: Set<UUID>, toGroup group: String?, beforeID: UUID? = nil, afterID: UUID? = nil
+    ) {
+        let target = group?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
+        if let target, !groups().contains(where: { $0.caseInsensitiveCompare(target) == .orderedSame }) {
+            addGroup(target)
+        }
+
+        var members = quicklinks.filter { $0.group == target }
+        // Same-group drags carry the stored row too — the move is a reorder, not a no-op.
+        var moving: [Quicklink] = []
+        for id in ids {
+            guard let stored = quicklink(id: id) else { continue }
+            if let updated = try? validated(stored.withGroup(target)) {
+                moving.append(updated)
+            }
+        }
+        // Same-group drags reorder; cross-group drops insert at the anchor neighbour.
+        let anchor = beforeID ?? afterID
+        if let anchor {
+            members.removeAll { link in moving.contains(where: { $0.id == link.id }) }
+            if let index = members.firstIndex(where: { $0.id == anchor }) {
+                members.insert(contentsOf: moving, at: beforeID != nil ? index : index + 1)
+            } else {
+                members.append(contentsOf: moving)
+            }
+        } else {
+            members.removeAll { link in moving.contains(where: { $0.id == link.id }) }
+            members.append(contentsOf: moving)
+        }
+
+        // Renumber the whole group, write each row, and commit one hand-built array.
+        var updated = quicklinks
+        for (index, value) in members.enumerated() {
+            var positioned = value
+            positioned.position = index
+            if let at = updated.firstIndex(where: { $0.id == value.id }) {
+                updated[at] = positioned
+            }
+            if let stmt = upsertStmt {
+                sqlite3_bind_text(stmt, 1, positioned.id.uuidString, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_text(stmt, 2, positioned.name, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_text(stmt, 3, positioned.link, -1, SQLITE_TRANSIENT)
+                bind(stmt, 4, positioned.openWithBundleID)
+                bind(stmt, 5, positioned.iconSymbol)
+                sqlite3_bind_int(stmt, 6, positioned.isEnabled ? 1 : 0)
+                sqlite3_bind_int(stmt, 7, positioned.showsInRootSearch ? 1 : 0)
+                if let pinnedAt = positioned.pinnedAt {
+                    sqlite3_bind_double(stmt, 8, pinnedAt.timeIntervalSince1970)
+                } else {
+                    sqlite3_bind_null(stmt, 8)
+                }
+                sqlite3_bind_double(stmt, 9, positioned.createdAt.timeIntervalSince1970)
+                bind(stmt, 10, positioned.group)
+                if let position = positioned.position {
+                    sqlite3_bind_int(stmt, 11, Int32(position))
+                } else {
+                    sqlite3_bind_null(stmt, 11)
+                }
+                sqlite3_step(stmt)
+                sqlite3_reset(stmt)
+                sqlite3_clear_bindings(stmt)
+            }
+        }
+        commit(updated.sorted(by: Self.displayOrder))
+    }
+
+    /// Renames every member at once. A colliding name gets a numeric suffix, never a merge:
+    /// a rename that silently folded two groups together would read as links vanishing.
+    func renameGroup(_ from: String, to proposed: String) {
+        let taken = Set(groups().map { $0.folding(options: [.caseInsensitive], locale: .current) })
+        let base = proposed.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !base.isEmpty else { return }
+        var target = base
+        var suffix = 2
+        while taken.contains(target.folding(options: [.caseInsensitive], locale: .current)) {
+            target = "\(base) \(suffix)"
+            suffix += 1
+        }
+        for stored in quicklinks where stored.group?.caseInsensitiveCompare(from) == .orderedSame {
+            try? update(stored.withGroup(target))
+        }
+        // The order row follows the rename, keeping the group's place in the sorting sheet.
+        setGroupOrder(groupOrder().map {
+            $0.caseInsensitiveCompare(from) == .orderedSame ? target : $0
+        })
     }
 
     @discardableResult
@@ -163,6 +336,12 @@ final class QuicklinkStore {
             sqlite3_bind_null(stmt, 8)
         }
         sqlite3_bind_double(stmt, 9, value.createdAt.timeIntervalSince1970)
+        bind(stmt, 10, value.group)
+        if let position = value.position {
+            sqlite3_bind_int(stmt, 11, Int32(position))
+        } else {
+            sqlite3_bind_null(stmt, 11)
+        }
         let status = sqlite3_step(stmt)
         sqlite3_reset(stmt)
         sqlite3_clear_bindings(stmt)
@@ -170,7 +349,7 @@ final class QuicklinkStore {
 
         var updated = quicklinks.filter { $0.id != value.id }
         updated.append(value)
-        commit(updated.sorted(by: Quicklink.precedes))
+        commit(updated.sorted(by: Self.displayOrder))
     }
 
     private func bind(_ stmt: OpaquePointer, _ index: Int32, _ value: String?) {
@@ -198,6 +377,7 @@ final class QuicklinkStore {
         value.openWithBundleID =
             draft.openWithBundleID?
             .trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
+        value.group = draft.group?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
         guard !value.name.isEmpty else { throw .emptyName }
         guard !value.link.isEmpty else { throw .emptyLink }
         guard !value.name.contains("\0"), !value.link.contains("\0") else {
@@ -215,6 +395,19 @@ final class QuicklinkStore {
             })
         else { throw .duplicateName }
         return value
+    }
+
+    /// Pins first; then, within the same group, the manual position; then the legacy
+    /// name order for rows a drag has not numbered yet.
+    private static func displayOrder(_ left: Quicklink, _ right: Quicklink) -> Bool {
+        switch (left.pinnedAt, right.pinnedAt) {
+        case (let l?, let r?) where l != r: return l < r
+        case (.some, .none): return true
+        case (.none, .some): return false
+        default: break
+        }
+        if let l = left.position, let r = right.position, l != r { return l < r }
+        return Quicklink.precedes(left, right)
     }
 
     private static func uniqueName(basedOn name: String, taken: [String]) -> String {
@@ -248,6 +441,8 @@ final class QuicklinkStore {
         sqlite3_exec(
             db, "ALTER TABLE quicklinks ADD COLUMN is_enabled INTEGER NOT NULL DEFAULT 1", nil, nil,
             nil)
+        sqlite3_exec(db, "ALTER TABLE quicklinks ADD COLUMN group_name TEXT", nil, nil, nil)
+        sqlite3_exec(db, "ALTER TABLE quicklinks ADD COLUMN position INTEGER", nil, nil, nil)
         // After the schema, so a column added later can be indexed the same way.
         sqlite3_exec(
             db,
@@ -255,18 +450,19 @@ final class QuicklinkStore {
             nil, nil, nil)
         upsertStmt = prepare(
             """
-            INSERT INTO quicklinks(id, name, link, open_with, icon, is_enabled, in_root_search, pinned_at, created_at)
-            VALUES(?,?,?,?,?,?,?,?,?)
+            INSERT INTO quicklinks(id, name, link, open_with, icon, is_enabled, in_root_search, pinned_at, created_at, group_name, position)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(id) DO UPDATE SET
               name = excluded.name, link = excluded.link, open_with = excluded.open_with,
               icon = excluded.icon, is_enabled = excluded.is_enabled,
-              in_root_search = excluded.in_root_search, pinned_at = excluded.pinned_at
+              in_root_search = excluded.in_root_search, pinned_at = excluded.pinned_at,
+              group_name = excluded.group_name, position = excluded.position
             """
         )
         // Both statements name columns in struct order, which `is_enabled` was appended after.
         loadStmt = prepare(
             """
-            SELECT id, name, link, open_with, icon, is_enabled, in_root_search, pinned_at, created_at
+            SELECT id, name, link, open_with, icon, is_enabled, in_root_search, pinned_at, created_at, group_name, position
             FROM quicklinks
             """
         )
@@ -299,7 +495,10 @@ final class QuicklinkStore {
             isEnabled: sqlite3_column_int(stmt, 5) != 0,
             showsInRootSearch: sqlite3_column_int(stmt, 6) != 0,
             pinnedAt: columnDate(stmt, 7),
-            createdAt: Date(timeIntervalSince1970: sqlite3_column_double(stmt, 8)))
+            createdAt: Date(timeIntervalSince1970: sqlite3_column_double(stmt, 8)),
+            group: columnString(stmt, 9),
+            position: sqlite3_column_type(stmt, 10) == SQLITE_NULL
+                ? nil : Int(sqlite3_column_int(stmt, 10)))
     }
 
     private static func columnDate(_ stmt: OpaquePointer?, _ index: Int32) -> Date? {
