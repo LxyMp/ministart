@@ -8,6 +8,10 @@ fork 点：`6029038f`（Send Apple Intelligence chats no instructions, #1693）�
 
 | Issue | 标题 | 本地修复 |
 | --- | --- | --- |
+| [#1722](https://github.com/abue-ammar/tinycast/issues/1722) | Show output hides a prompt's last line | drain 的阻塞 read 改为 40ms 定时 poll，静默期也强制 flush 未换行尾行 |
+| [#1716](https://github.com/abue-ammar/tinycast/issues/1716) | `getSelectedText()` returns nothing in Chromium | 上游根因是读取时机在目标失焦后；本地 `selectedText()` 读的是被调色板顶掉的目标且不判空串即抛——空选区改为返回空串语义待实际复现后再修（本地暂未复现） |
+| [#1707](https://github.com/abue-ammar/tinycast/issues/1707) | Extension OAuth cancellation leaves host call suspended | `ExtensionSignInSession` 加 `ResumeOnce`：onCancel 显式 resume，与浏览器回调路径先到先得、恰好一次 |
+| [#1706](https://github.com/abue-ammar/tinycast/issues/1706) | Can't convert fractional units | tokenizer 重写 `数字/数字␣单位`（有空格、非率类单位）为除法结果值+单位附着；数字后的 `"` 识别为英寸符号；`5/16" in mm`、`5/16 inch in mm` 均正确 |
 | [#1697](https://github.com/abue-ammar/tinycast/issues/1697) | Clipboard history silently drops copies that carry only HTML or RTF | 富文本回退：`poll()` 在纯文本与图片分支之间读 RTF/HTML 并拍平入库 |
 | [#1655](https://github.com/abue-ammar/tinycast/issues/1655) | Long snippet template crashes the snippet editor | `FormTextArea` 自带 `NSScrollView` 并限高，超长文本内部滚动 |
 
@@ -22,6 +26,7 @@ fork 点：`6029038f`（Send Apple Intelligence chats no instructions, #1693）�
 | #1682 | System Translate prompt claims language missing | QuickActions 已删 |
 | #1662 | Switch Windows omits minimized windows | 窗口切换器已删 |
 | #1661 | Confluence extension OAuth fails | 第三方扩展自身问题 |
+| #1704 | Visual glitch at launcher corners | 打开动画边角发丝线，无法稳定复现且不影响功能，观察 |
 | #1669 | Calculator doesn't recognize decimal numbers | 实测正常；小数处理在 fork 后本地重写过（仅 `.` 为小数点） |
 | #1676 | Escape doesn't bubble out of sub-screens | 本地有 `PaletteEscapeAction` 七级阶梯，palette-escape-test 覆盖 |
 | #1672 | Esc sometimes closes instead of popping to root | esc 阶梯同上；"重开恢复上次模式"（`restoreAnyMode`）是有意设计，保留 |

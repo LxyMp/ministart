@@ -3,6 +3,10 @@ import Foundation
 enum CalcTokenizer {
     /// nil on any character that can't be calculator input — "not a calculation", not an error.
     static func tokenize(_ input: String) -> [CalcToken]? {
+        return rewriteFractionUnits(tokens: tokenizeRaw(input), input: input)
+    }
+
+    private static func tokenizeRaw(_ input: String) -> [CalcToken]? {
         let chars = Array(input.unicodeScalars)
         var tokens: [CalcToken] = []
         tokens.reserveCapacity(chars.count / 2 + 1)
@@ -81,6 +85,14 @@ enum CalcTokenizer {
                     tokens.append(.compactNumber(value))
                 } else {
                     tokens.append(.number(value))
+                }
+                // A straight double quote right after a number is the inch mark: `5"`.
+                // Tokenized as the inch unit so unit attachment handles it like `5 in`.
+                if i < chars.count, chars[i] == "\"",
+                    tokens.last.map({ CalcQuantity.numberValue($0) != nil }) == true
+                {
+                    tokens.append(.ident("in"))
+                    i += 1
                 }
                 continue
             }
@@ -301,6 +313,52 @@ enum CalcTokenizer {
             if CalcUnits.byName[target]?.category == .temperature { return true }
         }
         return false
+    }
+    /// `5/16 inch` reads as (5/16) inch: a fraction followed by a unit. Without this the
+    /// parser divides by `16 inch`, producing `in⁻¹`, and the conversion fails (#1706).
+    /// The two numbers fold into their quotient; the unit then attaches to it normally.
+    /// `5/16 inch` reads as (5/16) inch: a fraction whose divisor keeps a **space** from
+    /// its unit (`16 inch`). A unit attached to its number (`1kg`, `20ms`) is a per-unit
+    /// division instead — `1 / 1kg` stays `kg⁻¹`. The space check reads the input, since
+    /// tokens carry no whitespace. (See #1706.)
+    private static func rewriteFractionUnits(
+        tokens: [CalcToken]?, input: String
+    ) -> [CalcToken]? {
+        guard var tokens else { return nil }
+        guard tokens.count >= 4 else { return tokens }
+        // `number / number<WS>unit` anywhere in the source opts the expression in.
+        guard
+            input.range(
+                of: #"[\d.]+\s*/\s*[\d.]+\s+[a-zA-Z]+"#,
+                options: .regularExpression) != nil
+        else { return tokens }
+        var changed = false
+        var index = 1
+        while index + 2 < tokens.count {
+            guard tokens[index] == .op(.divide),
+                let before = CalcQuantity.numberValue(tokens[index - 1]),
+                let divisor = CalcQuantity.numberValue(tokens[index + 1]),
+                case .ident(let unit) = tokens[index + 2],
+                let unitDef = CalcUnits.byName[unit],
+                // Only a plain-dimension unit folds with the fraction. Rate units (fuel
+                // economy, speed, flow — time⁻¹ in their dimension) and fuel-consumption
+                // pairs keep the division: `1 / 36 mpg` is a real per-unit computation.
+                let dimension = unitDef.category.dimension,
+                (dimension.time ?? 0) >= 0,
+                dimension.length >= 0,
+                unitDef.category != .fuelEconomy, unitDef.category != .fuelConsumption
+            else {
+                index += 1
+                continue
+            }
+            let quotient = before / divisor
+            tokens[index - 1] = .number(quotient)
+            tokens.remove(at: index)      // the divide
+            tokens.remove(at: index)      // the divisor
+            changed = true
+            index = max(1, index - 1)
+        }
+        return changed ? tokens : tokens
     }
 }
 

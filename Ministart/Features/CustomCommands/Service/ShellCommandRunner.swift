@@ -197,10 +197,15 @@ enum ShellCommandRunner {
         var lastYield = ContinuousClock().now
 
         while true {
-            // Zero is EOF; -1 with EIO is what a pty master returns once its child is gone.
-            let count = read(terminal.parentEnd, &buffer, readSize)
-            guard count > 0 else { break }
-            decoder.append(buffer, count: count)
+            // A timed poll, not a blocking read: a prompt prints its last line and then goes
+            // quiet, and only a wake-up with no data arriving can force that line out (#1722).
+            let ready = terminal.waitReadable(for: flushInterval)
+            if ready {
+                // Zero is EOF; -1 with EIO is what a pty master returns once its child is gone.
+                let count = read(terminal.parentEnd, &buffer, readSize)
+                guard count > 0 else { break }
+                decoder.append(buffer, count: count)
+            }
             let due = ContinuousClock().now - lastYield >= flushInterval
             if let text = decoder.take(force: due) {
                 continuation.yield(.output(text))

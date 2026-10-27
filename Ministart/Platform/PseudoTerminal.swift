@@ -63,6 +63,17 @@ final class PseudoTerminal: @unchecked Sendable {
     }
 
     /// Blocks until the command exits. A signalled death reports the signal, the way a shell does.
+    /// Whether the master end has data within `timeout`; a quiet prompt wakes this up.
+    /// `poll(2)` on the single fd — Swift sees none of the `fd_set` macros.
+    func waitReadable(for timeout: Duration) -> Bool {
+        var descriptor = pollfd(fd: parentEnd, events: Int16(POLLIN), revents: 0)
+        let milliseconds = Int32(
+            timeout.components.seconds * 1_000
+                + timeout.components.attoseconds / 1_000_000_000_000_000)
+        let result = poll(&descriptor, 1, milliseconds)
+        return result > 0 && descriptor.revents & Int16(POLLIN) != 0
+    }
+
     func wait() -> Int32 {
         var status: Int32 = 0
         while waitpid(processID, &status, 0) < 0 && errno == EINTR {}
