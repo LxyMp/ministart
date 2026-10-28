@@ -7232,6 +7232,16 @@
         }
       }
     },
+    "New QuickLink": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新建快速链接"
+          }
+        }
+      }
+    },
     "New Snippet": {
       "localizations": {
         "zh-Hans": {
@@ -9655,7 +9665,7 @@
         }
       }
     },
-    "Search Emoji & Symbols": {
+    "Search Emoji": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
@@ -9735,22 +9745,22 @@
         }
       }
     },
-    "Search Snippets": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索文本片段"
-          }
-        }
-      }
-    },
     "Search System Settings…": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "搜索系统设置…"
+          }
+        }
+      }
+    },
+    "Search Text": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索文本片段"
           }
         }
       }
@@ -10157,7 +10167,7 @@
         }
       }
     },
-    "Show Notes": {
+    "Show Note": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
